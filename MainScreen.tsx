@@ -4,12 +4,7 @@ import { Image, View, FlatList, TouchableNativeFeedback, Platform, StyleSheet } 
 
 const CASE_COLUMNS = 2;
 
-interface Case {
-    imageUrl: string;
-    id: string;
-}
-
-let cases = [
+let cases: Array<Case> = [
     {
         imageUrl:
             "http://cube.crider.co.uk/visualcube.php?fmt=png&size=500&view=plan&stage=oll",
@@ -126,13 +121,13 @@ const styles = StyleSheet.create({
   });
   
 
-export class MainScreen extends Component {
+export class MainScreen extends Component<{navigation: any}> {
     showEditCaseDialog() {
         alert("This needs to be a better editing dialog.");
     }
 
     goToCase(chosenCase: Case) {
-        alert(`This should go to the case with ID: ${chosenCase.id}.`);
+        this.props.navigation.navigate("Test", {case: chosenCase});
     }
 
     renderCase({ item }: { item: Case }) {
