@@ -24,7 +24,7 @@ export class TestScreen extends Component<{case: Case}> {
         return (
             <View style={styles.container}>
                 <Text>
-                    This is a screen for editing the case with ID {this.props.route.params.case.id}.
+                    This is a screen for testing the case with ID {this.props.route.params.case.id}.
                 </Text>
             </View>
         );
