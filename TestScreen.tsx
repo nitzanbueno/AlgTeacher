@@ -3,6 +3,7 @@ import { Component } from "react";
 import { Text, Image, View, StyleSheet, ToastAndroid } from "react-native";
 import { TouchableNativeFeedback } from "react-native-gesture-handler";
 import { TOUCHABLE_BACKGROUND, Case } from "./Models";
+import Cube from "cubejs";
 
 const styles = StyleSheet.create({
     container: {
@@ -42,14 +43,22 @@ const styles = StyleSheet.create({
     },
     descriptionText: {
         marginTop: 30,
-        fontSize: 30
-    }
+        fontSize: 30,
+    },
 });
 
-export class TestScreen extends Component<{
-    route: { params: { case: Case } };
-    navigation: any
-}> {
+export class TestScreen extends Component<
+    {
+        route: { params: { case: Case } };
+        navigation: any;
+    },
+    { scramble?: string }
+> {
+    constructor(props: any) {
+        super(props);
+        this.state = { scramble: undefined };
+    }
+
     renderImage = () => {
         return (
             <Image
@@ -64,6 +73,22 @@ export class TestScreen extends Component<{
         this.props.navigation.navigate("Main");
     };
 
+    createScramble = () => {
+        // We perform the algorithm on the cube, then we solve it.
+        // This gives us the inverse of the algorithm, but in an inefficient Kociemba way.
+        // This lets us present it to the user without them able to figure out
+        // what the algorithm itself is (other than remembering it, which is the goal).
+        var cube = new Cube();
+        cube.move(this.props.route.params.case.algorithm);
+        var scramble = cube.solve();
+
+        return scramble;
+    };
+
+    componentDidMount() {
+        this.setState({ scramble: this.createScramble() });
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -71,6 +96,7 @@ export class TestScreen extends Component<{
                     Description: {this.props.route.params.case.description}
                 </Text>
                 {this.renderImage()}
+                <Text>Scramble: {this.state.scramble || "Loading..."}</Text>
                 <Text>Do you remember the solution to this case?</Text>
                 <View style={styles.buttonContainer}>
                     <TouchableNativeFeedback
