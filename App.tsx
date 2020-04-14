@@ -9,8 +9,10 @@ import Cube from "cubejs";
 const Stack = createStackNavigator();
 
 class AppNavigationStack extends Component {
-    constructor(props: any) {
-        super(props);
+    componentDidMount() {
+        // This is EXTREMELY slow - ~30s.
+        // I have to make it work in the background because it freezes everything and you think the app didn't even open.
+        // It's TERRIBLE.
         Cube.initSolver();
     }
 
