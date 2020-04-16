@@ -7,8 +7,9 @@ import {
     TouchableNativeFeedback,
     StyleSheet,
 } from "react-native";
-import { Case, CASE_STUBS } from "./Models";
+import { Case } from "./Models";
 import { TouchableImage } from "./TouchableImage";
+import { GetAllCases } from "./CaseStorage";
 
 const CASE_COLUMNS = 2;
 
@@ -33,12 +34,21 @@ const styles = StyleSheet.create({
     },
 });
 
-export class MainScreen extends Component<{ navigation: any }> {
+export class MainScreen extends Component<{ navigation: any }, {cases: Case[]}> {
+    constructor(props: any) {
+        super(props);
+        this.state = {cases: []};
+    } 
+
     showEditCaseDialog() {
         alert("This needs to be a better editing dialog.");
     }
 
     addCase = () => {
+        this.props.navigation.setOptions({caseAddCallback: () => {
+            this.props.navigation.goBack();
+            this.resetCases();
+        }});
         this.props.navigation.navigate("Add");
     }
 
@@ -56,13 +66,27 @@ export class MainScreen extends Component<{ navigation: any }> {
         );
     }
 
+    resetCases = () => {
+        GetAllCases().then((cases) => {
+            this.setState({cases: cases});
+        })
+    }
+
+    componentDidMount() {
+        this.resetCases();
+    }
+
+    componentDidUpdate() {
+        this.resetCases();
+    }
+
     render() {
         return (
             <View style={styles.container}>
                 <FlatList
-                    data={CASE_STUBS}
+                    data={this.state.cases}
                     renderItem={this.renderCase.bind(this)}
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={(item) => item.id.toString()}
                     numColumns={CASE_COLUMNS}
                 />
                 <TouchableNativeFeedback onPress={this.addCase}>
