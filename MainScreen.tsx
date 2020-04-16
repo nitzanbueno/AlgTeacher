@@ -1,14 +1,14 @@
 import React from "react";
 import { Component } from "react";
 import {
-    Image,
+    Text,
     View,
     FlatList,
     TouchableNativeFeedback,
-    Platform,
     StyleSheet,
 } from "react-native";
 import { Case, CASE_STUBS } from "./Models";
+import { TouchableImage } from "./TouchableImage";
 
 const CASE_COLUMNS = 2;
 
@@ -19,9 +19,17 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
-    caseImage: {
-        width: 150,
-        height: 150,
+    addButton: {
+        position: "absolute",
+        bottom: 50,
+        left: 50,
+        width: 50,
+        height: 50,
+        fontSize: 5,
+        borderRadius: 25,
+        backgroundColor: "blue",
+        alignItems: "center",
+        justifyContent: "center",
     },
 });
 
@@ -30,26 +38,21 @@ export class MainScreen extends Component<{ navigation: any }> {
         alert("This needs to be a better editing dialog.");
     }
 
+    addCase = () => {
+        this.props.navigation.navigate("Add");
+    }
+
     goToCase(chosenCase: Case) {
         this.props.navigation.navigate("Test", { case: chosenCase });
     }
 
     renderCase({ item }: { item: Case }) {
         return (
-            <TouchableNativeFeedback
+            <TouchableImage
                 onPress={() => this.goToCase.bind(this)(item)}
                 onLongPress={this.showEditCaseDialog.bind(this)}
-                background={
-                    Platform.OS === "android"
-                        ? TouchableNativeFeedback.SelectableBackground()
-                        : undefined
-                }
-            >
-                <Image
-                    style={styles.caseImage}
-                    source={{ uri: item.imageUrl }}
-                />
-            </TouchableNativeFeedback>
+                imageUrl={item.imageUrl}
+            />
         );
     }
 
@@ -62,6 +65,11 @@ export class MainScreen extends Component<{ navigation: any }> {
                     keyExtractor={(item) => item.id}
                     numColumns={CASE_COLUMNS}
                 />
+                <TouchableNativeFeedback onPress={this.addCase}>
+                    <View style={styles.addButton}>
+                        <Text style={{color: "white"}}>+</Text>
+                    </View>
+                </TouchableNativeFeedback>
             </View>
         );
     }

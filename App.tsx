@@ -5,6 +5,7 @@ import { TestScreen } from "./TestScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Cube from "cubejs";
+import { AddScreen } from "./AddScreen";
 
 const Stack = createStackNavigator();
 
@@ -26,6 +27,7 @@ class AppNavigationStack extends Component {
                         options={{ title: "AlgTeacher" }}
                     />
                     <Stack.Screen name="Test" component={TestScreen} />
+                    <Stack.Screen name="Add" component={AddScreen} />
                 </Stack.Navigator>
             </NavigationContainer>
         );
