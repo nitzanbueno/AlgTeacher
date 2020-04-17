@@ -1,6 +1,6 @@
 import React from "react";
 import { Component } from "react";
-import { Text, Image, View, StyleSheet, ToastAndroid } from "react-native";
+import { Text, Image, View, StyleSheet } from "react-native";
 import { TouchableNativeFeedback } from "react-native-gesture-handler";
 import { TOUCHABLE_BACKGROUND, Case } from "./Models";
 
@@ -34,6 +34,9 @@ const styles = StyleSheet.create({
     noButton: {
         backgroundColor: "orangered",
     },
+    okButton: {
+        backgroundColor: "dodgerblue",
+    },
     buttonText: {
         height: "100%",
         textAlignVertical: "center",
@@ -51,8 +54,13 @@ export class TestScreen extends Component<
         route: { params: { case: Case } };
         navigation: any;
     },
-    any
+    { shouldDisplaySolution: boolean }
 > {
+    constructor(props: any) {
+        super(props);
+        this.state = { shouldDisplaySolution: false };
+    }
+
     renderImage = () => {
         return (
             <Image
@@ -62,10 +70,15 @@ export class TestScreen extends Component<
         );
     };
 
-    onButtonClick = (didRemember: boolean) => {
-        ToastAndroid.show(`${didRemember ? "Did" : "Didn't"} remember!`, 1000);
+    onClickYes = () => {
         this.props.navigation.navigate("Main");
     };
+
+    onClickNo = () => {
+        this.setState({ shouldDisplaySolution: true });
+    };
+
+    onClickOk = this.onClickYes;
 
     render() {
         return (
@@ -74,24 +87,52 @@ export class TestScreen extends Component<
                     Description: {this.props.route.params.case.description}
                 </Text>
                 {this.renderImage()}
-                <Text>Do you remember the solution to this case?</Text>
+                {!this.state.shouldDisplaySolution ? (
+                    <Text>Do you remember the solution to this case?</Text>
+                ) : (
+                    <Text>
+                        Solution: {this.props.route.params.case.algorithm}
+                    </Text>
+                )}
                 <View style={styles.buttonContainer}>
-                    <TouchableNativeFeedback
-                        onPress={() => this.onButtonClick(true)}
-                        background={TOUCHABLE_BACKGROUND}
-                    >
-                        <View style={[styles.buttonView, styles.yesButton]}>
-                            <Text style={styles.buttonText}>Yes</Text>
-                        </View>
-                    </TouchableNativeFeedback>
-                    <TouchableNativeFeedback
-                        onPress={() => this.onButtonClick(false)}
-                        background={TOUCHABLE_BACKGROUND}
-                    >
-                        <View style={[styles.buttonView, styles.noButton]}>
-                            <Text style={styles.buttonText}>No</Text>
-                        </View>
-                    </TouchableNativeFeedback>
+                    {!this.state.shouldDisplaySolution ? (
+                        [
+                            <TouchableNativeFeedback
+                                onPress={() => this.onClickYes()}
+                                background={TOUCHABLE_BACKGROUND}
+                                key="yesButton"
+                            >
+                                <View
+                                    style={[
+                                        styles.buttonView,
+                                        styles.yesButton,
+                                    ]}
+                                >
+                                    <Text style={styles.buttonText}>Yes</Text>
+                                </View>
+                            </TouchableNativeFeedback>,
+                            <TouchableNativeFeedback
+                                onPress={() => this.onClickNo()}
+                                background={TOUCHABLE_BACKGROUND}
+                                key="noButton"
+                            >
+                                <View
+                                    style={[styles.buttonView, styles.noButton]}
+                                >
+                                    <Text style={styles.buttonText}>No</Text>
+                                </View>
+                            </TouchableNativeFeedback>,
+                        ]
+                    ) : (
+                        <TouchableNativeFeedback
+                            onPress={() => this.onClickOk()}
+                            background={TOUCHABLE_BACKGROUND}
+                        >
+                            <View style={[styles.buttonView, styles.okButton]}>
+                                <Text style={styles.buttonText}>Got it!</Text>
+                            </View>
+                        </TouchableNativeFeedback>
+                    )}
                 </View>
             </View>
         );
