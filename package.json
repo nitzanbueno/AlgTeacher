@@ -24,6 +24,7 @@
     "react-native-web": "~0.11.7"
   },
   "devDependencies": {
+    "mem": ">=4.0.0",
     "@babel/core": "^7.8.6",
     "@types/react": "~16.9.23",
     "@types/react-native": "~0.61.17",
