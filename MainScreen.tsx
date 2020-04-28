@@ -6,10 +6,11 @@ import {
     FlatList,
     TouchableNativeFeedback,
     StyleSheet,
+    Alert,
 } from "react-native";
 import { Case } from "./Models";
 import { TouchableImage } from "./TouchableImage";
-import { GetAllCases } from "./CaseStorage";
+import { GetAllCases, DeleteCase } from "./CaseStorage";
 import {
     MenuTrigger,
     Menu,
@@ -47,6 +48,8 @@ const styles = StyleSheet.create({
 class CaseImage extends Component<{
     case: Case;
     onPress: () => void;
+    onEdit: () => void;
+    onDelete: () => void;
     ctx: any;
 }> {
     render() {
@@ -64,8 +67,8 @@ class CaseImage extends Component<{
                     />
                 </MenuTrigger>
                 <MenuOptions>
-                    <MenuOption disabled={true} text="Edit" />
-                    <MenuOption onSelect={() => alert("To Be Implemented")}>
+                    <MenuOption onSelect={this.props.onEdit} text="Edit" />
+                    <MenuOption onSelect={this.props.onDelete}>
                         <Text style={{ color: "red" }}>Delete</Text>
                     </MenuOption>
                 </MenuOptions>
@@ -85,19 +88,56 @@ export class MainScreen extends Component<
         this.state = { cases: [] };
     }
 
-    addCase = () => {
-        this.props.navigation.navigate("Add");
+    openAddScreen = () => {
+        let nextId =
+            this.state.cases.reduce(
+                (id1, case2) => Math.max(id1, case2.id),
+                0
+            ) + 1;
+        this.props.navigation.navigate("Add", { caseId: nextId });
     };
 
-    goToCase(chosenCase: Case) {
+    openEditScreen = (chosenCase: Case) => {
+        this.props.navigation.navigate("Add", {
+            caseId: chosenCase.id,
+            algorithm: chosenCase.algorithm,
+            description: chosenCase.description,
+            imageUrl: chosenCase.imageUrl,
+        });
+    };
+
+    openTestScreen = (chosenCase: Case) => {
         this.props.navigation.navigate("Test", { case: chosenCase });
-    }
+    };
+
+    deleteCase = (chosenCase: Case) => {
+        DeleteCase(chosenCase.id).then(this.resetCases);
+    };
+
+    openDeleteConfirmation = (chosenCase: Case) => {
+        Alert.alert(
+            "Delete Case",
+            "Are you sure you want to delete this case?",
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel",
+                },
+                { text: "Delete", onPress: () => this.deleteCase(chosenCase) },
+            ]
+        );
+    };
 
     renderCase = ({ item }: { item: Case }) => {
         return (
-            <ContextCaseImage onPress={() => this.goToCase(item)} case={item} />
+            <ContextCaseImage
+                onPress={() => this.openTestScreen(item)}
+                case={item}
+                onEdit={() => this.openEditScreen(item)}
+                onDelete={() => this.openDeleteConfirmation(item)}
+            />
         );
-    }
+    };
 
     resetCases = () => {
         GetAllCases().then((cases) => {
@@ -122,7 +162,7 @@ export class MainScreen extends Component<
                     keyExtractor={(item) => item.id.toString()}
                     numColumns={CASE_COLUMNS}
                 />
-                <TouchableNativeFeedback onPress={this.addCase}>
+                <TouchableNativeFeedback onPress={this.openAddScreen}>
                     <View style={styles.addButton}>
                         <Text style={{ color: "white" }}>+</Text>
                     </View>

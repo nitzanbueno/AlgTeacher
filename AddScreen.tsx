@@ -25,15 +25,16 @@ const styles = StyleSheet.create({
 });
 
 export class AddScreen extends Component<
-    { navigation: any },
-    { algorithm: string; description: string; selectedImage: string }
+    { navigation: any, route: any },
+    { algorithm: string; description: string; selectedImage: string, error: boolean }
 > {
     constructor(props: any) {
         super(props);
         this.state = {
-            algorithm: "",
-            description: "",
-            selectedImage: "",
+            algorithm: this.props.route.params.algorithm || "",
+            description: this.props.route.params.description || "",
+            selectedImage: this.props.route.params.imageUrl || "",
+            error: false,
         };
     }
 
@@ -45,6 +46,9 @@ export class AddScreen extends Component<
         this.setState({ description: value });
     };
 
+    /**
+     * Returns a list of image URLs based on the case algorithm, along with a serial number for each of them (for key extraction purposes).
+     */
     getPossibleImages = (): Array<{ url: string; id: number }> => {
         return GenerateCaseImageOptions(this.state.algorithm).map(
             (option, index) => {
@@ -68,17 +72,31 @@ export class AddScreen extends Component<
 
     saveCase = () => {
         let caseToSave: Case = {
-            id: -1,
+            id: this.props.route.params.caseId,
             algorithm: this.state.algorithm,
             description: this.state.description,
             imageUrl: this.state.selectedImage,
         };
 
         // Store the case, then call the callback
-        StoreCase(caseToSave).then((case_) => {
-            this.props.navigation.navigate("Main", { newCase: case_ });
+        StoreCase(caseToSave).then(() => {
+            this.props.navigation.navigate("Main");
         });
     };
+
+    /**
+     * Confirms all required fields are present.
+     * If they are, saves the case.
+     * If they aren't, displays error messages.
+     */
+    trySaveCase = () => {
+        // Currently, nothing is required except the image.
+        if (this.state.selectedImage != "") {
+            this.saveCase();
+        } else {
+            this.setState({error: true});
+        }
+    }
 
     render() {
         return (
@@ -111,7 +129,8 @@ export class AddScreen extends Component<
                 ) : (
                     <View style={styles.selectedImage} />
                 )}
-                <Button title="Save" onPress={this.saveCase} />
+                <Button title="Save" onPress={this.trySaveCase} />
+                { this.state.error && <Text>Please select an image.</Text> }
             </View>
         );
     }

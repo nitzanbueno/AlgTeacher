@@ -12,35 +12,36 @@ function deserializeCases(caseString: string): Case[] {
 }
 
 /**
- * Stores a copy of the given case with the correct ID and returns the copy.
- * @param case_ The case to store (the ID variable is ignored.).
+ * Stores the given case, replacing the case with its ID or storing
+ * a new case if the ID doesn't exist within the stored cases.
+ * @param case_ The case to store.
  */
-export async function StoreCase(case_: Case): Promise<Case> {
-    let currentCaseString = await AsyncStorage.getItem(CASES_KEY);
-    let cases: Case[];
+export async function StoreCase(case_: Case): Promise<void> {
+    let cases: Case[] = await GetAllCases();
 
-    if (currentCaseString === null) {
-        cases = [];
+    let existingCaseIndex = cases.findIndex(c => c.id == case_.id);
+    if (existingCaseIndex >= 0) {
+        cases[existingCaseIndex] = case_;
     } else {
-        cases = deserializeCases(currentCaseString);
+        cases.push(case_);
     }
-
-    // Get the next ID that doesn't exist in the case list
-    let nextId = cases.reduce((id1, case2) => Math.max(id1, case2.id), 0) + 1;
-
-    let caseToAdd: Case = {
-        id: nextId,
-        algorithm: case_.algorithm,
-        description: case_.description,
-        imageUrl: case_.imageUrl,
-    };
-
-    cases.push(caseToAdd);
 
     let newCaseString = serializeCases(cases);
     await AsyncStorage.setItem(CASES_KEY, newCaseString);
+}
 
-    return caseToAdd;
+export async function DeleteCase(id: Number) {
+    let cases: Case[] = await GetAllCases();
+
+    let caseIndex = cases.findIndex(c => c.id == id);
+    if (caseIndex >= 0) {
+        cases.splice(caseIndex, 1);
+    } else {
+        throw Error("Case ID not found.");
+    }
+
+    let newCaseString = serializeCases(cases);
+    await AsyncStorage.setItem(CASES_KEY, newCaseString);
 }
 
 /**
