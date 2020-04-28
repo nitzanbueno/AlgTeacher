@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, FlatList, StyleSheet, Image, Button, AccessibilityInfo } from "react-native";
+import { Text, View, FlatList, StyleSheet, Image, Button } from "react-native";
 import { TouchableImage } from "./TouchableImage";
 import { GenerateCaseImageOptions } from "./ImageOptionGenerator";
 import { TextInput } from "react-native-gesture-handler";
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
 });
 
 export class AddScreen extends Component<
-    {navigation: any},
+    { navigation: any },
     { algorithm: string; description: string; selectedImage: string }
 > {
     constructor(props: any) {
@@ -71,14 +71,14 @@ export class AddScreen extends Component<
             id: -1,
             algorithm: this.state.algorithm,
             description: this.state.description,
-            imageUrl: this.state.selectedImage
-        }
+            imageUrl: this.state.selectedImage,
+        };
 
         // Store the case, then call the callback
         StoreCase(caseToSave).then((case_) => {
-            this.props.navigation.navigate("Main", {newCase: case_})
+            this.props.navigation.navigate("Main", { newCase: case_ });
         });
-    }
+    };
 
     render() {
         return (
@@ -111,10 +111,7 @@ export class AddScreen extends Component<
                 ) : (
                     <View style={styles.selectedImage} />
                 )}
-                <Button
-                    title="Save"
-                    onPress={this.saveCase}
-                />
+                <Button title="Save" onPress={this.saveCase} />
             </View>
         );
     }

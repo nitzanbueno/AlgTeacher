@@ -10,11 +10,12 @@ import {
 import { Case } from "./Models";
 import { TouchableImage } from "./TouchableImage";
 import { GetAllCases } from "./CaseStorage";
+import {
     MenuTrigger,
     Menu,
     MenuOptions,
     MenuOption,
-    withMenuContext
+    withMenuContext,
 } from "react-native-popup-menu";
 
 const CASE_COLUMNS = 2;
@@ -81,22 +82,18 @@ export class MainScreen extends Component<
 > {
     constructor(props: any) {
         super(props);
-        this.state = {cases: []};
-    } 
+        this.state = { cases: [] };
+    }
 
     addCase = () => {
-        this.props.navigation.setOptions({caseAddCallback: () => {
-            this.props.navigation.goBack();
-            this.resetCases();
-        }});
         this.props.navigation.navigate("Add");
-    }
+    };
 
     goToCase(chosenCase: Case) {
         this.props.navigation.navigate("Test", { case: chosenCase });
     }
 
-    renderCase({ item }: { item: Case }) {
+    renderCase = ({ item }: { item: Case }) => {
         return (
             <ContextCaseImage onPress={() => this.goToCase(item)} case={item} />
         );
@@ -104,9 +101,9 @@ export class MainScreen extends Component<
 
     resetCases = () => {
         GetAllCases().then((cases) => {
-            this.setState({cases: cases});
-        })
-    }
+            this.setState({ cases: cases });
+        });
+    };
 
     componentDidMount() {
         this.resetCases();
@@ -121,13 +118,13 @@ export class MainScreen extends Component<
             <View style={styles.container}>
                 <FlatList
                     data={this.state.cases}
-                    renderItem={this.renderCase.bind(this)}
+                    renderItem={this.renderCase}
                     keyExtractor={(item) => item.id.toString()}
                     numColumns={CASE_COLUMNS}
                 />
                 <TouchableNativeFeedback onPress={this.addCase}>
                     <View style={styles.addButton}>
-                        <Text style={{color: "white"}}>+</Text>
+                        <Text style={{ color: "white" }}>+</Text>
                     </View>
                 </TouchableNativeFeedback>
             </View>
