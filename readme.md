@@ -1,36 +1,17 @@
-# AlgTeacher
+# AlgTeacher v0.1
 AlgTeacher is a (WIP) tool that helps you learn Rubik's cube algorithms.
 
-I'll create the full readme when the app is done (maybe).  
-For now, here's a specification of what I want to have in the app on the first version:
+## How does it work?
+You add algorithm for cases you want to learn to the app.  
+You can add a description and a picture of the case.  
+Whenever you want to test yourself, you choose one of them and the app asks you if you remember the algorithm that solves the case.  
+If you do, you press "Yes". If you don't, you press "No", and the app shows you the solution.
 
-## The main page
-The main page should be a list of cases, some of them marked as "untested" (I think it's going to be a red coloring), some marked as "tested" (green coloring), and some unmarked.  
-The unchecked cases should be at the top, then the checked ones, then the unmarked cases.  
-When a case is tapped on, it'll open the case test page.  
-There is also a + button to add an case.
+You can also long-press cases to edit or delete them.
 
-## The case test page
-The test page contains the picture of the case, and a scramble to generate the case (which should be generated using a Kociemba solution generator, as to not be the inverse of the solution algorithm).
 
-The test page also contains the text "Do you remember the algorithm for this case?" with buttons for "Yes" and "No". 
+## What is planned for the future?
 
-If "Yes" is tapped, the case becomes "tested" and is marked as such (green color).  
-If "No" is tapped, the case also becomes "tested" but the solution algorithm is displayed on screen.
-
-## The case addition page
-The case addition page asks for a description of the case, and the solution algorithm.
-
-The page then renders a selection of pictures for the user to choose from - one from top view, another from the isometric view, F2L selection etc. This will be done using VisualCube.
-
-After a picture is selected, the case is added.
-
-## The test-marking algorithm
-When will a case be marked as untested?
-
-Once each day, the app will check all cases to see if any should be marked untested:
-* A case added less than a week ago will be marked each day.
-* A case added more than a week ago will be marked every 3 days.
-* After 3 weeks, a case will not be marked.
-
-This algorithm is subject to change based on how well I think I remember solutions for cases (when I forget them, etc.).
+* **Displaying scrambles:** The app will display a scramble to the algorithm that lets you get the cube into position, so you can check if you remember the algorithm without remembering the notation itself.
+* **Sorting by priority:** The app will display cases you might have forgotten near the top, according to how many times you forgot the case in the recent days.
+* **Importing algorithms from databases:** Writing algorithms by hand is not fun, and copy-pasting on the phone is also not that fun. The app will allow you to import algorithm sets (such as PLL or OLL) with one click.
