@@ -10,6 +10,12 @@ import {
 import { Case } from "./Models";
 import { TouchableImage } from "./TouchableImage";
 import { GetAllCases } from "./CaseStorage";
+    MenuTrigger,
+    Menu,
+    MenuOptions,
+    MenuOption,
+    withMenuContext
+} from "react-native-popup-menu";
 
 const CASE_COLUMNS = 2;
 
@@ -34,15 +40,49 @@ const styles = StyleSheet.create({
     },
 });
 
-export class MainScreen extends Component<{ navigation: any }, {cases: Case[]}> {
+/**
+ * This component uses the react-native-popup-menu library to wrap a TouchableImage component with a context menu.
+ */
+class CaseImage extends Component<{
+    case: Case;
+    onPress: () => void;
+    ctx: any;
+}> {
+    render() {
+        return (
+            <Menu name={"case_" + this.props.case.id}>
+                <MenuTrigger>
+                    <TouchableImage
+                        onPress={this.props.onPress}
+                        onLongPress={() =>
+                            this.props.ctx.menuActions.openMenu(
+                                "case_" + this.props.case.id
+                            )
+                        }
+                        imageUrl={this.props.case.imageUrl}
+                    />
+                </MenuTrigger>
+                <MenuOptions>
+                    <MenuOption disabled={true} text="Edit" />
+                    <MenuOption onSelect={() => alert("To Be Implemented")}>
+                        <Text style={{ color: "red" }}>Delete</Text>
+                    </MenuOption>
+                </MenuOptions>
+            </Menu>
+        );
+    }
+}
+
+const ContextCaseImage = withMenuContext(CaseImage);
+
+export class MainScreen extends Component<
+    { navigation: any },
+    { cases: Case[] }
+> {
     constructor(props: any) {
         super(props);
         this.state = {cases: []};
     } 
-
-    showEditCaseDialog() {
-        alert("This needs to be a better editing dialog.");
-    }
 
     addCase = () => {
         this.props.navigation.setOptions({caseAddCallback: () => {
@@ -58,11 +98,7 @@ export class MainScreen extends Component<{ navigation: any }, {cases: Case[]}> 
 
     renderCase({ item }: { item: Case }) {
         return (
-            <TouchableImage
-                onPress={() => this.goToCase.bind(this)(item)}
-                onLongPress={this.showEditCaseDialog.bind(this)}
-                imageUrl={item.imageUrl}
-            />
+            <ContextCaseImage onPress={() => this.goToCase(item)} case={item} />
         );
     }
 
