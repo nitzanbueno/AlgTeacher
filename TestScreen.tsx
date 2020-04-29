@@ -1,8 +1,9 @@
 import React from "react";
 import { Component } from "react";
-import { Text, Image, View, StyleSheet } from "react-native";
+import { Text, Image, View, StyleSheet, NativeModules } from "react-native";
 import { TouchableNativeFeedback } from "react-native-gesture-handler";
 import { TOUCHABLE_BACKGROUND, Case } from "./Models";
+import ScrambleLib from "react-native-scramble-lib";
 
 const styles = StyleSheet.create({
     container: {
@@ -54,11 +55,11 @@ export class TestScreen extends Component<
         route: { params: { case: Case } };
         navigation: any;
     },
-    { shouldDisplaySolution: boolean }
+    { shouldDisplaySolution: boolean; scramble: String }
 > {
     constructor(props: any) {
         super(props);
-        this.state = { shouldDisplaySolution: false };
+        this.state = { shouldDisplaySolution: false, scramble: "Loading..." };
     }
 
     renderImage = () => {
@@ -80,6 +81,19 @@ export class TestScreen extends Component<
 
     onClickOk = this.onClickYes;
 
+    componentDidMount() {
+        ScrambleLib.generateScramble(
+            this.props.route.params.case.algorithm,
+            (success, scramble) => {
+                if (success) {
+                    this.setState({ scramble: scramble });
+                } else {
+                    this.setState({ scramble: "Error" });
+                }
+            }
+        );
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -88,7 +102,10 @@ export class TestScreen extends Component<
                 </Text>
                 {this.renderImage()}
                 {!this.state.shouldDisplaySolution ? (
-                    <Text>Do you remember the solution to this case?</Text>
+                    <View>
+                        <Text>Scramble: {this.state.scramble}</Text>
+                        <Text>Do you remember the solution to this case?</Text>
+                    </View>
                 ) : (
                     <Text>
                         Solution: {this.props.route.params.case.algorithm}
