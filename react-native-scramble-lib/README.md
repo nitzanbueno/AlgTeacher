@@ -12,6 +12,9 @@
 ```javascript
 import ScrambleLib from 'react-native-scramble-lib';
 
-// TODO: What to do with the module?
-ScrambleLib;
+ScrambleLib.generateScramble("F", (success, scramble) => {
+    if (success) {
+        this.scramble = scramble;
+    }
+});
 ```
