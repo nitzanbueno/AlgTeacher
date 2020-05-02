@@ -136,6 +136,10 @@ export class MainScreen extends Component<
         );
     };
 
+    startTimeAttack = () => {
+        this.props.navigation.navigate("TimeAttack");
+    }
+
     renderCase = ({ item }: { item: Case }) => {
         return (
             <ContextCaseImage
@@ -158,6 +162,9 @@ export class MainScreen extends Component<
         this.props.navigation.setOptions({
             headerRight: () => (
                 <View style={styles.iconContainer}>
+                    <TouchableNativeFeedback onPress={this.startTimeAttack}>
+                        <Icon style={styles.icon} name="stopwatch" size={20} />
+                    </TouchableNativeFeedback>
                     <TouchableNativeFeedback onPress={this.openAddScreen}>
                         <Icon style={styles.icon} name="plus" size={20} />
                     </TouchableNativeFeedback>
