@@ -38,6 +38,12 @@ export class AddScreen extends Component<
         };
     }
 
+    componentDidMount() {
+        if (this.props.route.params.title) {
+            this.props.navigation.setOptions({title: this.props.route.params.title});
+        }
+    }
+
     setAlgorithm = (value: string) => {
         this.setState({ algorithm: value });
     };
