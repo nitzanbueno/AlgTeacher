@@ -1,18 +1,28 @@
 import React, { Component } from "react";
-import { Text, View, FlatList, StyleSheet, Image, Button } from "react-native";
+import {
+    Text,
+    FlatList,
+    StyleSheet,
+    Image,
+    Button,
+    Picker,
+} from "react-native";
 import { TouchableImage } from "./TouchableImage";
 import { GenerateCaseImageOptions } from "./ImageOptionGenerator";
-import { TextInput } from "react-native-gesture-handler";
+import { TextInput, ScrollView } from "react-native-gesture-handler";
 import { Case } from "./Models";
-import { StoreCase } from "./CaseStorage";
+import { StoreCase, GetAllCategories } from "./CaseStorage";
+import { TextPrompt } from "./TextPrompt";
 
 const styles = StyleSheet.create({
     formField: {
         marginLeft: 10,
         marginRight: 10,
-        backgroundColor: "white",
         borderColor: "gray",
         borderWidth: 1,
+    },
+    formTextInput: {
+        backgroundColor: "white",
     },
     formLabel: {
         marginLeft: 10,
@@ -24,9 +34,19 @@ const styles = StyleSheet.create({
     },
 });
 
+const ADD_CATEGORY_KEY: string = "add";
+
 export class AddScreen extends Component<
-    { navigation: any, route: any },
-    { algorithm: string; description: string; selectedImage: string, error: boolean }
+    { navigation: any; route: any },
+    {
+        algorithm: string;
+        description: string;
+        selectedImage: string;
+        error: boolean;
+        category?: string;
+        categoryOptions: string[];
+        shouldDisplayAddPrompt: boolean;
+    }
 > {
     constructor(props: any) {
         super(props);
@@ -34,14 +54,24 @@ export class AddScreen extends Component<
             algorithm: this.props.route.params.algorithm || "",
             description: this.props.route.params.description || "",
             selectedImage: this.props.route.params.imageUrl || "",
+            category: this.props.route.params.category || undefined,
             error: false,
+            categoryOptions: [],
+            shouldDisplayAddPrompt: false,
         };
     }
 
     componentDidMount() {
         if (this.props.route.params.title) {
-            this.props.navigation.setOptions({title: this.props.route.params.title});
+            this.props.navigation.setOptions({
+                title: this.props.route.params.title,
+            });
         }
+
+        GetAllCategories().then((categories) => {
+            debugger;
+            this.setState({ categoryOptions: categories });
+        });
     }
 
     setAlgorithm = (value: string) => {
@@ -82,6 +112,7 @@ export class AddScreen extends Component<
             algorithm: this.state.algorithm,
             description: this.state.description,
             imageUrl: this.state.selectedImage,
+            category: this.state.category,
         };
 
         // Store the case, then call the callback
@@ -100,26 +131,87 @@ export class AddScreen extends Component<
         if (this.state.selectedImage != "") {
             this.saveCase();
         } else {
-            this.setState({error: true});
+            this.setState({ error: true });
         }
+    };
+
+    addCategory = (category: string) => {
+        // We can't add the category named the same as ADD_CATEGORY_KEY, because that's
+        // already the name of the "Add category" option.
+        // (not a great loss, I don't care enough to add an error message either)
+        if (category != "" && category != ADD_CATEGORY_KEY) {
+            // The rest will take care of itself
+            this.setState({ category: category });
+        }
+    };
+
+    // TODO: Extract a component for the category picker
+    promptAddCategory() {
+        this.setState({ shouldDisplayAddPrompt: true });
     }
+
+    renderCategoryOptions = () => {
+        let categoryOptions = [...this.state.categoryOptions];
+
+        // In case the user has added a new category
+        if (
+            this.state.category != undefined &&
+            this.state.category != ADD_CATEGORY_KEY &&
+            !categoryOptions.includes(this.state.category)
+        ) {
+            categoryOptions.push(this.state.category);
+        }
+
+        let pickerItems = categoryOptions.map((category) => (
+            <Picker.Item label={category} value={category} key={category} />
+        ));
+
+        pickerItems.unshift(
+            <Picker.Item key={""} label="None" value={undefined} />
+        );
+        pickerItems.push(
+            <Picker.Item
+                key={ADD_CATEGORY_KEY}
+                label="Add..."
+                value={ADD_CATEGORY_KEY}
+            />
+        );
+
+        return pickerItems;
+    };
+
+    selectCategoryOption = (itemValue: any, itemIndex: number) => {
+        if (itemValue != ADD_CATEGORY_KEY) {
+            this.setState({ category: itemValue });
+        } else {
+            this.promptAddCategory();
+        }
+    };
 
     render() {
         return (
-            <View>
+            <ScrollView>
                 <Text style={styles.formLabel}>Algorithm:</Text>
                 <TextInput
-                    style={styles.formField}
+                    style={[styles.formField, styles.formTextInput]}
                     value={this.state.algorithm}
                     onChangeText={this.setAlgorithm}
                 />
                 <Text style={styles.formLabel}>Description (Optional):</Text>
                 <TextInput
-                    style={styles.formField}
+                    style={[styles.formField, styles.formTextInput]}
                     value={this.state.description}
                     onChangeText={this.setDescription}
                 />
-                <Text style={styles.formLabel}>Image options:</Text>
+                <Text style={styles.formLabel}>Category:</Text>
+                <Picker
+                    style={styles.formField}
+                    selectedValue={this.state.category}
+                    onValueChange={this.selectCategoryOption}
+                >
+                    {this.renderCategoryOptions()}
+                </Picker>
+                <Text style={styles.formLabel}>Select image:</Text>
                 <FlatList
                     horizontal={true}
                     data={this.getPossibleImages()}
@@ -133,11 +225,23 @@ export class AddScreen extends Component<
                         source={{ uri: this.state.selectedImage }}
                     />
                 ) : (
-                    <View style={styles.selectedImage} />
+                    <ScrollView style={styles.selectedImage} />
                 )}
                 <Button title="Save" onPress={this.trySaveCase} />
-                { this.state.error && <Text>Please select an image.</Text> }
-            </View>
+                {this.state.error && <Text>Please select an image.</Text>}
+                {this.state.shouldDisplayAddPrompt && (
+                    <TextPrompt
+                        prompt="Add thing!"
+                        onSubmit={(result) => {
+                            this.setState({ shouldDisplayAddPrompt: false });
+                            this.addCategory(result);
+                        }}
+                        onCancel={() => {
+                            this.setState({ shouldDisplayAddPrompt: false });
+                        }}
+                    />
+                )}
+            </ScrollView>
         );
     }
 }

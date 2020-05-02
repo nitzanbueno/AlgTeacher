@@ -5,6 +5,7 @@ export interface Case {
     description: string;
     algorithm: string;
     imageUrl: string;
+    category?: string;
 }
 
 export const TOUCHABLE_BACKGROUND =

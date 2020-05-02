@@ -19,7 +19,7 @@ function deserializeCases(caseString: string): Case[] {
 export async function StoreCase(case_: Case): Promise<void> {
     let cases: Case[] = await GetAllCases();
 
-    let existingCaseIndex = cases.findIndex(c => c.id == case_.id);
+    let existingCaseIndex = cases.findIndex((c) => c.id == case_.id);
     if (existingCaseIndex >= 0) {
         cases[existingCaseIndex] = case_;
     } else {
@@ -33,7 +33,7 @@ export async function StoreCase(case_: Case): Promise<void> {
 export async function DeleteCase(id: Number) {
     let cases: Case[] = await GetAllCases();
 
-    let caseIndex = cases.findIndex(c => c.id == id);
+    let caseIndex = cases.findIndex((c) => c.id == id);
     if (caseIndex >= 0) {
         cases.splice(caseIndex, 1);
     } else {
@@ -60,4 +60,20 @@ export async function GetAllCases(): Promise<Case[]> {
     }
 
     return cases;
+}
+
+/**
+ * Returns an array containing all categories within stored cases,
+ * except undefined and empty strings.
+ */
+export async function GetAllCategories(): Promise<string[]> {
+    let cases = await GetAllCases();
+
+    let categories: string[] = cases
+        .map((case_) => case_.category)
+        .filter((case_) => case_ != "" && case_ != undefined) as string[];
+    categories = [...new Set(categories)];
+
+    debugger;
+    return categories;
 }

@@ -110,6 +110,7 @@ export class MainScreen extends Component<
             algorithm: chosenCase.algorithm,
             description: chosenCase.description,
             imageUrl: chosenCase.imageUrl,
+            category: chosenCase.category,
             title: "Edit"
         });
     };

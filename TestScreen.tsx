@@ -44,9 +44,17 @@ const styles = StyleSheet.create({
         textAlign: "center",
         color: "white",
     },
-    descriptionText: {
+    categoryText: {
         marginTop: 30,
         fontSize: 30,
+    },
+    descriptionText: {
+        marginTop: 30,
+        fontSize: 20,
+    },
+    scrambleText: {
+        fontSize: 15,
+        textAlign: "center",
     },
 });
 
@@ -97,19 +105,34 @@ export class TestScreen extends Component<
     render() {
         return (
             <View style={styles.container}>
-                <Text style={styles.descriptionText}>
-                    Description: {this.props.route.params.case.description}
-                </Text>
+                {!!this.props.route.params.case.category && (
+                    <Text style={styles.categoryText}>
+                        {this.props.route.params.case.category}
+                    </Text>
+                )}
+                {!!this.props.route.params.case.description && (
+                    <Text style={styles.descriptionText}>
+                        Description: {this.props.route.params.case.description}
+                    </Text>
+                )}
                 {this.renderImage()}
                 {!this.state.shouldDisplaySolution ? (
                     <View>
-                        <Text>Scramble: {this.state.scramble}</Text>
-                        <Text>Do you remember the solution to this case?</Text>
+                        <Text style={styles.scrambleText}>Scramble:</Text>
+                        <Text style={styles.scrambleText}>
+                            {this.state.scramble}
+                        </Text>
+                        <Text style={styles.scrambleText}>
+                            Do you remember the solution to this case?
+                        </Text>
                     </View>
                 ) : (
-                    <Text>
-                        Solution: {this.props.route.params.case.algorithm}
-                    </Text>
+                    <View>
+                        <Text style={styles.scrambleText}>Solution:</Text>
+                        <Text style={styles.scrambleText}>
+                            {this.props.route.params.case.algorithm}
+                        </Text>
+                    </View>
                 )}
                 <View style={styles.buttonContainer}>
                     {!this.state.shouldDisplaySolution ? (
