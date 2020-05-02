@@ -1,13 +1,6 @@
 import React from "react";
 import { Component } from "react";
-import {
-    Text,
-    View,
-    FlatList,
-    TouchableNativeFeedback,
-    StyleSheet,
-    Alert,
-} from "react-native";
+import { Text, View, FlatList, StyleSheet, Alert } from "react-native";
 import { Case } from "./Models";
 import { TouchableImage } from "./TouchableImage";
 import { GetAllCases, DeleteCase } from "./CaseStorage";
@@ -18,6 +11,8 @@ import {
     MenuOption,
     withMenuContext,
 } from "react-native-popup-menu";
+import Icon from "react-native-vector-icons/FontAwesome5";
+import { TouchableNativeFeedback } from "react-native-gesture-handler";
 
 const CASE_COLUMNS = 2;
 
@@ -39,6 +34,18 @@ const styles = StyleSheet.create({
         backgroundColor: "blue",
         alignItems: "center",
         justifyContent: "center",
+    },
+    iconContainer: {
+        flexDirection: "row",
+        height: "100%",
+        alignItems: "center",
+        marginRight: 5,
+    },
+    icon: {
+        marginRight: 10,
+        marginLeft: 10,
+        height: "100%",
+        textAlignVertical: "center",
     },
 });
 
@@ -147,6 +154,15 @@ export class MainScreen extends Component<
 
     componentDidMount() {
         this.resetCases();
+        this.props.navigation.setOptions({
+            headerRight: () => (
+                <View style={styles.iconContainer}>
+                    <TouchableNativeFeedback onPress={this.openAddScreen}>
+                        <Icon style={styles.icon} name="plus" size={20} />
+                    </TouchableNativeFeedback>
+                </View>
+            ),
+        });
     }
 
     componentDidUpdate() {
@@ -162,11 +178,6 @@ export class MainScreen extends Component<
                     keyExtractor={(item) => item.id.toString()}
                     numColumns={CASE_COLUMNS}
                 />
-                <TouchableNativeFeedback onPress={this.openAddScreen}>
-                    <View style={styles.addButton}>
-                        <Text style={{ color: "white" }}>+</Text>
-                    </View>
-                </TouchableNativeFeedback>
             </View>
         );
     }
