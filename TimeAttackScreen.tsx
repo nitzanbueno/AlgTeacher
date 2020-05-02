@@ -22,6 +22,10 @@ const styles = StyleSheet.create({
         textAlign: "center",
         height: 50,
     },
+    anchoredButton: {
+        width: "100%",
+        flex: 1,
+    },
     yesButton: {
         backgroundColor: "chartreuse",
         color: "black",
@@ -54,6 +58,8 @@ const styles = StyleSheet.create({
     },
     solutionView: {
         height: 200,
+        width: "100%",
+        alignItems: "center"
     },
 });
 
@@ -163,7 +169,7 @@ export class TimeAttackScreen extends Component<
                             </View>
                         )}
                     </View>
-                    <View style={[styles.buttonView, styles.yesButton]}>
+                    <View style={[styles.anchoredButton, styles.yesButton]}>
                         <TouchableNativeFeedback
                             onPress={this.getNextCase}
                             background={TOUCHABLE_BACKGROUND}
