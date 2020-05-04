@@ -3,12 +3,16 @@ import { View, Text, StyleSheet, Button } from "react-native";
 import CheckBox from "@react-native-community/checkbox";
 
 const styles = StyleSheet.create({
-    optionContainer: {
+    optionRow: {
         flexDirection: "row",
         height: 30,
-        borderColor: "#ccc",
-        borderWidth: 1,
+        alignItems: "center",
+        marginTop: 5,
+        marginBottom: 5,
     },
+    optionContainer: {
+        marginBottom: 10
+    }
 });
 
 export type CheckboxPickerOptionArray = Array<{ name: string; value: boolean }>;
@@ -36,8 +40,9 @@ export class CheckboxPicker extends Component<
     render() {
         return (
             <View>
+                <View style={styles.optionContainer}>
                 {this.props.options.map((option, index) => (
-                    <View style={styles.optionContainer} key={option}>
+                    <View style={styles.optionRow} key={option}>
                         <CheckBox
                             value={this.state.checkboxValues[index]}
                             onValueChange={(value) =>
@@ -47,6 +52,7 @@ export class CheckboxPicker extends Component<
                         <Text>{option}</Text>
                     </View>
                 ))}
+                </View>
                 <Button
                     title="Done"
                     onPress={() =>

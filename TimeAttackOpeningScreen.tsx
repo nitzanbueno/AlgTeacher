@@ -1,21 +1,23 @@
 import React from "react";
 import { Component } from "react";
-import { Text, View, StyleSheet, Button } from "react-native";
-import { TouchableNativeFeedback } from "react-native-gesture-handler";
-import { TOUCHABLE_BACKGROUND, Case } from "./Models";
-import ScrambleLib from "react-native-scramble-lib";
-import { GetAllCases, GetAllCategories } from "./CaseStorage";
-import { ShuffleArray } from "./Helpers";
+import { Text, StyleSheet, ScrollView } from "react-native";
+import { Case } from "./Models";
+import { GetAllCategories } from "./CaseStorage";
 import { CheckboxPicker, CheckboxPickerOptionArray } from "./CheckboxPicker";
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#fff",
-        alignItems: "center",
         textAlign: "center",
-        // justifyContent: "center",
+        paddingLeft: 10,
+        paddingRight: 10,
+        paddingTop: 20,
     },
+    header: {
+        fontSize: 20
+    },
+    
 });
 
 export class TimeAttackOpeningScreen extends Component<
@@ -52,13 +54,13 @@ export class TimeAttackOpeningScreen extends Component<
 
     render() {
         return (
-            <View style={styles.container}>
-                <Text>Choose categories:</Text>
+            <ScrollView style={styles.container}>
+                <Text style={styles.header}>Choose categories:</Text>
                 <CheckboxPicker
                     options={this.state.allCategories}
                     onSubmit={this.confirmCategorySelection}
                 />
-            </View>
+            </ScrollView>
         );
     }
 }
