@@ -6,7 +6,9 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { AddScreen } from "./AddScreen";
 import { MenuProvider } from "react-native-popup-menu";
-import { TimeAttackScreen } from "./TimeAttackScreen";
+import { TimeAttackOpeningScreen } from "./TimeAttackOpeningScreen";
+import { TimeAttackPlayScreen } from "./TimeAttackPlayScreen";
+import { TimeAttackEndScreen } from "./TimeAttackEndScreen";
 
 const Stack = createStackNavigator();
 
@@ -24,9 +26,19 @@ class AppNavigationStack extends Component {
                         <Stack.Screen name="Test" component={TestScreen} />
                         <Stack.Screen name="Add" component={AddScreen} />
                         <Stack.Screen
-                            name="TimeAttack"
-                            component={TimeAttackScreen}
+                            name="TimeAttackOpening"
+                            component={TimeAttackOpeningScreen}
                             options={{ title: "Time Attack" }}
+                        />
+                        <Stack.Screen
+                            name="TimeAttackPlay"
+                            component={TimeAttackPlayScreen}
+                            options={{ title: "Time Attack" }}
+                        />
+                        <Stack.Screen
+                            name="TimeAttackEnd"
+                            component={TimeAttackEndScreen}
+                            options={{ title: "Results" }}
                         />
                     </Stack.Navigator>
                 </NavigationContainer>

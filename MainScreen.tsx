@@ -138,7 +138,7 @@ export class MainScreen extends Component<
     };
 
     startTimeAttack = () => {
-        this.props.navigation.navigate("TimeAttack");
+        this.props.navigation.navigate("TimeAttackOpening");
     }
 
     renderCase = ({ item }: { item: Case }) => {
