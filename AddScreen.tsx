@@ -6,6 +6,7 @@ import {
     Image,
     Button,
     Picker,
+    View,
 } from "react-native";
 import { TouchableImage } from "./TouchableImage";
 import { GenerateCaseImageOptions } from "./ImageOptionGenerator";
@@ -20,6 +21,11 @@ const styles = StyleSheet.create({
         marginRight: 10,
         borderColor: "gray",
         borderWidth: 1,
+        height: 40,
+    },
+    pickerStandin: {
+        height: 40,
+        justifyContent: "center"
     },
     formTextInput: {
         backgroundColor: "white",
@@ -46,6 +52,7 @@ export class AddScreen extends Component<
         category?: string;
         categoryOptions: string[];
         shouldDisplayAddPrompt: boolean;
+        didLoadCategoryOptions: boolean;
     }
 > {
     constructor(props: any) {
@@ -58,6 +65,7 @@ export class AddScreen extends Component<
             error: false,
             categoryOptions: [],
             shouldDisplayAddPrompt: false,
+            didLoadCategoryOptions: false,
         };
     }
 
@@ -69,7 +77,11 @@ export class AddScreen extends Component<
         }
 
         GetAllCategories().then((categories) => {
-            this.setState({ categoryOptions: categories });
+            // After the category options load, the given category for the case can be written
+            this.setState({
+                categoryOptions: categories,
+                didLoadCategoryOptions: true,
+            });
         });
     }
 
@@ -203,13 +215,27 @@ export class AddScreen extends Component<
                     onChangeText={this.setDescription}
                 />
                 <Text style={styles.formLabel}>Category:</Text>
-                <Picker
-                    style={styles.formField}
-                    selectedValue={this.state.category}
-                    onValueChange={this.selectCategoryOption}
-                >
-                    {this.renderCategoryOptions()}
-                </Picker>
+                {this.state.didLoadCategoryOptions ? (
+                    <Picker
+                        style={styles.formField}
+                        selectedValue={this.state.category}
+                        onValueChange={this.selectCategoryOption}
+                    >
+                        {this.renderCategoryOptions()}
+                    </Picker>
+                ) : (
+                    // You might be asking yourself, "What the hell is that?"
+                    // "Why do I need to have "Loading" text for a picker? Can't I just have a "Loading" option or something?"
+                    // Well, apparently, whenever you change options for a picker, it automatically changes selection to the first one.
+                    // However, I want to have an already selected category (the one of the possibly-currently-edited case), and categories
+                    // load asynchronously, so that forces me to cause the selection change (which I can't tell apart from any other selection
+                    // change and thus can't block).
+                    // Unless, I don't change the categories at all, and just render the picker after they've been loaded.
+                    // Thus, this stupidity.
+                    <View style={styles.pickerStandin}>
+                        <Text>Loading...</Text>
+                    </View>
+                )}
                 <Text style={styles.formLabel}>Select image:</Text>
                 <FlatList
                     horizontal={true}
