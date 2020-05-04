@@ -76,7 +76,7 @@ export class TestScreen extends Component<
         route: { params: { case: Case } };
         navigation: any;
     },
-    { shouldDisplaySolution: boolean; scramble: String }
+    { shouldDisplaySolution: boolean; scramble: string }
 > {
     constructor(props: any) {
         super(props);
