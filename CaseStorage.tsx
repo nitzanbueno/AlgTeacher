@@ -74,6 +74,5 @@ export async function GetAllCategories(): Promise<string[]> {
         .filter((case_) => case_ != "" && case_ != undefined) as string[];
     categories = [...new Set(categories)];
 
-    debugger;
     return categories;
 }

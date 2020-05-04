@@ -3,7 +3,6 @@
  * @param imageCase The case to generate image options for
  */
 export function GenerateCaseImageOptions(imageCase: string): string[] {
-    debugger;
     return [
         `http://cube.crider.co.uk/visualcube.php?size=500&fmt=png&case=${imageCase}`,
         `http://cube.crider.co.uk/visualcube.php?size=500&fmt=png&view=plan&case=${imageCase}`,

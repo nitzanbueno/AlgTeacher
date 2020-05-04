@@ -69,7 +69,6 @@ export class AddScreen extends Component<
         }
 
         GetAllCategories().then((categories) => {
-            debugger;
             this.setState({ categoryOptions: categories });
         });
     }
