@@ -4,6 +4,7 @@ import { Text, Image, View, StyleSheet, NativeModules } from "react-native";
 import { TouchableNativeFeedback } from "react-native-gesture-handler";
 import { TOUCHABLE_BACKGROUND, Case } from "./Models";
 import ScrambleLib from "react-native-scramble-lib";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 const styles = StyleSheet.create({
     container: {
@@ -56,6 +57,18 @@ const styles = StyleSheet.create({
         fontSize: 15,
         textAlign: "center",
     },
+    iconContainer: {
+        flexDirection: "row",
+        height: "100%",
+        alignItems: "center",
+        marginRight: 5,
+    },
+    icon: {
+        marginRight: 10,
+        marginLeft: 10,
+        height: "100%",
+        textAlignVertical: "center",
+    },
 });
 
 export class TestScreen extends Component<
@@ -89,7 +102,28 @@ export class TestScreen extends Component<
 
     onClickOk = this.onClickYes;
 
+    openEditScreen = () => {
+        this.props.navigation.navigate("Add", {
+            caseId: this.props.route.params.case.id,
+            algorithm: this.props.route.params.case.algorithm,
+            description: this.props.route.params.case.description,
+            imageUrl: this.props.route.params.case.imageUrl,
+            category: this.props.route.params.case.category,
+            title: "Edit"
+        })
+    }
+
     componentDidMount() {
+        this.props.navigation.setOptions({
+            headerRight: () => (
+                <View style={styles.iconContainer}>
+                    <TouchableNativeFeedback onPress={this.openEditScreen}>
+                        <Icon style={styles.icon} name="pencil" size={20} />
+                    </TouchableNativeFeedback>
+                </View>
+            ),
+        });
+
         ScrambleLib.generateScramble(
             this.props.route.params.case.algorithm,
             (success, scramble) => {
