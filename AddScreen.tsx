@@ -128,7 +128,7 @@ export class AddScreen extends Component<
 
         // Store the case, then call the callback
         StoreCase(caseToSave).then(() => {
-            this.props.navigation.goBack();
+            this.props.navigation.navigate(this.props.route.params.callerScreen, {case: caseToSave});
         });
     };
 

@@ -109,7 +109,8 @@ export class TestScreen extends Component<
             description: this.props.route.params.case.description,
             imageUrl: this.props.route.params.case.imageUrl,
             category: this.props.route.params.case.category,
-            title: "Edit"
+            title: "Edit",
+            callerScreen: "Test"
         })
     }
 

@@ -105,13 +105,18 @@ export class MainScreen extends Component<
     };
 
     openEditScreen = (chosenCase: Case) => {
+        this.props.navigation.setOptions({
+            addCallback: this.resetCases
+        });
+
         this.props.navigation.navigate("Add", {
             caseId: chosenCase.id,
             algorithm: chosenCase.algorithm,
             description: chosenCase.description,
             imageUrl: chosenCase.imageUrl,
             category: chosenCase.category,
-            title: "Edit"
+            title: "Edit",
+            callerScreen: "Main"
         });
     };
 
