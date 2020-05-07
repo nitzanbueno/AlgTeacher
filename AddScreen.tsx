@@ -5,12 +5,12 @@ import {
     StyleSheet,
     Image,
     Button,
-    Picker,
     View,
 } from "react-native";
 import { TouchableImage } from "./TouchableImage";
 import { GenerateCaseImageOptions } from "./ImageOptionGenerator";
 import { TextInput, ScrollView } from "react-native-gesture-handler";
+import Picker from "@react-native-community/picker";
 import { Case } from "./Models";
 import { StoreCase, GetAllCategories } from "./CaseStorage";
 import { TextPrompt } from "./TextPrompt";
@@ -18,7 +18,7 @@ import { TextPrompt } from "./TextPrompt";
 const styles = StyleSheet.create({
     formField: {
         marginLeft: 10,
-        marginRight: 10,
+        marginRight: 10, 
         borderColor: "gray",
         borderWidth: 1,
         height: 40,
