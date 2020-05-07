@@ -101,7 +101,7 @@ export class MainScreen extends Component<
                 (id1, case2) => Math.max(id1, case2.id),
                 0
             ) + 1;
-        this.props.navigation.navigate("Add", { caseId: nextId });
+        this.props.navigation.navigate("Add", { caseId: nextId, callerScreen: "Main" });
     };
 
     openEditScreen = (chosenCase: Case) => {
