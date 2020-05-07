@@ -10,7 +10,7 @@ import {
 import { TouchableImage } from "./TouchableImage";
 import { GenerateCaseImageOptions } from "./ImageOptionGenerator";
 import { TextInput, ScrollView } from "react-native-gesture-handler";
-import Picker from "@react-native-community/picker";
+import { Picker } from "@react-native-community/picker";
 import { Case } from "./Models";
 import { StoreCase, GetAllCategories } from "./CaseStorage";
 import { TextPrompt } from "./TextPrompt";
