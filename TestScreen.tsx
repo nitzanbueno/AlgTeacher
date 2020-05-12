@@ -3,8 +3,8 @@ import { Component } from "react";
 import { Text, Image, View, StyleSheet, NativeModules } from "react-native";
 import { TouchableNativeFeedback } from "react-native-gesture-handler";
 import { TOUCHABLE_BACKGROUND, Case } from "./Models";
-import ScrambleLib from "react-native-scramble-lib";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { GenerateScramble } from "./ScrambleLib";
 
 const styles = StyleSheet.create({
     container: {
@@ -125,7 +125,7 @@ export class TestScreen extends Component<
             ),
         });
 
-        ScrambleLib.generateScramble(
+        GenerateScramble(
             this.props.route.params.case.algorithm,
             (success, scramble) => {
                 if (success) {

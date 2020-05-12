@@ -7,6 +7,7 @@ import ScrambleLib from "react-native-scramble-lib";
 import { GetAllCases } from "./CaseStorage";
 import { ShuffleArray } from "./Helpers";
 import { CheckboxPicker, CheckboxPickerOptionArray } from "./CheckboxPicker";
+import { GenerateScramble } from "./ScrambleLib";
 
 const styles = StyleSheet.create({
     container: {
@@ -111,7 +112,7 @@ export class TimeAttackPlayScreen extends Component<
         let nextCase: Case = this.state.cases[nextCaseIndex];
 
         if (nextCase) {
-            ScrambleLib.generateScramble(
+            GenerateScramble(
                 nextCase.algorithm,
                 (success, scramble) => {
                     if (success) {
