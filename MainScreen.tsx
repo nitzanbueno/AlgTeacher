@@ -87,7 +87,7 @@ class CaseImage extends Component<{
 const ContextCaseImage = withMenuContext(CaseImage);
 
 export class MainScreen extends Component<
-    { navigation: any },
+    { navigation: any, route: any },
     { cases: Case[] }
 > {
     constructor(props: any) {
@@ -179,8 +179,10 @@ export class MainScreen extends Component<
         });
     }
 
-    componentDidUpdate() {
-        this.resetCases();
+    componentDidUpdate(prevProps: any) {
+        if (prevProps?.route?.params?.case !== this.props?.route?.params?.case) {
+            this.resetCases();
+        }
     }
 
     render() {
