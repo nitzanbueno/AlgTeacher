@@ -133,6 +133,7 @@ export class TimeAttackPlayScreen extends Component<
         buttonToDisplay: TimeAttackButtonOption;
         timerStartTimestamp?: Date;
         totalTime: number;
+        solveCount: number;
     }
 > {
     constructor(props: any) {
@@ -145,13 +146,15 @@ export class TimeAttackPlayScreen extends Component<
             buttonToDisplay: TimeAttackButtonOption.START_TIMER,
             timerStartTimestamp: undefined,
             totalTime: 0,
+            solveCount: 0,
         };
     }
 
     goToEndScreen = () => {
         this.props.navigation.replace('TimeAttackEnd', {
             totalTime: this.state.totalTime,
-            cases: this.state.cases
+            cases: this.state.cases,
+            solveCount: this.state.solveCount,
         });
     };
 
@@ -167,6 +170,7 @@ export class TimeAttackPlayScreen extends Component<
                 scramble: UNDEFINED_SCRAMBLE_TEXT,
                 totalTime: prevState.totalTime + caseTime,
                 timerStartTimestamp: undefined,
+                solveCount: prevState.solveCount + 1,
             };
         }, this.getNextCase);
     };
