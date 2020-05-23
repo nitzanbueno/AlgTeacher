@@ -35,8 +35,8 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     selectedImage: {
-        width: 200,
-        height: 200,
+        width: 150,
+        height: 150,
     },
 });
 
@@ -252,11 +252,11 @@ export class AddScreen extends Component<
                 ) : (
                     <ScrollView style={styles.selectedImage} />
                 )}
-                <Button title="Save" onPress={this.trySaveCase} />
                 {this.state.error && <Text>Please select an image.</Text>}
+                <Button title="Save" onPress={this.trySaveCase} />
                 {this.state.shouldDisplayAddPrompt && (
                     <TextPrompt
-                        prompt="Add thing!"
+                        prompt="Add category"
                         onSubmit={(result) => {
                             this.setState({ shouldDisplayAddPrompt: false });
                             this.addCategory(result);
