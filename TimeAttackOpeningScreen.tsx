@@ -49,11 +49,16 @@ export class TimeAttackOpeningScreen extends Component<
         });
     };
 
-    goToAddScreen = () =>
+    goToAddScreen = () => {
         this.props.navigation.replace('Add', {
             caseId: -1,
             callerScreen: 'Main',
         });
+    };
+
+    goToImportScreen = () => {
+        this.props.navigation.replace('ImportAlgorithmSet');
+    };
 
     render() {
         return (
@@ -68,6 +73,10 @@ export class TimeAttackOpeningScreen extends Component<
                         {"You don't have any categories.\nHow about "}
                         <Text style={{color: 'blue', textDecorationLine: 'underline'}} onPress={this.goToAddScreen}>
                             adding a case with one
+                        </Text>
+                        {' or maybe '}
+                        <Text style={{color: 'blue', textDecorationLine: 'underline'}} onPress={this.goToImportScreen}>
+                            importing an algorithm set
                         </Text>
                         ?
                     </Text>
