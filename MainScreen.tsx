@@ -13,6 +13,7 @@ import {
 } from "react-native-popup-menu";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { TouchableNativeFeedback } from "react-native-gesture-handler";
+import { MenuIcon } from "./MenuIcon";
 
 const CASE_COLUMNS = 2;
 
@@ -158,6 +159,10 @@ export class MainScreen extends Component<
         });
     };
 
+    openAlgSetScreen = () => {
+
+    }
+
     componentDidMount() {
         this.resetCases();
         this.props.navigation.setOptions({
@@ -169,6 +174,11 @@ export class MainScreen extends Component<
                     <TouchableNativeFeedback onPress={this.openAddScreen}>
                         <Icon style={styles.icon} name="plus" size={20} />
                     </TouchableNativeFeedback>
+                    <MenuIcon>
+                        <MenuOptions>
+                        <MenuOption onSelect={this.openAlgSetScreen} text="Add algorithm set..." />
+                        </MenuOptions>
+                    </MenuIcon>
                 </View>
             ),
         });
