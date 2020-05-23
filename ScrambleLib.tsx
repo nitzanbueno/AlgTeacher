@@ -158,15 +158,15 @@ const ROTATION_MAP: any = {
 
 function SanitizeAlgorithm(algorithm: string): string {
     return algorithm
-        .replace('r', 'Rw')
-        .replace('l', 'Lw')
-        .replace('u', 'Uw')
-        .replace('d', 'Dw')
-        .replace('f', 'Fw')
-        .replace('b', 'Bw')
-        .replace('X', 'x')
-        .replace('Y', 'y')
-        .replace('Z', 'z')
+        .replace(/r/g, 'Rw')
+        .replace(/l/g, 'Lw')
+        .replace(/u/g, 'Uw')
+        .replace(/d/g, 'Dw')
+        .replace(/f/g, 'Fw')
+        .replace(/b/g, 'Bw')
+        .replace(/X/g, 'x')
+        .replace(/Y/g, 'y')
+        .replace(/Z/g, 'z')
         .replace(/[^RULDFBMSEwxyz'2 ]/g, ' ')
         .replace(/([RULDFBMSEwxyz'2 ])(?!['2w])/g, '$1 ')
         .replace(/ +/g, ' ')
@@ -190,6 +190,7 @@ function ApplyRotation(move: string, rotation: string): string {
  * @param {string} algorithm The algorithm to normalize.
  */
 function NormalizeAlgorithm(algorithm: string) {
+    debugger;
     algorithm = SanitizeAlgorithm(algorithm);
 	algorithm = algorithm
         .replace(/M'/g, "R' L x")
