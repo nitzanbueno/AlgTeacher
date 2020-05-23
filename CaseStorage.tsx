@@ -39,6 +39,16 @@ export async function StoreCase(case_: Case): Promise<void> {
     await AsyncStorage.setItem(CASES_KEY, newCaseString);
 }
 
+/**
+ * Stores a list of cases.
+ * @param caseList The list of cases to store.
+ */
+export async function StoreCaseList(caseList: Case[]): Promise<void> {
+    for (const case_ of caseList) {
+        await StoreCase(case_);
+    }
+}
+
 export async function DeleteCase(id: Number) {
     let cases: Case[] = await GetAllCases();
 

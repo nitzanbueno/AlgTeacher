@@ -159,8 +159,8 @@ export class MainScreen extends Component<
         });
     };
 
-    openAlgSetScreen = () => {
-
+    openAlgorithmSetScreen = () => {
+        this.props.navigation.navigate("ImportAlgorithmSet")
     }
 
     componentDidMount() {
@@ -176,7 +176,7 @@ export class MainScreen extends Component<
                     </TouchableNativeFeedback>
                     <MenuIcon>
                         <MenuOptions>
-                        <MenuOption onSelect={this.openAlgSetScreen} text="Add algorithm set..." />
+                        <MenuOption onSelect={this.openAlgorithmSetScreen} text="Import algorithm set..." />
                         </MenuOptions>
                     </MenuIcon>
                 </View>
