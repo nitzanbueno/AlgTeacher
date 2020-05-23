@@ -64,6 +64,13 @@ export async function DeleteCase(id: Number) {
 }
 
 /**
+ * Clears all cases.
+ */
+export async function ClearAllCases() {
+    await AsyncStorage.removeItem(CASES_KEY);
+}
+
+/**
  * Returns all stored cases in a list.
  * Creates and stores an empty list in case no case was stored yet.
  */

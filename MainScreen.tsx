@@ -3,7 +3,7 @@ import { Component } from "react";
 import { Text, View, FlatList, StyleSheet, Alert } from "react-native";
 import { Case } from "./Models";
 import { TouchableImage } from "./TouchableImage";
-import { GetAllCases, DeleteCase } from "./CaseStorage";
+import { GetAllCases, DeleteCase, ClearAllCases } from "./CaseStorage";
 import {
     MenuTrigger,
     Menu,
@@ -124,6 +124,10 @@ export class MainScreen extends Component<
         DeleteCase(chosenCase.id).then(this.resetCases);
     };
 
+    clearCases = () => {
+        ClearAllCases().then(this.resetCases);
+    }
+
     openDeleteConfirmation = (chosenCase: Case) => {
         Alert.alert(
             "Delete Case",
@@ -134,6 +138,20 @@ export class MainScreen extends Component<
                     style: "cancel",
                 },
                 { text: "Delete", onPress: () => this.deleteCase(chosenCase) },
+            ]
+        );
+    };
+
+    openClearConfirmation = () => {
+        Alert.alert(
+            "Clear All Cases",
+            "Are you sure you want to delete ALL cases?",
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel",
+                },
+                { text: "Delete", onPress: () => this.clearCases() },
             ]
         );
     };
@@ -177,6 +195,7 @@ export class MainScreen extends Component<
                     <MenuIcon>
                         <MenuOptions>
                         <MenuOption onSelect={this.openAlgorithmSetScreen} text="Import algorithm set..." />
+                        <MenuOption onSelect={this.openClearConfirmation} text="Delete all cases..." />
                         </MenuOptions>
                     </MenuIcon>
                 </View>
