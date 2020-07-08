@@ -6,13 +6,12 @@ import {
     Platform,
     GestureResponderEvent,
 } from "react-native";
+import SvgUri from "react-native-svg-uri";
 
-const styles = StyleSheet.create({
-    caseImage: {
-        width: 150,
-        height: 150,
-    },
-});
+const caseImage = {
+    width: 150,
+    height: 150,
+};
 
 export class TouchableImage extends Component<
     {
@@ -33,8 +32,8 @@ export class TouchableImage extends Component<
                         : undefined
                 }
             >
-                <Image
-                    style={styles.caseImage}
+                <SvgUri
+                    {...caseImage}
                     source={{ uri: this.props.imageUrl }}
                 />
             </TouchableNativeFeedback>

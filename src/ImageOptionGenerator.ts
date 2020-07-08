@@ -4,12 +4,12 @@
  */
 export function GenerateCaseImageOptions(imageCase: string): string[] {
     return [
-        `http://cube.crider.co.uk/visualcube.php?size=500&fmt=png&case=${imageCase}`,
-        `http://cube.crider.co.uk/visualcube.php?size=500&fmt=png&view=plan&case=${imageCase}`,
-        `http://cube.crider.co.uk/visualcube.php?size=500&fmt=png&view=plan&stage=oll&case=${imageCase}`,
-        `http://cube.crider.co.uk/visualcube.php?size=500&fmt=png&view=plan&stage=coll&case=${imageCase}`,
-        `http://cube.crider.co.uk/visualcube.php?size=500&fmt=png&view=plan&stage=wv&case=${imageCase}`,
-        `http://cube.crider.co.uk/visualcube.php?size=500&fmt=png&stage=f2l&case=${imageCase}`,
-        `http://cube.crider.co.uk/visualcube.php?size=500&fmt=png&stage=wv&case=${imageCase}`,
+        `https://algteacher.000webhostapp.com/visualcube.php?size=500&fmt=svg&case=${imageCase}`,
+    //    `https://algteacher.000webhostapp.com/visualcube.php?size=500&fmt=svg&view=plan&case=${imageCase}`,
+      //  `https://algteacher.000webhostapp.com/visualcube.php?size=500&fmt=svg&view=plan&stage=oll&case=${imageCase}`,
+      //`https://algteacher.000webhostapp.com/visualcube.php?size=500&fmt=svg&view=plan&stage=coll&case=${imageCase}`,
+ //   `https://algteacher.000webhostapp.com/visualcube.php?size=500&fmt=svg&view=plan&stage=wv&case=${imageCase}`,
+        //`https://algteacher.000webhostapp.com/visualcube.php?size=500&fmt=svg&stage=f2l&case=${imageCase}`,
+        //`https://algteacher.000webhostapp.com/visualcube.php?size=500&fmt=svg&stage=wv&case=${imageCase}`,
     ];
 }

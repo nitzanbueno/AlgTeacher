@@ -5,6 +5,7 @@ import { TouchableNativeFeedback } from "react-native-gesture-handler";
 import { TOUCHABLE_BACKGROUND, Case } from "../Models";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { GenerateScramble } from "../ScrambleLib";
+import SvgUri from "react-native-svg-uri";
 
 const styles = StyleSheet.create({
     container: {
@@ -12,10 +13,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         alignItems: "center",
         // justifyContent: "center",
-    },
-    caseImage: {
-        width: 300,
-        height: 300,
     },
     buttonContainer: {
         marginTop: 10,
@@ -71,6 +68,11 @@ const styles = StyleSheet.create({
     },
 });
 
+const caseImage = {
+    width: 300,
+    height: 300,
+};
+
 export class TestScreen extends Component<
     {
         route: { params: { case: Case } };
@@ -85,8 +87,8 @@ export class TestScreen extends Component<
 
     renderImage = () => {
         return (
-            <Image
-                style={styles.caseImage}
+            <SvgUri
+                {...caseImage}
                 source={{ uri: this.props.route.params.case.imageUrl }}
             />
         );
