@@ -600,6 +600,7 @@ const OrientedLS: Case[] = [
         algorithm: "R' U' R' U' R' U R U R",
         description: '',
         imageUrl: "http://cube.crider.co.uk/visualcube.php?size=500&fmt=png&view=plan&stage=wv&case=R' U' R' U' R' U R U R",
+        category: 'Oriented LS',
     },
     {
         id: -1,
