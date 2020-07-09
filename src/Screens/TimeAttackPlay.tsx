@@ -1,14 +1,11 @@
 import React from 'react';
 import {Component} from 'react';
-import {Text, View, StyleSheet, Button} from 'react-native';
+import {Text, View, StyleSheet} from 'react-native';
 import {TouchableNativeFeedback} from 'react-native-gesture-handler';
-import {TOUCHABLE_BACKGROUND, Case} from './Models';
-import ScrambleLib from 'react-native-scramble-lib';
-import {GetAllCases} from './CaseStorage';
-import {ShuffleArray} from './Helpers';
-import {CheckboxPicker, CheckboxPickerOptionArray} from './CheckboxPicker';
-import {GenerateScramble} from './ScrambleLib';
-import {getTimeText} from './Utils';
+import {TOUCHABLE_BACKGROUND, Case} from '../Models';
+import {GetAllCases} from '../CaseStorage';
+import {GenerateScramble} from '../ScrambleLib';
+import {GetTimeText, ShuffleArray} from '../Utils';
 
 const UNDEFINED_SCRAMBLE_TEXT: string = 'Loading...';
 const TIMEOUT = 11;
@@ -95,7 +92,7 @@ class Timer extends Component<{startTimestamp: number; style: any; extraTime?: n
     constructor(props: any) {
         super(props);
 
-        this.state = {timeText: getTimeText(props.extraTime)};
+        this.state = {timeText: GetTimeText(props.extraTime)};
     }
 
     updateTime = () => {
@@ -103,7 +100,7 @@ class Timer extends Component<{startTimestamp: number; style: any; extraTime?: n
         const currentTime = new Date();
         const timeAmount = currentTime.getTime() - this.props.startTimestamp + (this.props.extraTime || 0);
 
-        this.setState({timeText: getTimeText(timeAmount)});
+        this.setState({timeText: GetTimeText(timeAmount)});
     };
 
     componentDidMount() {
@@ -207,9 +204,11 @@ export class TimeAttackPlayScreen extends Component<
     initCases = (cases: Case[]) => {
         let categories = this.props.route.params.categories;
         let testedCases = ShuffleArray(cases);
+
         if (categories) {
             testedCases = testedCases.filter(c => c.category && categories.includes(c.category));
         }
+        
         this.setState({cases: testedCases, currentCaseIndex: -1});
         this.getNextCase();
     };
@@ -263,7 +262,7 @@ export class TimeAttackPlayScreen extends Component<
                                         extraTime={this.state.totalTime}
                                     />
                                 ) : (
-                                    <Text style={styles.timerText}>{getTimeText(this.state.totalTime)}</Text>
+                                    <Text style={styles.timerText}>{GetTimeText(this.state.totalTime)}</Text>
                                 )}
                             </View>
                             <View style={[styles.buttonView, styles.noButton]}>

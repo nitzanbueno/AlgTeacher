@@ -1,9 +1,9 @@
 import React from 'react';
 import {Component} from 'react';
 import {Text, View, StyleSheet, Button} from 'react-native';
-import {getTimeText} from './Utils';
-import {Case} from './Models';
-import {getHighScore, setHighScore} from './TimeAttackStorage';
+import {GetTimeText} from '../Utils';
+import {Case} from '../Models';
+import {getHighScore, setHighScore} from '../TimeAttackStorage';
 
 const styles = StyleSheet.create({
     container: {
@@ -50,7 +50,7 @@ export class TimeAttackEndScreen extends Component<Props, State> {
     }
 
     getScoreText(scoreObject: {totalTime: number; solveCount: number}) {
-        return `${scoreObject.solveCount}/${this.props.route.params.cases.length} solves in ${getTimeText(scoreObject.totalTime)}`;
+        return `${scoreObject.solveCount}/${this.props.route.params.cases.length} solves in ${GetTimeText(scoreObject.totalTime)}`;
     }
 
     render() {

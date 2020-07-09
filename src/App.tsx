@@ -1,15 +1,15 @@
 import 'react-native-gesture-handler';
 import React, {Component} from 'react';
-import {MainScreen} from './MainScreen';
-import {TestScreen} from './TestScreen';
+import {MainScreen} from './Screens/Main';
+import {TestScreen} from './Screens/Test';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {AddScreen} from './AddScreen';
+import {AddScreen} from './Screens/Add';
 import {MenuProvider} from 'react-native-popup-menu';
-import {TimeAttackOpeningScreen} from './TimeAttackOpeningScreen';
-import {TimeAttackPlayScreen} from './TimeAttackPlayScreen';
-import {TimeAttackEndScreen} from './TimeAttackEndScreen';
-import {ImportAlgorithmSetScreen} from './ImportAlgorithmSetScreen';
+import {TimeAttackOpeningScreen} from './Screens/TimeAttackOpening';
+import {TimeAttackPlayScreen} from './Screens/TimeAttackPlay';
+import {TimeAttackEndScreen} from './Screens/TimeAttackEnd';
+import {ImportAlgorithmSetScreen} from './Screens/ImportAlgorithmSet';
 
 const Stack = createStackNavigator();
 

@@ -1,9 +1,9 @@
 import React from "react";
 import { Component } from "react";
 import { Text, View, FlatList, StyleSheet, Alert } from "react-native";
-import { Case } from "./Models";
-import { TouchableImage } from "./TouchableImage";
-import { GetAllCases, DeleteCase, ClearAllCases } from "./CaseStorage";
+import { Case } from "../Models";
+import { TouchableImage } from "../CommonComponents/TouchableImage";
+import { GetAllCases, DeleteCase, ClearAllCases } from "../CaseStorage";
 import {
     MenuTrigger,
     Menu,
@@ -13,7 +13,7 @@ import {
 } from "react-native-popup-menu";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { TouchableNativeFeedback } from "react-native-gesture-handler";
-import { MenuIcon } from "./MenuIcon";
+import { MenuIcon } from "../CommonComponents/MenuIcon";
 
 const CASE_COLUMNS = 2;
 

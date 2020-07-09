@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, Alert} from 'react-native';
-import {StoreCaseList} from './CaseStorage';
-import {ALGORITHM_SETS} from './AlgorithmSets';
+import {StoreCaseList} from '../CaseStorage';
+import {ALGORITHM_SETS} from '../AlgorithmSets';
 
 const styles = StyleSheet.create({
     container: {

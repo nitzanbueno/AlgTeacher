@@ -1,11 +1,11 @@
-import {hashCode} from './Utils';
+import {HashCode} from './Utils';
 import {Case} from './Models';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const HIGHSCORE_KEY = '@high_score/';
 
 function hashCases(cases: Case[]) {
-    return hashCode(JSON.stringify(cases.sort((a, b) => a.id - b.id).map(c => c.algorithm)));
+    return HashCode(JSON.stringify(cases.sort((a, b) => a.id - b.id).map(c => c.algorithm)));
 }
 
 type HighScoreType = {totalTime: number; solveCount: number};

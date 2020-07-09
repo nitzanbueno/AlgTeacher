@@ -12,14 +12,14 @@ function zeroPad(num: string, size: number) {
     return leadingZeros + num;
 }
 
-export function getTimeText(timeAmount: number) {
+export function GetTimeText(timeAmount: number) {
     const seconds = (Math.floor(timeAmount / 10) / 100) % 60;
     const minutes = Math.floor(timeAmount / 60000);
 
     return `${minutes}:${zeroPad(seconds.toFixed(2), 2)}`;
 }
 
-export function hashCode(s: string) {
+export function HashCode(s: string) {
     let hash = 0,
         i,
         chr;
@@ -31,4 +31,20 @@ export function hashCode(s: string) {
     }
 
     return hash;
+}
+
+/**
+ * Returns a shuffling of an array.
+ * @param array The array to shuffle.
+ */
+export function ShuffleArray<T>(array: T[]): T[] {;
+    let result = array.slice();
+    for (let i: number = result.length - 1; i > 0; i--) {
+        let replacementIndex: number = Math.floor(Math.random() * (i + 1));
+        let temporaryVar: T = result[i];
+        result[i] = result[replacementIndex];
+        result[replacementIndex] = temporaryVar;
+    }
+
+    return result;
 }

@@ -3,14 +3,6 @@ import {Case} from './Models';
 
 const CASES_KEY = '@cases';
 
-function serializeCases(cases: Case[]): string {
-    return JSON.stringify(cases);
-}
-
-function deserializeCases(caseString: string): Case[] {
-    return JSON.parse(caseString);
-}
-
 /**
  * Stores the given case, replacing the case with its ID or storing
  * a new case if the ID doesn't exist within the stored cases.
@@ -35,7 +27,7 @@ export async function StoreCase(case_: Case): Promise<void> {
         cases.push(caseToStore);
     }
 
-    let newCaseString = serializeCases(cases);
+    let newCaseString = JSON.stringify(cases);
     await AsyncStorage.setItem(CASES_KEY, newCaseString);
 }
 
@@ -59,7 +51,7 @@ export async function DeleteCase(id: Number) {
         throw Error('Case ID not found.');
     }
 
-    let newCaseString = serializeCases(cases);
+    let newCaseString = JSON.stringify(cases);
     await AsyncStorage.setItem(CASES_KEY, newCaseString);
 }
 
@@ -82,7 +74,7 @@ export async function GetAllCases(): Promise<Case[]> {
         cases = [];
         await AsyncStorage.setItem(CASES_KEY, JSON.stringify(cases));
     } else {
-        cases = deserializeCases(caseString);
+        cases = JSON.parse(caseString);
     }
 
     return cases;

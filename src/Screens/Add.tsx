@@ -7,13 +7,13 @@ import {
     Button,
     View,
 } from "react-native";
-import { TouchableImage } from "./TouchableImage";
-import { GenerateCaseImageOptions } from "./ImageOptionGenerator";
+import { TouchableImage } from "../CommonComponents/TouchableImage";
+import { GenerateCaseImageOptions } from "../ImageOptionGenerator";
 import { TextInput, ScrollView } from "react-native-gesture-handler";
 import { Picker } from "@react-native-community/picker";
-import { Case } from "./Models";
-import { StoreCase, GetAllCategories } from "./CaseStorage";
-import { TextPrompt } from "./TextPrompt";
+import { Case } from "../Models";
+import { StoreCase, GetAllCategories } from "../CaseStorage";
+import { TextPrompt } from "../CommonComponents/TextPrompt";
 
 const styles = StyleSheet.create({
     formField: {
