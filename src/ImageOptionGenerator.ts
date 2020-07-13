@@ -4,6 +4,7 @@
  */
 export function GenerateCaseImageOptions(imageCase: string): string[] {
     return [
+        // This first case breaks react-native-svg
         `https://algteacher.000webhostapp.com/visualcube.php?size=500&fmt=svg&case=${imageCase}`,
     //    `https://algteacher.000webhostapp.com/visualcube.php?size=500&fmt=svg&view=plan&case=${imageCase}`,
       //  `https://algteacher.000webhostapp.com/visualcube.php?size=500&fmt=svg&view=plan&stage=oll&case=${imageCase}`,
