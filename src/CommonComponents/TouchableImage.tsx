@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {TouchableNativeFeedback, Platform, GestureResponderEvent} from 'react-native';
-import {SvgUri} from 'react-native-svg';
+import FixedSizeSvgUri from '../FixedSizeSvgUri';
 
 const caseImage = {
     width: 150,
@@ -21,7 +21,7 @@ export class TouchableImage extends Component<
                 onPress={this.props.onPress}
                 onLongPress={this.props.onLongPress}
                 background={Platform.OS === 'android' ? TouchableNativeFeedback.SelectableBackground() : undefined}>
-                <SvgUri {...caseImage} uri={this.props.imageUrl} />
+                <FixedSizeSvgUri {...caseImage} uri={this.props.imageUrl} />
             </TouchableNativeFeedback>
         );
     }

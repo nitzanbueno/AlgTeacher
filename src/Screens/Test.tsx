@@ -1,11 +1,11 @@
 import React from "react";
 import { Component } from "react";
-import { Text, Image, View, StyleSheet, NativeModules } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import { TouchableNativeFeedback } from "react-native-gesture-handler";
 import { TOUCHABLE_BACKGROUND, Case } from "../Models";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { GenerateScramble } from "../ScrambleLib";
-import { SvgUri } from "react-native-svg";
+import FixedSizeSvgUri from "../FixedSizeSvgUri";
 
 const styles = StyleSheet.create({
     container: {
@@ -87,7 +87,7 @@ export class TestScreen extends Component<
 
     renderImage = () => {
         return (
-            <SvgUri
+            <FixedSizeSvgUri
                 {...caseImage}
                 uri={this.props.route.params.case.imageUrl}
             />

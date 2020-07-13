@@ -13,7 +13,7 @@ import { Picker } from "@react-native-community/picker";
 import { Case } from "../Models";
 import { StoreCase, GetAllCategories } from "../CaseStorage";
 import { TextPrompt } from "../CommonComponents/TextPrompt";
-import { SvgUri } from 'react-native-svg';
+import FixedSizeSvgUri from "../FixedSizeSvgUri";
 
 const styles = StyleSheet.create({
     formField: {
@@ -250,7 +250,7 @@ export class AddScreen extends Component<
                 />
                 <Text style={styles.formLabel}>Selected image:</Text>
                 {this.state.selectedImage ? (
-                    <SvgUri
+                    <FixedSizeSvgUri
                         {...selectedImage}
                         uri={this.state.selectedImage}
                     />
