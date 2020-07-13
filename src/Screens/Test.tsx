@@ -5,7 +5,7 @@ import { TouchableNativeFeedback } from "react-native-gesture-handler";
 import { TOUCHABLE_BACKGROUND, Case } from "../Models";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { GenerateScramble } from "../ScrambleLib";
-import SvgUri from "react-native-svg-uri";
+import { SvgUri } from "react-native-svg";
 
 const styles = StyleSheet.create({
     container: {
@@ -89,7 +89,7 @@ export class TestScreen extends Component<
         return (
             <SvgUri
                 {...caseImage}
-                source={{ uri: this.props.route.params.case.imageUrl }}
+                uri={this.props.route.params.case.imageUrl}
             />
         );
     };

@@ -1,12 +1,6 @@
-import React, { Component } from "react";
-import {
-    StyleSheet,
-    Image,
-    TouchableNativeFeedback,
-    Platform,
-    GestureResponderEvent,
-} from "react-native";
-import SvgUri from "react-native-svg-uri";
+import React, {Component} from 'react';
+import {TouchableNativeFeedback, Platform, GestureResponderEvent} from 'react-native';
+import {SvgUri} from 'react-native-svg';
 
 const caseImage = {
     width: 150,
@@ -26,16 +20,8 @@ export class TouchableImage extends Component<
             <TouchableNativeFeedback
                 onPress={this.props.onPress}
                 onLongPress={this.props.onLongPress}
-                background={
-                    Platform.OS === "android"
-                        ? TouchableNativeFeedback.SelectableBackground()
-                        : undefined
-                }
-            >
-                <SvgUri
-                    {...caseImage}
-                    source={{ uri: this.props.imageUrl }}
-                />
+                background={Platform.OS === 'android' ? TouchableNativeFeedback.SelectableBackground() : undefined}>
+                <SvgUri {...caseImage} uri={this.props.imageUrl} />
             </TouchableNativeFeedback>
         );
     }
