@@ -4,13 +4,12 @@
  */
 export function GenerateCaseImageOptions(imageCase: string): string[] {
     return [
-        // This first case breaks react-native-svg
         `https://algteacher.000webhostapp.com/visualcube.php?size=500&fmt=svg&case=${imageCase}`,
-    //    `https://algteacher.000webhostapp.com/visualcube.php?size=500&fmt=svg&view=plan&case=${imageCase}`,
-      //  `https://algteacher.000webhostapp.com/visualcube.php?size=500&fmt=svg&view=plan&stage=oll&case=${imageCase}`,
-      //`https://algteacher.000webhostapp.com/visualcube.php?size=500&fmt=svg&view=plan&stage=coll&case=${imageCase}`,
- //   `https://algteacher.000webhostapp.com/visualcube.php?size=500&fmt=svg&view=plan&stage=wv&case=${imageCase}`,
-        //`https://algteacher.000webhostapp.com/visualcube.php?size=500&fmt=svg&stage=f2l&case=${imageCase}`,
-        //`https://algteacher.000webhostapp.com/visualcube.php?size=500&fmt=svg&stage=wv&case=${imageCase}`,
+        `https://algteacher.000webhostapp.com/visualcube.php?size=500&fmt=svg&view=plan&case=${imageCase}`,
+        `https://algteacher.000webhostapp.com/visualcube.php?size=500&fmt=svg&view=plan&stage=oll&case=${imageCase}`,
+        `https://algteacher.000webhostapp.com/visualcube.php?size=500&fmt=svg&view=plan&stage=coll&case=${imageCase}`,
+        `https://algteacher.000webhostapp.com/visualcube.php?size=500&fmt=svg&view=plan&stage=wv&case=${imageCase}`,
+        `https://algteacher.000webhostapp.com/visualcube.php?size=500&fmt=svg&stage=f2l&case=${imageCase}`,
+        `https://algteacher.000webhostapp.com/visualcube.php?size=500&fmt=svg&stage=wv&case=${imageCase}`,
     ];
 }
