@@ -11,7 +11,7 @@ import { GenerateCaseImageOptions } from "../ImageOptionGenerator";
 import { TextInput, ScrollView } from "react-native-gesture-handler";
 import { Picker } from "@react-native-community/picker";
 import { Case } from "../Models";
-import { StoreCase, GetAllCategories } from "../CaseStorage";
+import CaseStorage from "../CaseStorage";
 import { TextPrompt } from "../CommonComponents/TextPrompt";
 import FixedSizeSvgUri from "../CommonComponents/FixedSizeSvgUri";
 
@@ -81,7 +81,7 @@ export class AddScreen extends Component<
             });
         }
 
-        GetAllCategories().then((categories) => {
+        CaseStorage.GetAllCategories().then((categories) => {
             // After the category options load, the given category for the case can be written
             this.setState({
                 categoryOptions: categories,
@@ -132,7 +132,7 @@ export class AddScreen extends Component<
         };
 
         // Store the case, then call the callback
-        StoreCase(caseToSave).then(() => {
+        CaseStorage.StoreCase(caseToSave).then(() => {
             this.props.navigation.navigate(this.props.route.params.callerScreen, {case: caseToSave});
         });
     };

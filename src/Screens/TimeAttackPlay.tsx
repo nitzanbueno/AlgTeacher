@@ -3,7 +3,7 @@ import {Component} from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import {TouchableNativeFeedback} from 'react-native-gesture-handler';
 import {TOUCHABLE_BACKGROUND, Case} from '../Models';
-import {GetAllCases} from '../CaseStorage';
+import CaseStorage from '../CaseStorage';
 import {GenerateScramble} from '../ScrambleLib';
 import {GetTimeText, ShuffleArray} from '../Utils';
 
@@ -214,7 +214,7 @@ export class TimeAttackPlayScreen extends Component<
     };
 
     componentDidMount() {
-        GetAllCases().then(cases => {
+        CaseStorage.GetAllCases().then(cases => {
             this.initCases(cases);
         });
     }

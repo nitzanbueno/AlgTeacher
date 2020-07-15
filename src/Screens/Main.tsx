@@ -3,7 +3,7 @@ import { Component } from "react";
 import { Text, View, FlatList, StyleSheet, Alert } from "react-native";
 import { Case } from "../Models";
 import { TouchableImage } from "../CommonComponents/TouchableImage";
-import { GetAllCases, DeleteCase, ClearAllCases } from "../CaseStorage";
+import CaseStorage from "../CaseStorage";
 import {
     MenuTrigger,
     Menu,
@@ -122,11 +122,11 @@ export class MainScreen extends Component<
     };
 
     deleteCase = (chosenCase: Case) => {
-        DeleteCase(chosenCase.id).then(this.resetCases);
+        CaseStorage.DeleteCase(chosenCase.id).then(this.resetCases);
     };
 
     clearCases = () => {
-        ClearAllCases().then(this.resetCases);
+        CaseStorage.ClearAllCases().then(this.resetCases);
     }
 
     openDeleteConfirmation = (chosenCase: Case) => {
@@ -173,7 +173,7 @@ export class MainScreen extends Component<
     };
 
     resetCases = () => {
-        GetAllCases().then((cases) => {
+        CaseStorage.GetAllCases().then((cases) => {
             this.setState({ cases: cases });
         });
     };

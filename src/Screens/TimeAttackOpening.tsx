@@ -2,7 +2,7 @@ import React from 'react';
 import {Component} from 'react';
 import {Text, StyleSheet, ScrollView} from 'react-native';
 import {Case} from '../Models';
-import {GetAllCategories} from '../CaseStorage';
+import CaseStorage from '../CaseStorage';
 import {CheckboxPicker, CheckboxPickerOptionArray} from '../CommonComponents/CheckboxPicker';
 
 const styles = StyleSheet.create({
@@ -36,7 +36,7 @@ export class TimeAttackOpeningScreen extends Component<
     }
 
     componentDidMount() {
-        GetAllCategories().then(categories => {
+        CaseStorage.GetAllCategories().then(categories => {
             this.setState({allCategories: categories});
         });
     }

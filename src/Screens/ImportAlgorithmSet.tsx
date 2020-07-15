@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, Alert} from 'react-native';
-import {StoreCaseList} from '../CaseStorage';
+import CaseStorage from '../CaseStorage';
 import {ALGORITHM_SETS} from '../AlgorithmSets';
 
 const styles = StyleSheet.create({
@@ -32,7 +32,7 @@ export class ImportAlgorithmSetScreen extends Component<{navigation: any}> {
 
         if (!cases || cases.length == 0) return;
 
-        StoreCaseList(cases).then(() => {
+        CaseStorage.StoreCaseList(cases).then(() => {
             this.props.navigation.navigate('Main', {case: cases[0]});
         });
     };
