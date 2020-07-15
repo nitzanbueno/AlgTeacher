@@ -1,12 +1,12 @@
 function zeroPad(num: string, size: number) {
-    const integerPart = num.split('.')[0];
+    const integerPart = num.split(".")[0];
 
     if (integerPart.length >= size) return num;
 
-    let leadingZeros = '';
+    let leadingZeros = "";
 
     for (let i = 0; i < size - integerPart.length; i++) {
-        leadingZeros += '0';
+        leadingZeros += "0";
     }
 
     return leadingZeros + num;
@@ -37,7 +37,7 @@ export function HashCode(s: string) {
  * Returns a shuffling of an array.
  * @param array The array to shuffle.
  */
-export function ShuffleArray<T>(array: T[]): T[] {;
+export function ShuffleArray<T>(array: T[]): T[] {
     let result = array.slice();
     for (let i: number = result.length - 1; i > 0; i--) {
         let replacementIndex: number = Math.floor(Math.random() * (i + 1));
@@ -47,4 +47,14 @@ export function ShuffleArray<T>(array: T[]): T[] {;
     }
 
     return result;
+}
+
+export function ArrayEquals<T>(arr1: T[], arr2: T[]) {
+    if (arr1.length != arr2.length) return false;
+
+    for (let i = 0; i < arr1.length; i++) {
+        if (arr1[i] !== arr2[i]) return false;
+    }
+
+    return true;
 }
