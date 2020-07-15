@@ -28,10 +28,15 @@ const styles = StyleSheet.create({
     },
 });
 
-type Props = {route: {params: {cases: Case[]; totalTime: number; solveCount: number}}};
-type State = {highScore: {totalTime: number; solveCount: number} | null};
+interface Props {
+    route: {params: {cases: Case[]; totalTime: number; solveCount: number}};
+}
 
-export class TimeAttackEndScreen extends Component<Props, State> {
+interface State {
+    highScore: {totalTime: number; solveCount: number} | null;
+}
+
+export default class TimeAttackEndScreen extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
 
@@ -42,7 +47,11 @@ export class TimeAttackEndScreen extends Component<Props, State> {
         const {cases, totalTime, solveCount} = this.props.route.params;
         const highScore = await getHighScore(cases);
 
-        if (highScore == null || highScore.solveCount < solveCount || (highScore.solveCount == solveCount && highScore.totalTime > totalTime)) {
+        if (
+            highScore == null ||
+            highScore.solveCount < solveCount ||
+            (highScore.solveCount == solveCount && highScore.totalTime > totalTime)
+        ) {
             await setHighScore(cases, {totalTime, solveCount});
         } else {
             this.setState({highScore});

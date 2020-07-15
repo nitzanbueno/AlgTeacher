@@ -117,23 +117,24 @@ class Timer extends Component<{startTimestamp: number; style: any; extraTime?: n
     }
 }
 
-export class TimeAttackPlayScreen extends Component<
-    {
-        route: {params: {categories: string[]}};
-        navigation: any;
-    },
-    {
-        currentCaseIndex: number;
-        scramble: string;
-        shouldDisplaySolution: boolean;
-        cases: Case[];
-        buttonToDisplay: TimeAttackButtonOption;
-        timerStartTimestamp?: Date;
-        totalTime: number;
-        solveCount: number;
-    }
-> {
-    constructor(props: any) {
+interface Props {
+    route: {params: {categories: string[]}};
+    navigation: any;
+}
+
+interface State {
+    currentCaseIndex: number;
+    scramble: string;
+    shouldDisplaySolution: boolean;
+    cases: Case[];
+    buttonToDisplay: TimeAttackButtonOption;
+    timerStartTimestamp?: Date;
+    totalTime: number;
+    solveCount: number;
+}
+
+export default class TimeAttackPlayScreen extends Component<Props, State> {
+    constructor(props: Props) {
         super(props);
         this.state = {
             currentCaseIndex: -1,
@@ -208,7 +209,7 @@ export class TimeAttackPlayScreen extends Component<
         if (categories) {
             testedCases = testedCases.filter(c => c.category && categories.includes(c.category));
         }
-        
+
         this.setState({cases: testedCases, currentCaseIndex: -1});
         this.getNextCase();
     };

@@ -17,17 +17,17 @@ const styles = StyleSheet.create({
 
 export type CheckboxPickerOptionArray = Array<{name: string; value: boolean}>;
 
-interface PropsType {
+interface Props {
     options: string[];
     onSubmit: (options: CheckboxPickerOptionArray) => void;
 }
 
-interface StateType {
+interface State {
     checkboxes: Map<string, boolean>;
 }
 
-export class CheckboxPicker extends Component<PropsType, StateType> {
-    constructor(props: PropsType) {
+export default class CheckboxPicker extends Component<Props, State> {
+    constructor(props: Props) {
         super(props);
 
         // Init all values with false

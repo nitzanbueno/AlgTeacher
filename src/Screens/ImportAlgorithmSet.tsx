@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     },
 });
 
-export class ImportAlgorithmSetScreen extends Component<{navigation: any}> {
+export default class ImportAlgorithmSetScreen extends Component<{navigation: any}> {
     importAlgorithmSet = (algorithmSetKey: string) => {
         const cases = ALGORITHM_SETS.get(algorithmSetKey);
 

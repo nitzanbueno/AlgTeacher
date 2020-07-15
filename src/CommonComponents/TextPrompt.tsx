@@ -1,12 +1,5 @@
-import React, { Component } from "react";
-import {
-    Text,
-    View,
-    StyleSheet,
-    TextInput,
-    Button,
-    TouchableWithoutFeedback,
-} from "react-native";
+import React, {Component} from "react";
+import {Text, View, StyleSheet, TextInput, Button, TouchableWithoutFeedback} from "react-native";
 
 const styles = StyleSheet.create({
     backdrop: {
@@ -40,25 +33,26 @@ const styles = StyleSheet.create({
     },
 });
 
-export class TextPrompt extends Component<
-    {
-        prompt: string;
-        onSubmit: (result: string) => void;
-        onCancel: () => void;
-    },
-    { input: string }
-> {
-    constructor(props: any) {
+interface Props {
+    prompt: string;
+    onSubmit: (result: string) => void;
+    onCancel: () => void;
+}
+
+interface State {
+    input: string;
+}
+
+export default class TextPrompt extends Component<Props, State> {
+    constructor(props: Props) {
         super(props);
-        this.state = { input: "" };
+
+        this.state = {input: ""};
     }
 
     render() {
         return [
-            <TouchableWithoutFeedback
-                key="backdrop"
-                onPress={this.props.onCancel}
-            >
+            <TouchableWithoutFeedback key="backdrop" onPress={this.props.onCancel}>
                 <View style={styles.backdrop} />
             </TouchableWithoutFeedback>,
             <View style={styles.promptContainer} key="prompt">
@@ -66,14 +60,9 @@ export class TextPrompt extends Component<
                 <TextInput
                     style={styles.promptInput}
                     value={this.state.input}
-                    onChangeText={(value: string) =>
-                        this.setState({ input: value })
-                    }
+                    onChangeText={(value: string) => this.setState({input: value})}
                 />
-                <Button
-                    title="OK"
-                    onPress={() => this.props.onSubmit(this.state.input)}
-                />
+                <Button title="OK" onPress={() => this.props.onSubmit(this.state.input)} />
             </View>,
         ];
     }

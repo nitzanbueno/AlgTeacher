@@ -1,31 +1,25 @@
-import React, { Component } from "react";
-import {
-    Text,
-    FlatList,
-    StyleSheet,
-    Button,
-    View,
-} from "react-native";
-import { TouchableImage } from "../CommonComponents/TouchableImage";
-import { GenerateCaseImageOptions } from "../ImageOptionGenerator";
-import { TextInput, ScrollView } from "react-native-gesture-handler";
-import { Picker } from "@react-native-community/picker";
-import { Case } from "../Models";
+import React, {Component} from "react";
+import {Text, FlatList, StyleSheet, Button, View} from "react-native";
+import TouchableImage from "../CommonComponents/TouchableImage";
+import {GenerateCaseImageOptions} from "../ImageOptionGenerator";
+import {TextInput, ScrollView} from "react-native-gesture-handler";
+import {Picker} from "@react-native-community/picker";
+import {Case} from "../Models";
 import CaseStorage from "../CaseStorage";
-import { TextPrompt } from "../CommonComponents/TextPrompt";
+import TextPrompt from "../CommonComponents/TextPrompt";
 import FixedSizeSvgUri from "../CommonComponents/FixedSizeSvgUri";
 
 const styles = StyleSheet.create({
     formField: {
         marginLeft: 10,
-        marginRight: 10, 
+        marginRight: 10,
         borderColor: "gray",
         borderWidth: 1,
         height: 40,
     },
     pickerStandin: {
         height: 40,
-        justifyContent: "center"
+        justifyContent: "center",
     },
     formTextInput: {
         backgroundColor: "white",
@@ -47,20 +41,24 @@ const selectedImageSize = {
 
 const ADD_CATEGORY_KEY: string = "add";
 
-export class AddScreen extends Component<
-    { navigation: any; route: any },
-    {
-        algorithm: string;
-        description: string;
-        selectedImage: string;
-        error: boolean;
-        category?: string;
-        categoryOptions: string[];
-        shouldDisplayAddPrompt: boolean;
-        didLoadCategoryOptions: boolean;
-    }
-> {
-    constructor(props: any) {
+interface Props {
+    navigation: any;
+    route: any;
+}
+
+interface State {
+    algorithm: string;
+    description: string;
+    selectedImage: string;
+    error: boolean;
+    category?: string;
+    categoryOptions: string[];
+    shouldDisplayAddPrompt: boolean;
+    didLoadCategoryOptions: boolean;
+}
+
+export default class AddScreen extends Component<Props, State> {
+    constructor(props: Props) {
         super(props);
         this.state = {
             algorithm: this.props.route.params.algorithm || "",
@@ -81,7 +79,7 @@ export class AddScreen extends Component<
             });
         }
 
-        CaseStorage.GetAllCategories().then((categories) => {
+        CaseStorage.GetAllCategories().then(categories => {
             // After the category options load, the given category for the case can be written
             this.setState({
                 categoryOptions: categories,
@@ -91,35 +89,28 @@ export class AddScreen extends Component<
     }
 
     setAlgorithm = (value: string) => {
-        this.setState({ algorithm: value });
+        this.setState({algorithm: value});
     };
 
     setDescription = (value: string) => {
-        this.setState({ description: value });
+        this.setState({description: value});
     };
 
     /**
      * Returns a list of image URLs based on the case algorithm, along with a serial number for each of them (for key extraction purposes).
      */
-    getPossibleImages = (): Array<{ url: string; id: number }> => {
-        return GenerateCaseImageOptions(this.state.algorithm).map(
-            (option, index) => {
-                return { url: option, id: index };
-            }
-        );
+    getPossibleImages = (): Array<{url: string, id: number}> => {
+        return GenerateCaseImageOptions(this.state.algorithm).map((option, index) => {
+            return {url: option, id: index};
+        });
     };
 
     selectImageOption = (option: string) => {
-        this.setState({ selectedImage: option });
+        this.setState({selectedImage: option});
     };
 
-    renderCaseImageOption = ({ item }: { item: { url: string } }) => {
-        return (
-            <TouchableImage
-                onPress={() => this.selectImageOption(item.url)}
-                imageUrl={item.url}
-            />
-        );
+    renderCaseImageOption = ({item}: {item: {url: string}}) => {
+        return <TouchableImage onPress={() => this.selectImageOption(item.url)} imageUrl={item.url} />;
     };
 
     saveCase = () => {
@@ -147,7 +138,7 @@ export class AddScreen extends Component<
         if (this.state.selectedImage != "") {
             this.saveCase();
         } else {
-            this.setState({ error: true });
+            this.setState({error: true});
         }
     };
 
@@ -157,48 +148,34 @@ export class AddScreen extends Component<
         // (not a great loss, I don't care enough to add an error message either)
         if (category != "" && category != ADD_CATEGORY_KEY) {
             // The rest will take care of itself
-            this.setState({ category: category });
+            this.setState({category: category});
         }
     };
 
     // TODO: Extract a component for the category picker
     promptAddCategory() {
-        this.setState({ shouldDisplayAddPrompt: true });
+        this.setState({shouldDisplayAddPrompt: true});
     }
 
     renderCategoryOptions = () => {
         let categoryOptions = [...this.state.categoryOptions];
 
         // In case the user has added a new category
-        if (
-            this.state.category != undefined &&
-            this.state.category != ADD_CATEGORY_KEY &&
-            !categoryOptions.includes(this.state.category)
-        ) {
+        if (this.state.category != undefined && this.state.category != ADD_CATEGORY_KEY && !categoryOptions.includes(this.state.category)) {
             categoryOptions.push(this.state.category);
         }
 
-        let pickerItems = categoryOptions.map((category) => (
-            <Picker.Item label={category} value={category} key={category} />
-        ));
+        let pickerItems = categoryOptions.map(category => <Picker.Item label={category} value={category} key={category} />);
 
-        pickerItems.unshift(
-            <Picker.Item key={""} label="None" value={undefined} />
-        );
-        pickerItems.push(
-            <Picker.Item
-                key={ADD_CATEGORY_KEY}
-                label="Add..."
-                value={ADD_CATEGORY_KEY}
-            />
-        );
+        pickerItems.unshift(<Picker.Item key={""} label="None" value={undefined} />);
+        pickerItems.push(<Picker.Item key={ADD_CATEGORY_KEY} label="Add..." value={ADD_CATEGORY_KEY} />);
 
         return pickerItems;
     };
 
     selectCategoryOption = (itemValue: any, itemIndex: number) => {
         if (itemValue != ADD_CATEGORY_KEY) {
-            this.setState({ category: itemValue });
+            this.setState({category: itemValue});
         } else {
             this.promptAddCategory();
         }
@@ -208,11 +185,7 @@ export class AddScreen extends Component<
         return (
             <ScrollView>
                 <Text style={styles.formLabel}>Algorithm:</Text>
-                <TextInput
-                    style={[styles.formField, styles.formTextInput]}
-                    value={this.state.algorithm}
-                    onChangeText={this.setAlgorithm}
-                />
+                <TextInput style={[styles.formField, styles.formTextInput]} value={this.state.algorithm} onChangeText={this.setAlgorithm} />
                 <Text style={styles.formLabel}>Description (Optional):</Text>
                 <TextInput
                     style={[styles.formField, styles.formTextInput]}
@@ -221,11 +194,7 @@ export class AddScreen extends Component<
                 />
                 <Text style={styles.formLabel}>Category:</Text>
                 {this.state.didLoadCategoryOptions ? (
-                    <Picker
-                        style={styles.formField}
-                        selectedValue={this.state.category}
-                        onValueChange={this.selectCategoryOption}
-                    >
+                    <Picker style={styles.formField} selectedValue={this.state.category} onValueChange={this.selectCategoryOption}>
                         {this.renderCategoryOptions()}
                     </Picker>
                 ) : (
@@ -246,14 +215,11 @@ export class AddScreen extends Component<
                     horizontal={true}
                     data={this.getPossibleImages()}
                     renderItem={this.renderCaseImageOption}
-                    keyExtractor={(item) => item.id.toString()}
+                    keyExtractor={item => item.id.toString()}
                 />
                 <Text style={styles.formLabel}>Selected image:</Text>
                 {this.state.selectedImage ? (
-                    <FixedSizeSvgUri
-                        {...selectedImageSize}
-                        uri={this.state.selectedImage}
-                    />
+                    <FixedSizeSvgUri {...selectedImageSize} uri={this.state.selectedImage} />
                 ) : (
                     <View style={styles.selectedImage} />
                 )}
@@ -262,12 +228,12 @@ export class AddScreen extends Component<
                 {this.state.shouldDisplayAddPrompt && (
                     <TextPrompt
                         prompt="Add category"
-                        onSubmit={(result) => {
-                            this.setState({ shouldDisplayAddPrompt: false });
+                        onSubmit={result => {
+                            this.setState({shouldDisplayAddPrompt: false});
                             this.addCategory(result);
                         }}
                         onCancel={() => {
-                            this.setState({ shouldDisplayAddPrompt: false });
+                            this.setState({shouldDisplayAddPrompt: false});
                         }}
                     />
                 )}

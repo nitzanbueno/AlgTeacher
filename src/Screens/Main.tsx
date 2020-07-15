@@ -1,20 +1,13 @@
-import React from "react";
-import { Component } from "react";
-import { Text, View, FlatList, StyleSheet, Alert } from "react-native";
-import { Case } from "../Models";
-import { TouchableImage } from "../CommonComponents/TouchableImage";
+import React, {FunctionComponent} from "react";
+import {Component} from "react";
+import {Text, View, FlatList, StyleSheet, Alert} from "react-native";
+import {Case} from "../Models";
+import TouchableImage from "../CommonComponents/TouchableImage";
 import CaseStorage from "../CaseStorage";
-import {
-    MenuTrigger,
-    Menu,
-    MenuOptions,
-    MenuOption,
-    withMenuContext,
-    MenuContext
-} from "react-native-popup-menu";
+import {MenuTrigger, Menu, MenuOptions, MenuOption, withMenuContext, MenuContext} from "react-native-popup-menu";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { TouchableNativeFeedback } from "react-native-gesture-handler";
-import { MenuIcon } from "../CommonComponents/MenuIcon";
+import {TouchableNativeFeedback} from "react-native-gesture-handler";
+import MenuIcon from "../CommonComponents/MenuIcon";
 
 const CASE_COLUMNS = 2;
 
@@ -51,59 +44,58 @@ const styles = StyleSheet.create({
     },
 });
 
-/**
- * This component uses the react-native-popup-menu library to wrap a TouchableImage component with a context menu.
- */
-class CaseImage extends Component<{
+interface CaseImageProps {
     case: Case;
     onPress: () => void;
     onEdit: () => void;
     onDelete: () => void;
-    ctx: MenuContext;
-}> {
-    render() {
-        return (
-            <Menu name={"case_" + this.props.case.id}>
-                <MenuTrigger>
-                    <TouchableImage
-                        onPress={this.props.onPress}
-                        onLongPress={() =>
-                            this.props.ctx.menuActions.openMenu(
-                                "case_" + this.props.case.id
-                            )
-                        }
-                        imageUrl={this.props.case.imageUrl}
-                    />
-                </MenuTrigger>
-                <MenuOptions>
-                    <MenuOption onSelect={this.props.onEdit} text="Edit" />
-                    <MenuOption onSelect={this.props.onDelete}>
-                        <Text style={{ color: "red" }}>Delete</Text>
-                    </MenuOption>
-                </MenuOptions>
-            </Menu>
-        );
-    }
 }
 
-const ContextCaseImage = withMenuContext(CaseImage);
+/**
+ * This component uses the react-native-popup-menu library to wrap a TouchableImage component with a context menu.
+ */
+const CaseImage: FunctionComponent<CaseImageProps> = withMenuContext((props: CaseImageProps & {ctx: MenuContext}) => {
+    return (
+        <Menu name={"case_" + props.case.id}>
+            <MenuTrigger>
+                <TouchableImage
+                    onPress={props.onPress}
+                    onLongPress={() => props.ctx.menuActions.openMenu("case_" + props.case.id)}
+                    imageUrl={props.case.imageUrl}
+                />
+            </MenuTrigger>
+            <MenuOptions>
+                <MenuOption onSelect={props.onEdit} text="Edit" />
+                <MenuOption onSelect={props.onDelete}>
+                    <Text style={{color: "red"}}>Delete</Text>
+                </MenuOption>
+            </MenuOptions>
+        </Menu>
+    );
+});
 
-export class MainScreen extends Component<
-    { navigation: any, route: any },
-    { cases: Case[] }
-> {
+interface Props {
+    navigation: any;
+    route: any;
+}
+
+interface State {
+    cases: Case[];
+}
+
+export default class MainScreen extends Component<Props, State> {
     constructor(props: any) {
         super(props);
-        this.state = { cases: [] };
+        this.state = {cases: []};
     }
 
     openAddScreen = () => {
-        this.props.navigation.navigate("Add", { caseId: -1, callerScreen: "Main" });
+        this.props.navigation.navigate("Add", {caseId: -1, callerScreen: "Main"});
     };
 
     openEditScreen = (chosenCase: Case) => {
         this.props.navigation.setOptions({
-            addCallback: this.resetCases
+            addCallback: this.resetCases,
         });
 
         this.props.navigation.navigate("Add", {
@@ -113,12 +105,12 @@ export class MainScreen extends Component<
             imageUrl: chosenCase.imageUrl,
             category: chosenCase.category,
             title: "Edit",
-            callerScreen: "Main"
+            callerScreen: "Main",
         });
     };
 
     openTestScreen = (chosenCase: Case) => {
-        this.props.navigation.navigate("Test", { case: chosenCase });
+        this.props.navigation.navigate("Test", {case: chosenCase});
     };
 
     deleteCase = (chosenCase: Case) => {
@@ -127,43 +119,35 @@ export class MainScreen extends Component<
 
     clearCases = () => {
         CaseStorage.ClearAllCases().then(this.resetCases);
-    }
+    };
 
     openDeleteConfirmation = (chosenCase: Case) => {
-        Alert.alert(
-            "Delete Case",
-            "Are you sure you want to delete this case?",
-            [
-                {
-                    text: "Cancel",
-                    style: "cancel",
-                },
-                { text: "Delete", onPress: () => this.deleteCase(chosenCase) },
-            ]
-        );
+        Alert.alert("Delete Case", "Are you sure you want to delete this case?", [
+            {
+                text: "Cancel",
+                style: "cancel",
+            },
+            {text: "Delete", onPress: () => this.deleteCase(chosenCase)},
+        ]);
     };
 
     openClearConfirmation = () => {
-        Alert.alert(
-            "Clear All Cases",
-            "Are you sure you want to delete ALL cases?",
-            [
-                {
-                    text: "Cancel",
-                    style: "cancel",
-                },
-                { text: "Delete", onPress: () => this.clearCases() },
-            ]
-        );
+        Alert.alert("Clear All Cases", "Are you sure you want to delete ALL cases?", [
+            {
+                text: "Cancel",
+                style: "cancel",
+            },
+            {text: "Delete", onPress: () => this.clearCases()},
+        ]);
     };
 
     startTimeAttack = () => {
         this.props.navigation.navigate("TimeAttackOpening");
-    }
+    };
 
-    renderCase = ({ item }: { item: Case }) => {
+    renderCase = ({item}: {item: Case}) => {
         return (
-            <ContextCaseImage
+            <CaseImage
                 onPress={() => this.openTestScreen(item)}
                 case={item}
                 onEdit={() => this.openEditScreen(item)}
@@ -173,14 +157,14 @@ export class MainScreen extends Component<
     };
 
     resetCases = () => {
-        CaseStorage.GetAllCases().then((cases) => {
-            this.setState({ cases: cases });
+        CaseStorage.GetAllCases().then(cases => {
+            this.setState({cases: cases});
         });
     };
 
     openAlgorithmSetScreen = () => {
-        this.props.navigation.navigate("ImportAlgorithmSet")
-    }
+        this.props.navigation.navigate("ImportAlgorithmSet");
+    };
 
     componentDidMount() {
         this.resetCases();
@@ -195,8 +179,8 @@ export class MainScreen extends Component<
                     </TouchableNativeFeedback>
                     <MenuIcon>
                         <MenuOptions>
-                        <MenuOption onSelect={this.openAlgorithmSetScreen} text="Import algorithm set..." />
-                        <MenuOption onSelect={this.openClearConfirmation} text="Delete all cases..." />
+                            <MenuOption onSelect={this.openAlgorithmSetScreen} text="Import algorithm set..." />
+                            <MenuOption onSelect={this.openClearConfirmation} text="Delete all cases..." />
                         </MenuOptions>
                     </MenuIcon>
                 </View>
@@ -216,7 +200,7 @@ export class MainScreen extends Component<
                 <FlatList
                     data={this.state.cases}
                     renderItem={this.renderCase}
-                    keyExtractor={(item) => item.id.toString()}
+                    keyExtractor={item => item.id.toString()}
                     numColumns={CASE_COLUMNS}
                 />
             </View>

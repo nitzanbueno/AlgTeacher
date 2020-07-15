@@ -3,7 +3,7 @@ import {Component} from 'react';
 import {Text, StyleSheet, ScrollView} from 'react-native';
 import {Case} from '../Models';
 import CaseStorage from '../CaseStorage';
-import {CheckboxPicker, CheckboxPickerOptionArray} from '../CommonComponents/CheckboxPicker';
+import CheckboxPicker, {CheckboxPickerOptionArray} from '../CommonComponents/CheckboxPicker';
 
 const styles = StyleSheet.create({
     container: {
@@ -19,16 +19,17 @@ const styles = StyleSheet.create({
     },
 });
 
-export class TimeAttackOpeningScreen extends Component<
-    {
-        route: {params: {case: Case}};
-        navigation: any;
-    },
-    {
-        allCategories: string[];
-    }
-> {
-    constructor(props: any) {
+interface Props {
+    route: {params: {case: Case}};
+    navigation: any;
+}
+
+interface State {
+    allCategories: string[];
+}
+
+export default class TimeAttackOpeningScreen extends Component<Props, State> {
+    constructor(props: Props) {
         super(props);
         this.state = {
             allCategories: ['Loading...'],
