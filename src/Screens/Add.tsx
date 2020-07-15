@@ -3,7 +3,6 @@ import {
     Text,
     FlatList,
     StyleSheet,
-    Image,
     Button,
     View,
 } from "react-native";
@@ -14,6 +13,7 @@ import { Picker } from "@react-native-community/picker";
 import { Case } from "../Models";
 import { StoreCase, GetAllCategories } from "../CaseStorage";
 import { TextPrompt } from "../CommonComponents/TextPrompt";
+import FixedSizeSvgUri from "../FixedSizeSvgUri";
 
 const styles = StyleSheet.create({
     formField: {
@@ -39,6 +39,11 @@ const styles = StyleSheet.create({
         height: 150,
     },
 });
+
+const selectedImage = {
+    width: 150,
+    height: 150,
+};
 
 const ADD_CATEGORY_KEY: string = "add";
 
@@ -245,12 +250,12 @@ export class AddScreen extends Component<
                 />
                 <Text style={styles.formLabel}>Selected image:</Text>
                 {this.state.selectedImage ? (
-                    <Image
-                        style={styles.selectedImage}
-                        source={{ uri: this.state.selectedImage }}
+                    <FixedSizeSvgUri
+                        {...selectedImage}
+                        uri={this.state.selectedImage}
                     />
                 ) : (
-                    <ScrollView style={styles.selectedImage} />
+                    <View style={styles.selectedImage} />
                 )}
                 {this.state.error && <Text>Please select an image.</Text>}
                 <Button title="Save" onPress={this.trySaveCase} />

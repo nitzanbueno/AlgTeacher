@@ -1,18 +1,11 @@
-import React, { Component } from "react";
-import {
-    StyleSheet,
-    Image,
-    TouchableNativeFeedback,
-    Platform,
-    GestureResponderEvent,
-} from "react-native";
+import React, {Component} from 'react';
+import {TouchableWithoutFeedback, GestureResponderEvent} from 'react-native';
+import FixedSizeSvgUri from '../FixedSizeSvgUri';
 
-const styles = StyleSheet.create({
-    caseImage: {
-        width: 150,
-        height: 150,
-    },
-});
+const caseImage = {
+    width: 150,
+    height: 150,
+};
 
 export class TouchableImage extends Component<
     {
@@ -23,21 +16,15 @@ export class TouchableImage extends Component<
     {}
 > {
     render() {
+        // The code crashes if this is a TouchableNativeFeedback
+        // Something about "trying to send command to a non-existing view"
+        // Maybe it should be fixed one day, but it's not that big a deal
         return (
-            <TouchableNativeFeedback
+            <TouchableWithoutFeedback
                 onPress={this.props.onPress}
-                onLongPress={this.props.onLongPress}
-                background={
-                    Platform.OS === "android"
-                        ? TouchableNativeFeedback.SelectableBackground()
-                        : undefined
-                }
-            >
-                <Image
-                    style={styles.caseImage}
-                    source={{ uri: this.props.imageUrl }}
-                />
-            </TouchableNativeFeedback>
+                onLongPress={this.props.onLongPress}>
+                <FixedSizeSvgUri {...caseImage} uri={this.props.imageUrl} />
+            </TouchableWithoutFeedback>
         );
     }
 }

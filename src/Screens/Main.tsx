@@ -10,6 +10,7 @@ import {
     MenuOptions,
     MenuOption,
     withMenuContext,
+    MenuContext
 } from "react-native-popup-menu";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { TouchableNativeFeedback } from "react-native-gesture-handler";
@@ -58,7 +59,7 @@ class CaseImage extends Component<{
     onPress: () => void;
     onEdit: () => void;
     onDelete: () => void;
-    ctx: any;
+    ctx: MenuContext;
 }> {
     render() {
         return (
