@@ -5,7 +5,7 @@ import { TouchableNativeFeedback } from "react-native-gesture-handler";
 import { TOUCHABLE_BACKGROUND, Case } from "../Models";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { GenerateScramble } from "../ScrambleLib";
-import FixedSizeSvgUri from "../FixedSizeSvgUri";
+import FixedSizeSvgUri from "../CommonComponents/FixedSizeSvgUri";
 
 const styles = StyleSheet.create({
     container: {
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const caseImage = {
+const caseImageSize = {
     width: 300,
     height: 300,
 };
@@ -88,7 +88,7 @@ export class TestScreen extends Component<
     renderImage = () => {
         return (
             <FixedSizeSvgUri
-                {...caseImage}
+                {...caseImageSize}
                 uri={this.props.route.params.case.imageUrl}
             />
         );

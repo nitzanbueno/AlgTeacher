@@ -1,11 +1,6 @@
 import React, {Component} from 'react';
 import {TouchableWithoutFeedback, GestureResponderEvent} from 'react-native';
-import FixedSizeSvgUri from '../FixedSizeSvgUri';
-
-const caseImage = {
-    width: 150,
-    height: 150,
-};
+import FixedSizeSvgUri from './FixedSizeSvgUri';
 
 export class TouchableImage extends Component<
     {
@@ -23,7 +18,7 @@ export class TouchableImage extends Component<
             <TouchableWithoutFeedback
                 onPress={this.props.onPress}
                 onLongPress={this.props.onLongPress}>
-                <FixedSizeSvgUri {...caseImage} uri={this.props.imageUrl} />
+                <FixedSizeSvgUri width={150} height={150} uri={this.props.imageUrl} />
             </TouchableWithoutFeedback>
         );
     }
