@@ -1,71 +1,64 @@
-import React, { Component } from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
-import CheckBox from "@react-native-community/checkbox";
+import React, {Component} from 'react';
+import {View, Text, StyleSheet, Button} from 'react-native';
+import CheckBox from '@react-native-community/checkbox';
 
 const styles = StyleSheet.create({
     optionRow: {
-        flexDirection: "row",
+        flexDirection: 'row',
         height: 30,
-        alignItems: "center",
+        alignItems: 'center',
         marginTop: 5,
         marginBottom: 5,
     },
     optionContainer: {
-        marginBottom: 10
-    }
+        marginBottom: 10,
+    },
 });
 
-export type CheckboxPickerOptionArray = Array<{ name: string; value: boolean }>;
+export type CheckboxPickerOptionArray = Array<{name: string; value: boolean}>;
 
-export class CheckboxPicker extends Component<
-    {
-        options: string[];
-        onSubmit: (options: CheckboxPickerOptionArray) => void;
-    },
-    { checkboxValues: boolean[] }
-> {
-    constructor(props: any) {
+interface PropsType {
+    options: string[];
+    onSubmit: (options: CheckboxPickerOptionArray) => void;
+}
+
+interface StateType {
+    checkboxes: Map<string, boolean>;
+}
+
+export class CheckboxPicker extends Component<PropsType, StateType> {
+    constructor(props: PropsType) {
         super(props);
 
         // Init all values with false
-        this.state = { checkboxValues: this.props.options.map((_) => false) };
+        const checkboxes = new Map<string, boolean>(props.options.map(option => [option, false]));
+        this.state = {checkboxes};
     }
 
-    changeCheckboxValue = (value: boolean, index: number) => {
-        let newCheckboxValues = this.state.checkboxValues.slice();
-        newCheckboxValues[index] = value;
-        this.setState({ checkboxValues: newCheckboxValues });
+    changeCheckboxValue = (key: string, value: boolean) => {
+        const newCheckboxes = new Map(this.state.checkboxes);
+        newCheckboxes.set(key, value);
+        this.setState({checkboxes: newCheckboxes});
+    };
+
+    onSubmit = () => {
+        const optionArray = Array.from(this.state.checkboxes.entries(), ([name, value]) => ({name, value}));
+
+        this.props.onSubmit(optionArray);
     };
 
     render() {
         return (
             <View>
                 <View style={styles.optionContainer}>
-                {this.props.options.map((option, index) => (
-                    <View style={styles.optionRow} key={option}>
-                        <CheckBox
-                            value={this.state.checkboxValues[index]}
-                            onValueChange={(value) =>
-                                this.changeCheckboxValue(value, index)
-                            }
-                        />
-                        <Text>{option}</Text>
-                    </View>
-                ))}
+                    {Array.from(this.state.checkboxes.entries(), ([option, value]) => (
+                        <View style={styles.optionRow} key={option}>
+                            <CheckBox value={value} onValueChange={newValue => this.changeCheckboxValue(option, newValue)} />
+                            <Text>{option}</Text>
+                        </View>
+                    ))}
                 </View>
-                <Button
-                    title="Done"
-                    onPress={() =>
-                        this.props.onSubmit(
-                            this.state.checkboxValues.map((value, index) => {
-                                return {
-                                    name: this.props.options[index],
-                                    value: value,
-                                };
-                            })
-                        )
-                    }
-                />
+                <Button title="Done" onPress={this.onSubmit} />
             </View>
         );
     }
