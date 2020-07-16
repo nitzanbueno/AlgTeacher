@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, FC, useEffect } from 'react';
 import {Component} from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import {TouchableNativeFeedback} from 'react-native-gesture-handler';
@@ -6,9 +6,9 @@ import {TOUCHABLE_BACKGROUND, Case} from '../Models';
 import CaseStorage from '../CaseStorage';
 import {GenerateScramble} from '../ScrambleLib';
 import {GetTimeText, ShuffleArray} from '../Utils';
+import Timer from '../CommonComponents/Timer';
 
 const UNDEFINED_SCRAMBLE_TEXT: string = 'Loading...';
-const TIMEOUT = 11;
 
 const styles = StyleSheet.create({
     container: {
@@ -83,38 +83,6 @@ function BottomScreenButton(props: {style: Object; onPress: () => void; text: st
             </TouchableNativeFeedback>
         </View>
     );
-}
-
-class Timer extends Component<{startTimestamp: number; style: any; extraTime?: number}, {timeText: string}> {
-    intervalCallback: any;
-    isUnmounted = false;
-
-    constructor(props: any) {
-        super(props);
-
-        this.state = {timeText: GetTimeText(props.extraTime)};
-    }
-
-    updateTime = () => {
-        if (this.isUnmounted) return;
-        const currentTime = new Date();
-        const timeAmount = currentTime.getTime() - this.props.startTimestamp + (this.props.extraTime || 0);
-
-        this.setState({timeText: GetTimeText(timeAmount)});
-    };
-
-    componentDidMount() {
-        this.intervalCallback = setInterval(this.updateTime, TIMEOUT);
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.intervalCallback);
-        this.isUnmounted = true;
-    }
-
-    render() {
-        return <Text style={this.props.style}>{this.state.timeText}</Text>;
-    }
 }
 
 interface Props {
