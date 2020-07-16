@@ -47,10 +47,8 @@ const TimeAttackEndScreen: FC<Props> = props => {
                 fetchedHighScore.solveCount < timeAttackScore.solveCount ||
                 (fetchedHighScore.solveCount == timeAttackScore.solveCount && fetchedHighScore.totalTime > timeAttackScore.totalTime)
             ) {
-                console.log("EEEE", timeAttackScore.totalTime);
                 await TimeAttackStorage.SaveHighScore(cases, timeAttackScore);
             } else {
-                console.log("SET", timeAttackScore.totalTime);
                 setHighScore(fetchedHighScore);
             }
         }

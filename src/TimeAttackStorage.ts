@@ -14,7 +14,6 @@ export default class TimeAttackStorage {
     static async FetchHighScore(caseList: Case[]): Promise<HighScoreType | null> {
         const key = HIGHSCORE_KEY + hashCases(caseList);
         const result = await AsyncStorage.getItem(key);
-        console.log(key, result);
     
         if (result == null) return null;
     
@@ -38,7 +37,6 @@ export default class TimeAttackStorage {
     static async SaveHighScore(caseList: Case[], highScore: HighScoreType) {
         const key = HIGHSCORE_KEY + hashCases(caseList);
         const value = JSON.stringify(highScore);
-        console.log('SET', key, value);
         await AsyncStorage.setItem(key, value);
     }
 }
