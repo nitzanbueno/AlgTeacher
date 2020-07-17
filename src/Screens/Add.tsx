@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {Component, FC, useState, useEffect} from "react";
 import {Text, FlatList, StyleSheet, Button, View} from "react-native";
 import TouchableImage from "../CommonComponents/TouchableImage";
 import {GenerateCaseImageOptions} from "../ImageOptionGenerator";
@@ -7,6 +7,7 @@ import {Case} from "../Models";
 import CaseStorage from "../CaseStorage";
 import FixedSizeSvgUri from "../CommonComponents/FixedSizeSvgUri";
 import PickerWithAddOption from "../CommonComponents/PickerWithAddOption";
+import { useAsyncLoad } from "../Utils";
 
 const styles = StyleSheet.create({
     formField: {
@@ -43,85 +44,47 @@ interface Props {
     route: any;
 }
 
-interface State {
-    algorithm: string;
-    description: string;
-    selectedImage: string;
-    error: boolean;
-    category: string;
-    categoryOptions: string[];
-    shouldDisplayAddPrompt: boolean;
-    didLoadCategoryOptions: boolean;
-}
+const AddScreen: FC<Props> = (props) => {
+    const [description, setDescription] = useState(props.route.params.description || "");
+    const [algorithm, setAlgorithm] = useState(props.route.params.algorithm || "");
+    const [category, setCategory] = useState(props.route.params.category || "");
+    const [selectedImage, setSelectedImage] = useState(props.route.params.imageUrl || "");
+    const [isError, setIsError] = useState(false);
+    const [categoryOptions, didLoadCategoryOptions] = useAsyncLoad(CaseStorage.GetAllCategories);
 
-export default class AddScreen extends Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-        this.state = {
-            algorithm: this.props.route.params.algorithm || "",
-            description: this.props.route.params.description || "",
-            selectedImage: this.props.route.params.imageUrl || "",
-            category: this.props.route.params.category || "",
-            error: false,
-            categoryOptions: [],
-            shouldDisplayAddPrompt: false,
-            didLoadCategoryOptions: false,
-        };
-    }
-
-    componentDidMount() {
-        if (this.props.route.params.title) {
-            this.props.navigation.setOptions({
-                title: this.props.route.params.title,
-            });
+    useEffect(() => {
+        if(props.route.params.title) {
+            props.navigation.setOptions({
+                title: props.route.params.title
+            })
         }
-
-        CaseStorage.GetAllCategories().then(categories => {
-            // After the category options load, the given category for the case can be written
-            this.setState({
-                categoryOptions: categories,
-                didLoadCategoryOptions: true,
-            });
-        });
-    }
-
-    setAlgorithm = (value: string) => {
-        this.setState({algorithm: value});
-    };
-
-    setDescription = (value: string) => {
-        this.setState({description: value});
-    };
+    }, [props.route.params.title]);
 
     /**
      * Returns a list of image URLs based on the case algorithm, along with a serial number for each of them (for key extraction purposes).
      */
-    getPossibleImages = (): Array<{url: string, id: number}> => {
-        return GenerateCaseImageOptions(this.state.algorithm).map((option, index) => {
+    function getPossibleImages(): Array<{url: string, id: number}> {
+        return GenerateCaseImageOptions(algorithm).map((option, index) => {
             return {url: option, id: index};
         });
     };
 
-    selectImageOption = (option: string) => {
-        this.setState({selectedImage: option});
+    function renderCaseImageOption({item}: {item: {url: string}}) {
+        return <TouchableImage onPress={() => setSelectedImage(item.url)} imageUrl={item.url} />;
     };
 
-    renderCaseImageOption = ({item}: {item: {url: string}}) => {
-        return <TouchableImage onPress={() => this.selectImageOption(item.url)} imageUrl={item.url} />;
-    };
-
-    saveCase = () => {
+    function saveCase() {
         let caseToSave: Case = {
-            id: this.props.route.params.caseId,
-            algorithm: this.state.algorithm,
-            description: this.state.description,
-            imageUrl: this.state.selectedImage,
-            category: this.state.category,
+            id: props.route.params.caseId,
+            algorithm,
+            description,
+            imageUrl: selectedImage,
+            category,
         };
 
         // Store the case, then call the callback
         CaseStorage.StoreCase(caseToSave).then(() => {
-            this.props.navigation.navigate(this.props.route.params.callerScreen, {case: caseToSave});
+            props.navigation.navigate(props.route.params.callerScreen, {case: caseToSave});
         });
     };
 
@@ -130,68 +93,64 @@ export default class AddScreen extends Component<Props, State> {
      * If they are, saves the case.
      * If they aren't, displays error messages.
      */
-    trySaveCase = () => {
+    function trySaveCase() {
         // Currently, nothing is required except the image.
-        if (this.state.selectedImage != "") {
-            this.saveCase();
+        if (selectedImage != "") {
+            saveCase();
         } else {
-            this.setState({error: true});
+            setIsError(true);
         }
     };
 
-    selectCategoryOption = (value: string) => {
-        this.setState({category: value});
-    };
+    return (
+        <ScrollView>
+            <Text style={styles.formLabel}>Algorithm:</Text>
+            <TextInput style={[styles.formField, styles.formTextInput]} value={algorithm} onChangeText={setAlgorithm} />
+            <Text style={styles.formLabel}>Description (Optional):</Text>
+            <TextInput
+                style={[styles.formField, styles.formTextInput]}
+                value={description}
+                onChangeText={setDescription}
+            />
+            <Text style={styles.formLabel}>Category:</Text>
+            {(didLoadCategoryOptions && categoryOptions != null) ? (
+                <PickerWithAddOption
+                    style={styles.formField}
+                    selectedValue={category}
+                    onValueChange={setCategory}
+                    options={categoryOptions}
+                    addPromptText="Add category"
+                />
+            ) : (
+                // You might be asking yourself, "What the hell is that?"
+                // "Why do I need to have "Loading" text for a picker? Can't I just have a "Loading" option or something?"
+                // Well, apparently, whenever you change options for a picker, it automatically changes selection to the first one.
+                // However, I want to have an already selected category (the one of the possibly-currently-edited case), and categories
+                // load asynchronously, so that forces me to cause the selection change (which I can't tell apart from any other selection
+                // change and thus can't block).
+                // Unless, I don't change the categories at all, and just render the picker after they've been loaded.
+                // Thus, this stupidity.
+                <View style={styles.pickerStandin}>
+                    <Text>Loading...</Text>
+                </View>
+            )}
+            <Text style={styles.formLabel}>Select image:</Text>
+            <FlatList
+                horizontal={true}
+                data={getPossibleImages()}
+                renderItem={renderCaseImageOption}
+                keyExtractor={item => item.id.toString()}
+            />
+            <Text style={styles.formLabel}>Selected image:</Text>
+            {selectedImage ? (
+                <FixedSizeSvgUri {...selectedImageSize} uri={selectedImage} />
+            ) : (
+                <View style={styles.selectedImage} />
+            )}
+            {isError && <Text>Please select an image.</Text>}
+            <Button title="Save" onPress={trySaveCase} />
+        </ScrollView>
+    );
+};
 
-    render() {
-        return (
-            <ScrollView>
-                <Text style={styles.formLabel}>Algorithm:</Text>
-                <TextInput style={[styles.formField, styles.formTextInput]} value={this.state.algorithm} onChangeText={this.setAlgorithm} />
-                <Text style={styles.formLabel}>Description (Optional):</Text>
-                <TextInput
-                    style={[styles.formField, styles.formTextInput]}
-                    value={this.state.description}
-                    onChangeText={this.setDescription}
-                />
-                <Text style={styles.formLabel}>Category:</Text>
-                {this.state.didLoadCategoryOptions ? (
-                    <PickerWithAddOption
-                        style={styles.formField}
-                        selectedValue={this.state.category}
-                        onValueChange={this.selectCategoryOption}
-                        options={this.state.categoryOptions}
-                        addPromptText="Add category"
-                    />
-                ) : (
-                    // You might be asking yourself, "What the hell is that?"
-                    // "Why do I need to have "Loading" text for a picker? Can't I just have a "Loading" option or something?"
-                    // Well, apparently, whenever you change options for a picker, it automatically changes selection to the first one.
-                    // However, I want to have an already selected category (the one of the possibly-currently-edited case), and categories
-                    // load asynchronously, so that forces me to cause the selection change (which I can't tell apart from any other selection
-                    // change and thus can't block).
-                    // Unless, I don't change the categories at all, and just render the picker after they've been loaded.
-                    // Thus, this stupidity.
-                    <View style={styles.pickerStandin}>
-                        <Text>Loading...</Text>
-                    </View>
-                )}
-                <Text style={styles.formLabel}>Select image:</Text>
-                <FlatList
-                    horizontal={true}
-                    data={this.getPossibleImages()}
-                    renderItem={this.renderCaseImageOption}
-                    keyExtractor={item => item.id.toString()}
-                />
-                <Text style={styles.formLabel}>Selected image:</Text>
-                {this.state.selectedImage ? (
-                    <FixedSizeSvgUri {...selectedImageSize} uri={this.state.selectedImage} />
-                ) : (
-                    <View style={styles.selectedImage} />
-                )}
-                {this.state.error && <Text>Please select an image.</Text>}
-                <Button title="Save" onPress={this.trySaveCase} />
-            </ScrollView>
-        );
-    }
-}
+export default AddScreen;

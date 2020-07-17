@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+
 function zeroPad(num: string, size: number) {
     const integerPart = num.split(".")[0];
 
@@ -57,4 +59,24 @@ export function ArrayEquals<T>(arr1: T[], arr2: T[]) {
     }
 
     return true;
+}
+
+/**
+ * Loads a value asynchronously, and returns the loaded value (or null if not loaded) and
+ * a boolean determining whether the value has loaded yet or not.
+ * @param asyncLoad The async loading function
+ * @param dependencies The dependencies to reload according to (will only load once if not specified).
+ */
+export function useAsyncLoad<T>(asyncLoad: () => Promise<T>, dependencies?: Array<any>): [T | null, boolean] {
+    const [didLoad, setDidLoad] = useState(false);
+    const [result, setResult] = useState<T | null>(null);
+
+    useEffect(() => {
+        asyncLoad().then((loadedResult) => {
+            setDidLoad(true);
+            setResult(loadedResult);
+        })
+    }, dependencies || []);
+
+    return [result, didLoad];
 }

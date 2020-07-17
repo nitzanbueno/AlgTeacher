@@ -110,7 +110,7 @@ const TestScreen: FC<Props> = props => {
             description,
             imageUrl,
             category,
-            title: "",
+            title: "Edit",
             callerScreen: "Test",
         });
     }
