@@ -3,11 +3,10 @@ import {Text, FlatList, StyleSheet, Button, View} from "react-native";
 import TouchableImage from "../CommonComponents/TouchableImage";
 import {GenerateCaseImageOptions} from "../ImageOptionGenerator";
 import {TextInput, ScrollView} from "react-native-gesture-handler";
-import {Picker} from "@react-native-community/picker";
 import {Case} from "../Models";
 import CaseStorage from "../CaseStorage";
-import TextPrompt from "../CommonComponents/TextPrompt";
 import FixedSizeSvgUri from "../CommonComponents/FixedSizeSvgUri";
+import PickerWithAddOption from "../CommonComponents/PickerWithAddOption";
 
 const styles = StyleSheet.create({
     formField: {
@@ -39,8 +38,6 @@ const selectedImageSize = {
     height: 150,
 };
 
-const ADD_CATEGORY_KEY: string = "add";
-
 interface Props {
     navigation: any;
     route: any;
@@ -51,7 +48,7 @@ interface State {
     description: string;
     selectedImage: string;
     error: boolean;
-    category?: string;
+    category: string;
     categoryOptions: string[];
     shouldDisplayAddPrompt: boolean;
     didLoadCategoryOptions: boolean;
@@ -64,7 +61,7 @@ export default class AddScreen extends Component<Props, State> {
             algorithm: this.props.route.params.algorithm || "",
             description: this.props.route.params.description || "",
             selectedImage: this.props.route.params.imageUrl || "",
-            category: this.props.route.params.category || undefined,
+            category: this.props.route.params.category || "",
             error: false,
             categoryOptions: [],
             shouldDisplayAddPrompt: false,
@@ -142,43 +139,8 @@ export default class AddScreen extends Component<Props, State> {
         }
     };
 
-    addCategory = (category: string) => {
-        // We can't add the category named the same as ADD_CATEGORY_KEY, because that's
-        // already the name of the "Add category" option.
-        // (not a great loss, I don't care enough to add an error message either)
-        if (category != "" && category != ADD_CATEGORY_KEY) {
-            // The rest will take care of itself
-            this.setState({category: category});
-        }
-    };
-
-    // TODO: Extract a component for the category picker
-    promptAddCategory() {
-        this.setState({shouldDisplayAddPrompt: true});
-    }
-
-    renderCategoryOptions = () => {
-        let categoryOptions = [...this.state.categoryOptions];
-
-        // In case the user has added a new category
-        if (this.state.category != undefined && this.state.category != ADD_CATEGORY_KEY && !categoryOptions.includes(this.state.category)) {
-            categoryOptions.push(this.state.category);
-        }
-
-        let pickerItems = categoryOptions.map(category => <Picker.Item label={category} value={category} key={category} />);
-
-        pickerItems.unshift(<Picker.Item key={""} label="None" value={undefined} />);
-        pickerItems.push(<Picker.Item key={ADD_CATEGORY_KEY} label="Add..." value={ADD_CATEGORY_KEY} />);
-
-        return pickerItems;
-    };
-
-    selectCategoryOption = (itemValue: any, itemIndex: number) => {
-        if (itemValue != ADD_CATEGORY_KEY) {
-            this.setState({category: itemValue});
-        } else {
-            this.promptAddCategory();
-        }
+    selectCategoryOption = (value: string) => {
+        this.setState({category: value});
     };
 
     render() {
@@ -194,9 +156,13 @@ export default class AddScreen extends Component<Props, State> {
                 />
                 <Text style={styles.formLabel}>Category:</Text>
                 {this.state.didLoadCategoryOptions ? (
-                    <Picker style={styles.formField} selectedValue={this.state.category} onValueChange={this.selectCategoryOption}>
-                        {this.renderCategoryOptions()}
-                    </Picker>
+                    <PickerWithAddOption
+                        style={styles.formField}
+                        selectedValue={this.state.category}
+                        onValueChange={this.selectCategoryOption}
+                        options={this.state.categoryOptions}
+                        addPromptText="Add category"
+                    />
                 ) : (
                     // You might be asking yourself, "What the hell is that?"
                     // "Why do I need to have "Loading" text for a picker? Can't I just have a "Loading" option or something?"
@@ -225,18 +191,6 @@ export default class AddScreen extends Component<Props, State> {
                 )}
                 {this.state.error && <Text>Please select an image.</Text>}
                 <Button title="Save" onPress={this.trySaveCase} />
-                {this.state.shouldDisplayAddPrompt && (
-                    <TextPrompt
-                        prompt="Add category"
-                        onSubmit={result => {
-                            this.setState({shouldDisplayAddPrompt: false});
-                            this.addCategory(result);
-                        }}
-                        onCancel={() => {
-                            this.setState({shouldDisplayAddPrompt: false});
-                        }}
-                    />
-                )}
             </ScrollView>
         );
     }
