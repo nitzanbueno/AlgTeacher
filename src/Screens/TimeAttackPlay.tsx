@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, FC, useEffect } from 'react';
 import {Component} from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import {TouchableNativeFeedback} from 'react-native-gesture-handler';
@@ -6,9 +6,9 @@ import {TOUCHABLE_BACKGROUND, Case} from '../Models';
 import CaseStorage from '../CaseStorage';
 import {GenerateScramble} from '../ScrambleLib';
 import {GetTimeText, ShuffleArray} from '../Utils';
+import Timer from '../CommonComponents/Timer';
 
 const UNDEFINED_SCRAMBLE_TEXT: string = 'Loading...';
-const TIMEOUT = 11;
 
 const styles = StyleSheet.create({
     container: {
@@ -85,204 +85,143 @@ function BottomScreenButton(props: {style: Object; onPress: () => void; text: st
     );
 }
 
-class Timer extends Component<{startTimestamp: number; style: any; extraTime?: number}, {timeText: string}> {
-    intervalCallback: any;
-    isUnmounted = false;
-
-    constructor(props: any) {
-        super(props);
-
-        this.state = {timeText: GetTimeText(props.extraTime)};
-    }
-
-    updateTime = () => {
-        if (this.isUnmounted) return;
-        const currentTime = new Date();
-        const timeAmount = currentTime.getTime() - this.props.startTimestamp + (this.props.extraTime || 0);
-
-        this.setState({timeText: GetTimeText(timeAmount)});
-    };
-
-    componentDidMount() {
-        this.intervalCallback = setInterval(this.updateTime, TIMEOUT);
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.intervalCallback);
-        this.isUnmounted = true;
-    }
-
-    render() {
-        return <Text style={this.props.style}>{this.state.timeText}</Text>;
-    }
-}
-
 interface Props {
     route: {params: {categories: string[]}};
     navigation: any;
 }
 
-interface State {
-    currentCaseIndex: number;
-    scramble: string;
-    shouldDisplaySolution: boolean;
-    cases: Case[];
-    buttonToDisplay: TimeAttackButtonOption;
-    timerStartTimestamp?: Date;
-    totalTime: number;
-    solveCount: number;
-}
+const TimeAttackPlayScreen: FC<Props> = (props) => {
+    const [currentCaseIndex, setCurrentCaseIndex] = useState(-1);
+    const [scramble, setScramble] = useState(UNDEFINED_SCRAMBLE_TEXT);
+    const [shouldDisplaySolution, setShouldDisplaySolution] = useState(false);
+    const [cases, setCases] = useState<Case[]>([]);
+    const [buttonToDisplay, setButtonToDisplay] = useState(TimeAttackButtonOption.START_TIMER);
+    const [timerStartTimestamp, setTimerStartTimestamp] = useState<Date | null>(null);
+    const [totalTime, setTotalTime] = useState(0);
+    const [solveCount, setSolveCount] = useState(0);
 
-export default class TimeAttackPlayScreen extends Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-        this.state = {
-            currentCaseIndex: -1,
-            scramble: UNDEFINED_SCRAMBLE_TEXT,
-            shouldDisplaySolution: false,
-            cases: [],
-            buttonToDisplay: TimeAttackButtonOption.START_TIMER,
-            timerStartTimestamp: undefined,
-            totalTime: 0,
-            solveCount: 0,
-        };
-    }
-
-    goToEndScreen = () => {
-        this.props.navigation.replace('TimeAttackEnd', {
-            totalTime: this.state.totalTime,
-            cases: this.state.cases,
-            solveCount: this.state.solveCount,
+    function goToEndScreen() {
+        props.navigation.replace('TimeAttackEnd', {
+            totalTime: totalTime,
+            cases: cases,
+            solveCount: solveCount,
         });
     };
 
-    stopTimer = () => {
+    function stopTimer() {
         const timerStopTimestamp = new Date();
 
-        if (!this.state.timerStartTimestamp) return;
+        if (!timerStartTimestamp) return;
 
-        let caseTime = timerStopTimestamp.getTime() - this.state.timerStartTimestamp.getTime();
+        let caseTime = timerStopTimestamp.getTime() - timerStartTimestamp.getTime();
 
-        this.setState(prevState => {
-            return {
-                scramble: UNDEFINED_SCRAMBLE_TEXT,
-                totalTime: prevState.totalTime + caseTime,
-                timerStartTimestamp: undefined,
-                solveCount: prevState.solveCount + 1,
-            };
-        }, this.getNextCase);
+        setScramble(UNDEFINED_SCRAMBLE_TEXT);
+        setTotalTime(prevTotalTime => prevTotalTime + caseTime)
+        setTimerStartTimestamp(null);
+        setSolveCount(prevSolveCount => prevSolveCount + 1);
+        setCurrentCaseIndex(x => x + 1);
     };
 
-    skipCase = () => {
-        this.setState({timerStartTimestamp: undefined}, this.getNextCase);
+    function skipCase() {
+        setTimerStartTimestamp(null);
+        setCurrentCaseIndex(x => x + 1);
     };
 
-    getNextCase = () => {
-        let nextCaseIndex = this.state.currentCaseIndex + 1;
-
-        if (nextCaseIndex >= this.state.cases.length) {
-            this.goToEndScreen();
+    useEffect(() => {
+        if (currentCaseIndex >= cases.length) {
+            goToEndScreen();
             return;
         }
 
-        this.setState({
-            currentCaseIndex: nextCaseIndex,
-            shouldDisplaySolution: false,
-            buttonToDisplay: TimeAttackButtonOption.START_TIMER,
-        });
+        const newCase = cases[currentCaseIndex];
 
-        let nextCase: Case = this.state.cases[nextCaseIndex];
+        setShouldDisplaySolution(false);
+        setButtonToDisplay(TimeAttackButtonOption.START_TIMER);
 
-        if (nextCase) {
-            GenerateScramble(nextCase.algorithm, (success, scramble) => {
-                this.setState({
-                    scramble: success ? scramble : 'Error',
-                });
+        if (newCase) {
+            GenerateScramble(newCase.algorithm, (success, scramble) => {
+                setScramble(success ? scramble : 'Error');
             });
         }
-    };
+    }, [currentCaseIndex, cases]);
 
-    initCases = (cases: Case[]) => {
-        let categories = this.props.route.params.categories;
-        let testedCases = ShuffleArray(cases);
+    function initCases(newCases: Case[]) {
+        let categories = props.route.params.categories;
+        let testedCases = ShuffleArray(newCases);
 
         if (categories) {
             testedCases = testedCases.filter(c => c.category && categories.includes(c.category));
         }
 
-        this.setState({cases: testedCases, currentCaseIndex: -1});
-        this.getNextCase();
+        setCases(testedCases);
+        setCurrentCaseIndex(0);
     };
 
-    componentDidMount() {
-        CaseStorage.GetAllCases().then(cases => {
-            this.initCases(cases);
+    useEffect(() => {
+        CaseStorage.GetAllCases().then(fetchedCases => {
+            initCases(fetchedCases);
         });
-    }
+    }, []);
 
-    startTimer = () => {
-        this.setState({
-            buttonToDisplay: TimeAttackButtonOption.STOP_TIMER,
-            timerStartTimestamp: new Date(),
-        });
+    function startTimer() {
+        setButtonToDisplay(TimeAttackButtonOption.STOP_TIMER);
+        setTimerStartTimestamp(new Date());
     };
 
-    renderBottomButton = () => {
-        switch (this.state.buttonToDisplay) {
+    function BottomButton() {
+        switch (buttonToDisplay) {
             case TimeAttackButtonOption.STOP_TIMER:
-                return <BottomScreenButton text="Stop" onPress={this.stopTimer} style={styles.nextCaseButton} />;
+                return <BottomScreenButton text="Stop" onPress={stopTimer} style={styles.nextCaseButton} />;
             case TimeAttackButtonOption.START_TIMER:
-                return <BottomScreenButton text="Start" onPress={this.startTimer} style={styles.nextCaseButton} />;
+                return <BottomScreenButton text="Start" onPress={startTimer} style={styles.nextCaseButton} />;
             case TimeAttackButtonOption.NEXT_CASE:
-                return <BottomScreenButton text="Next Case" onPress={this.skipCase} style={styles.nextCaseButton} />;
+                return <BottomScreenButton text="Next Case" onPress={skipCase} style={styles.nextCaseButton} />;
         }
     };
 
-    render() {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.header}>Scramble:</Text>
-                <Text style={styles.algorithmText}>{this.state.scramble}</Text>
-                <View style={styles.solutionView}>
-                    {this.state.shouldDisplaySolution && this.state.cases[this.state.currentCaseIndex] ? (
-                        [
-                            <Text key="header" style={styles.header}>
-                                Solution:
-                            </Text>,
-                            <Text key="text" style={styles.algorithmText}>
-                                {this.state.cases[this.state.currentCaseIndex].algorithm}
-                            </Text>,
-                        ]
-                    ) : (
-                        <>
-                            <View style={{height: 20}}>
-                                {this.state.timerStartTimestamp ? (
-                                    <Timer
-                                        style={styles.timerText}
-                                        startTimestamp={this.state.timerStartTimestamp.getTime()}
-                                        extraTime={this.state.totalTime}
-                                    />
-                                ) : (
-                                    <Text style={styles.timerText}>{GetTimeText(this.state.totalTime)}</Text>
-                                )}
-                            </View>
-                            <View style={[styles.buttonView, styles.noButton]}>
-                                <TouchableNativeFeedback
-                                    onPress={() => {
-                                        this.setState({
-                                            shouldDisplaySolution: true,
-                                            buttonToDisplay: TimeAttackButtonOption.NEXT_CASE,
-                                        });
-                                    }}
-                                    background={TOUCHABLE_BACKGROUND}>
-                                    <Text style={[styles.buttonText, {color: 'white'}]}>I forgot</Text>
-                                </TouchableNativeFeedback>
-                            </View>
-                        </>
-                    )}
-                </View>
-                {this.renderBottomButton()}
+    return (
+        <View style={styles.container}>
+            <Text style={styles.header}>Scramble:</Text>
+            <Text style={styles.algorithmText}>{scramble}</Text>
+            <View style={styles.solutionView}>
+                {shouldDisplaySolution && cases[currentCaseIndex] ? (
+                    [
+                        <Text key="header" style={styles.header}>
+                            Solution:
+                        </Text>,
+                        <Text key="text" style={styles.algorithmText}>
+                            {cases[currentCaseIndex].algorithm}
+                        </Text>,
+                    ]
+                ) : (
+                    <>
+                        <View style={{height: 20}}>
+                            {timerStartTimestamp ? (
+                                <Timer
+                                    style={styles.timerText}
+                                    startTimestamp={timerStartTimestamp.getTime()}
+                                    extraTime={totalTime}
+                                />
+                            ) : (
+                                <Text style={styles.timerText}>{GetTimeText(totalTime)}</Text>
+                            )}
+                        </View>
+                        <View style={[styles.buttonView, styles.noButton]}>
+                            <TouchableNativeFeedback
+                                onPress={() => {
+                                    setShouldDisplaySolution(true);
+                                    setButtonToDisplay(TimeAttackButtonOption.NEXT_CASE);
+                                }}
+                                background={TOUCHABLE_BACKGROUND}>
+                                <Text style={[styles.buttonText, {color: 'white'}]}>I forgot</Text>
+                            </TouchableNativeFeedback>
+                        </View>
+                    </>
+                )}
             </View>
-        );
-    }
+            <BottomButton />
+        </View>
+    );
 }
+
+export default TimeAttackPlayScreen;

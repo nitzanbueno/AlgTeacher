@@ -1,5 +1,4 @@
-import React, {FunctionComponent} from "react";
-import {Component} from "react";
+import React, {FC, useState, useEffect} from "react";
 import {Text, View, FlatList, StyleSheet, Alert} from "react-native";
 import {Case} from "../Models";
 import TouchableImage from "../CommonComponents/TouchableImage";
@@ -54,7 +53,7 @@ interface CaseImageProps {
 /**
  * This component uses the react-native-popup-menu library to wrap a TouchableImage component with a context menu.
  */
-const CaseImage: FunctionComponent<CaseImageProps> = withMenuContext((props: CaseImageProps & {ctx: MenuContext}) => {
+const CaseImage: FC<CaseImageProps> = withMenuContext((props: CaseImageProps & {ctx: MenuContext}) => {
     return (
         <Menu name={"case_" + props.case.id}>
             <MenuTrigger>
@@ -79,26 +78,43 @@ interface Props {
     route: any;
 }
 
-interface State {
-    cases: Case[];
-}
+const MainScreen: FC<Props> = props => {
+    const [cases, setCases] = useState<Case[]>([]);
 
-export default class MainScreen extends Component<Props, State> {
-    constructor(props: any) {
-        super(props);
-        this.state = {cases: []};
+    function startTimeAttack() {
+        props.navigation.navigate("TimeAttackOpening");
     }
 
-    openAddScreen = () => {
-        this.props.navigation.navigate("Add", {caseId: -1, callerScreen: "Main"});
-    };
+    function deleteCase(chosenCase: Case) {
+        CaseStorage.DeleteCase(chosenCase.id).then(resetCases);
+    }
 
-    openEditScreen = (chosenCase: Case) => {
-        this.props.navigation.setOptions({
-            addCallback: this.resetCases,
+    function openDeleteConfirmation(chosenCase: Case) {
+        Alert.alert("Delete Case", "Are you sure you want to delete this case?", [
+            {
+                text: "Cancel",
+                style: "cancel",
+            },
+            {text: "Delete", onPress: () => deleteCase(chosenCase)},
+        ]);
+    }
+
+    function resetCases() {
+        CaseStorage.GetAllCases().then(newCases => {
+            setCases(newCases);
+        });
+    }
+
+    function openAddScreen() {
+        props.navigation.navigate("Add", {caseId: -1, callerScreen: "Main"});
+    }
+
+    function openEditScreen(chosenCase: Case) {
+        props.navigation.setOptions({
+            addCallback: resetCases,
         });
 
-        this.props.navigation.navigate("Add", {
+        props.navigation.navigate("Add", {
             caseId: chosenCase.id,
             algorithm: chosenCase.algorithm,
             description: chosenCase.description,
@@ -107,103 +123,69 @@ export default class MainScreen extends Component<Props, State> {
             title: "Edit",
             callerScreen: "Main",
         });
-    };
+    }
 
-    openTestScreen = (chosenCase: Case) => {
-        this.props.navigation.navigate("Test", {case: chosenCase});
-    };
+    function openTestScreen(chosenCase: Case) {
+        props.navigation.navigate("Test", {case: chosenCase});
+    }
 
-    deleteCase = (chosenCase: Case) => {
-        CaseStorage.DeleteCase(chosenCase.id).then(this.resetCases);
-    };
+    function renderCase({item}: {item: Case}) {
+        return (
+            <CaseImage
+                onPress={() => openTestScreen(item)}
+                case={item}
+                onEdit={() => openEditScreen(item)}
+                onDelete={() => openDeleteConfirmation(item)}
+            />
+        );
+    }
 
-    clearCases = () => {
-        CaseStorage.ClearAllCases().then(this.resetCases);
-    };
+    function openAlgorithmSetScreen() {
+        props.navigation.navigate("ImportAlgorithmSet");
+    }
 
-    openDeleteConfirmation = (chosenCase: Case) => {
-        Alert.alert("Delete Case", "Are you sure you want to delete this case?", [
-            {
-                text: "Cancel",
-                style: "cancel",
-            },
-            {text: "Delete", onPress: () => this.deleteCase(chosenCase)},
-        ]);
-    };
+    function clearCases() {
+        CaseStorage.ClearAllCases().then(resetCases);
+    }
 
-    openClearConfirmation = () => {
+    function openClearConfirmation() {
         Alert.alert("Clear All Cases", "Are you sure you want to delete ALL cases?", [
             {
                 text: "Cancel",
                 style: "cancel",
             },
-            {text: "Delete", onPress: () => this.clearCases()},
+            {text: "Delete", onPress: () => clearCases()},
         ]);
-    };
+    }
 
-    startTimeAttack = () => {
-        this.props.navigation.navigate("TimeAttackOpening");
-    };
+    useEffect(resetCases, [props?.route?.params?.case]);
 
-    renderCase = ({item}: {item: Case}) => {
-        return (
-            <CaseImage
-                onPress={() => this.openTestScreen(item)}
-                case={item}
-                onEdit={() => this.openEditScreen(item)}
-                onDelete={() => this.openDeleteConfirmation(item)}
-            />
-        );
-    };
-
-    resetCases = () => {
-        CaseStorage.GetAllCases().then(cases => {
-            this.setState({cases: cases});
-        });
-    };
-
-    openAlgorithmSetScreen = () => {
-        this.props.navigation.navigate("ImportAlgorithmSet");
-    };
-
-    componentDidMount() {
-        this.resetCases();
-        this.props.navigation.setOptions({
+    useEffect(() => {
+        props.navigation.setOptions({
             headerRight: () => (
                 <View style={styles.iconContainer}>
-                    <TouchableNativeFeedback onPress={this.startTimeAttack}>
+                    <TouchableNativeFeedback onPress={startTimeAttack}>
                         <Icon style={styles.icon} name="stopwatch" size={20} />
                     </TouchableNativeFeedback>
-                    <TouchableNativeFeedback onPress={this.openAddScreen}>
+                    <TouchableNativeFeedback onPress={openAddScreen}>
                         <Icon style={styles.icon} name="plus" size={20} />
                     </TouchableNativeFeedback>
                     <MenuIcon>
                         <MenuOptions>
-                            <MenuOption onSelect={this.openAlgorithmSetScreen} text="Import algorithm set..." />
-                            <MenuOption onSelect={this.openClearConfirmation} text="Delete all cases..." />
+                            <MenuOption onSelect={openAlgorithmSetScreen} text="Import algorithm set..." />
+                            <MenuOption onSelect={openClearConfirmation} text="Delete all cases..." />
                         </MenuOptions>
                     </MenuIcon>
                 </View>
             ),
         });
-    }
+    }, []);
 
-    componentDidUpdate(prevProps: any) {
-        if (prevProps?.route?.params?.case !== this.props?.route?.params?.case) {
-            this.resetCases();
-        }
-    }
+    return (
+        <View style={styles.container}>
+            <FlatList data={cases} renderItem={renderCase} keyExtractor={item => item.id.toString()} numColumns={CASE_COLUMNS} />
+        </View>
+    );
+};
 
-    render() {
-        return (
-            <View style={styles.container}>
-                <FlatList
-                    data={this.state.cases}
-                    renderItem={this.renderCase}
-                    keyExtractor={item => item.id.toString()}
-                    numColumns={CASE_COLUMNS}
-                />
-            </View>
-        );
-    }
-}
+export default MainScreen;

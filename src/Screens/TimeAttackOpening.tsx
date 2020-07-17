@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import {Component} from 'react';
 import {Text, StyleSheet, ScrollView} from 'react-native';
 import {Case} from '../Models';
@@ -28,61 +28,56 @@ interface State {
     allCategories: string[];
 }
 
-export default class TimeAttackOpeningScreen extends Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-        this.state = {
-            allCategories: ['Loading...'],
-        };
-    }
+const TimeAttackOpeningScreen: FC<Props> = (props) => {
+    const [allCategories, setAllCategories] = useState<string[]>([]);
 
-    componentDidMount() {
-        CaseStorage.GetAllCategories().then(categories => {
-            this.setState({allCategories: categories});
-        });
-    }
-
-    confirmCategorySelection = (options: CheckboxPickerOptionArray) => {
+    function confirmCategorySelection(options: CheckboxPickerOptionArray) {
         let chosenCategories = options.filter(option => option.value).map(option => option.name);
 
-        this.props.navigation.replace('TimeAttackPlay', {
+        props.navigation.replace('TimeAttackPlay', {
             categories: chosenCategories,
         });
     };
 
-    goToAddScreen = () => {
-        this.props.navigation.replace('Add', {
+    function goToAddScreen() {
+        props.navigation.replace('Add', {
             caseId: -1,
             callerScreen: 'Main',
         });
     };
 
-    goToImportScreen = () => {
-        this.props.navigation.replace('ImportAlgorithmSet');
+    function goToImportScreen() {
+        props.navigation.replace('ImportAlgorithmSet');
     };
 
-    render() {
-        return (
-            <ScrollView style={styles.container}>
-                {this.state.allCategories.length > 0 ? (
-                    <>
-                        <Text style={styles.header}>Choose categories:</Text>
-                        <CheckboxPicker options={this.state.allCategories} onSubmit={this.confirmCategorySelection} />
-                    </>
-                ) : (
-                    <Text style={styles.header}>
-                        {"You don't have any categories.\nHow about "}
-                        <Text style={{color: 'blue', textDecorationLine: 'underline'}} onPress={this.goToAddScreen}>
-                            adding a case with one
-                        </Text>
-                        {' or maybe '}
-                        <Text style={{color: 'blue', textDecorationLine: 'underline'}} onPress={this.goToImportScreen}>
-                            importing an algorithm set
-                        </Text>
-                        ?
+    useEffect(() => {
+        CaseStorage.GetAllCategories().then(categories => {
+            setAllCategories(categories);
+        }); 
+    }, []);
+
+    return (
+        <ScrollView style={styles.container}>
+            {allCategories.length > 0 ? (
+                <>
+                    <Text style={styles.header}>Choose categories:</Text>
+                    <CheckboxPicker options={allCategories} onSubmit={confirmCategorySelection} />
+                </>
+            ) : (
+                <Text style={styles.header}>
+                    {"You don't have any categories.\nHow about "}
+                    <Text style={{color: 'blue', textDecorationLine: 'underline'}} onPress={goToAddScreen}>
+                        adding a case with one
                     </Text>
-                )}
-            </ScrollView>
-        );
-    }
+                    {' or maybe '}
+                    <Text style={{color: 'blue', textDecorationLine: 'underline'}} onPress={goToImportScreen}>
+                        importing an algorithm set
+                    </Text>
+                    ?
+                </Text>
+            )}
+        </ScrollView>
+    );
 }
+
+export default TimeAttackOpeningScreen;

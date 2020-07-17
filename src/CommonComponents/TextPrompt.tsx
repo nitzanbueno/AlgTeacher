@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
         height: "100%",
         opacity: 0.5,
         backgroundColor: "black",
+        zIndex: 1000,
     },
     promptContainer: {
         position: "absolute",
@@ -20,6 +21,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         left: "5%",
         padding: 5,
+        zIndex: 1001,
     },
     promptText: {
         fontSize: 20,

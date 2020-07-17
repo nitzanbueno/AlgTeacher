@@ -1,6 +1,5 @@
-import React from "react";
-import {Component} from "react";
-import {Text, View, StyleSheet} from "react-native";
+import React, {useState, useEffect, FC} from "react";
+import {Text, View, StyleSheet, ViewStyle} from "react-native";
 import {TouchableNativeFeedback} from "react-native-gesture-handler";
 import {TOUCHABLE_BACKGROUND, Case} from "../Models";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -73,113 +72,101 @@ const caseImageSize = {
     height: 300,
 };
 
+const Button: FC<{style: ViewStyle, onPress: () => void}> = props => {
+    return (
+        <TouchableNativeFeedback onPress={props.onPress} background={TOUCHABLE_BACKGROUND}>
+            <View style={[styles.buttonView, props.style]}>
+                <Text style={styles.buttonText}>{props.children}</Text>
+            </View>
+        </TouchableNativeFeedback>
+    );
+};
+
 interface Props {
     route: {params: {case: Case}};
     navigation: any;
 }
 
-interface State {
-    shouldDisplaySolution: boolean;
-    scramble: string;
-}
+const TestScreen: FC<Props> = props => {
+    const [shouldDisplaySolution, setShouldDisplaySolution] = useState(false);
+    const [scramble, setScramble] = useState("");
 
-export default class TestScreen extends Component<Props, State> {
-    constructor(props: any) {
-        super(props);
-        this.state = {shouldDisplaySolution: false, scramble: "Loading..."};
+    const {category, description, imageUrl, algorithm} = props.route.params.case;
+
+    function onClickYes() {
+        props.navigation.navigate("Main");
     }
 
-    renderImage = () => {
-        return <FixedSizeSvgUri {...caseImageSize} uri={this.props.route.params.case.imageUrl} />;
-    };
+    function onClickNo() {
+        setShouldDisplaySolution(true);
+    }
 
-    onClickYes = () => {
-        this.props.navigation.navigate("Main");
-    };
+    function openEditScreen() {
+        const {id, category, description, imageUrl, algorithm} = props.route.params.case;
 
-    onClickNo = () => {
-        this.setState({shouldDisplaySolution: true});
-    };
-
-    onClickOk = this.onClickYes;
-
-    openEditScreen = () => {
-        this.props.navigation.navigate("Add", {
-            caseId: this.props.route.params.case.id,
-            algorithm: this.props.route.params.case.algorithm,
-            description: this.props.route.params.case.description,
-            imageUrl: this.props.route.params.case.imageUrl,
-            category: this.props.route.params.case.category,
+        props.navigation.navigate("Add", {
+            caseId: id,
+            algorithm,
+            description,
+            imageUrl,
+            category,
             title: "Edit",
             callerScreen: "Test",
         });
-    };
+    }
 
-    componentDidMount() {
-        this.props.navigation.setOptions({
+    useEffect(() => {
+        props.navigation.setOptions({
             headerRight: () => (
                 <View style={styles.iconContainer}>
-                    <TouchableNativeFeedback onPress={this.openEditScreen}>
+                    <TouchableNativeFeedback onPress={openEditScreen}>
                         <Icon style={styles.icon} name="pencil" size={20} />
                     </TouchableNativeFeedback>
                 </View>
             ),
         });
 
-        GenerateScramble(this.props.route.params.case.algorithm, (success, scramble) => {
+        GenerateScramble(props.route.params.case.algorithm, (success, newScramble) => {
             if (success) {
-                this.setState({scramble: scramble});
+                setScramble(newScramble);
             } else {
-                this.setState({scramble: "Error"});
+                setScramble("Error");
             }
         });
-    }
+    }, [algorithm]);
 
-    render() {
-        return (
-            <View style={styles.container}>
-                {!!this.props.route.params.case.category && (
-                    <Text style={styles.categoryText}>{this.props.route.params.case.category}</Text>
-                )}
-                {!!this.props.route.params.case.description && (
-                    <Text style={styles.descriptionText}>Description: {this.props.route.params.case.description}</Text>
-                )}
-                {this.renderImage()}
-                {!this.state.shouldDisplaySolution ? (
-                    <View>
-                        <Text style={styles.scrambleText}>Scramble:</Text>
-                        <Text style={styles.scrambleText}>{this.state.scramble}</Text>
-                        <Text style={styles.scrambleText}>Do you remember the solution to this case?</Text>
-                    </View>
+    const onClickOk = onClickYes;
+
+    return (
+        <View style={styles.container}>
+            {/* In case category/description are empty, we can't output the strings (React Native doesn't like it) */}
+            {!!category && <Text style={styles.categoryText}>{category}</Text>}
+            {!!description && <Text style={styles.descriptionText}>Description: {description}</Text>}
+            <FixedSizeSvgUri {...caseImageSize} uri={imageUrl} />
+            {shouldDisplaySolution ? (
+                <>
+                    <Text style={styles.scrambleText}>Solution:</Text>
+                    <Text style={styles.scrambleText}>{algorithm}</Text>
+                </>
+            ) : (
+                <>
+                    <Text style={styles.scrambleText}>Scramble:</Text>
+                    <Text style={styles.scrambleText}>{scramble || "Loading..."}</Text>
+                    <Text style={styles.scrambleText}>Do you remember the solution to this case?</Text>
+                </>
+            )}
+            <View style={styles.buttonContainer}>
+                {!shouldDisplaySolution ? (
+                    <>
+                        <Button style={styles.yesButton} onPress={onClickYes} children="Yes" />
+                        <Button style={styles.noButton} onPress={onClickNo} children="No" />
+                    </>
                 ) : (
-                    <View>
-                        <Text style={styles.scrambleText}>Solution:</Text>
-                        <Text style={styles.scrambleText}>{this.props.route.params.case.algorithm}</Text>
-                    </View>
+                    <Button style={styles.okButton} onPress={onClickOk} children="Got it!" />
                 )}
-                <View style={styles.buttonContainer}>
-                    {!this.state.shouldDisplaySolution ? (
-                        [
-                            <TouchableNativeFeedback onPress={() => this.onClickYes()} background={TOUCHABLE_BACKGROUND} key="yesButton">
-                                <View style={[styles.buttonView, styles.yesButton]}>
-                                    <Text style={styles.buttonText}>Yes</Text>
-                                </View>
-                            </TouchableNativeFeedback>,
-                            <TouchableNativeFeedback onPress={() => this.onClickNo()} background={TOUCHABLE_BACKGROUND} key="noButton">
-                                <View style={[styles.buttonView, styles.noButton]}>
-                                    <Text style={styles.buttonText}>No</Text>
-                                </View>
-                            </TouchableNativeFeedback>,
-                        ]
-                    ) : (
-                        <TouchableNativeFeedback onPress={() => this.onClickOk()} background={TOUCHABLE_BACKGROUND}>
-                            <View style={[styles.buttonView, styles.okButton]}>
-                                <Text style={styles.buttonText}>Got it!</Text>
-                            </View>
-                        </TouchableNativeFeedback>
-                    )}
-                </View>
             </View>
-        );
-    }
-}
+        </View>
+    );
+};
+
+export default TestScreen;
