@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import React, {Component} from "react";
+import React, {Component, createContext} from "react";
 import MainScreen from "./Screens/Main";
 import TestScreen from "./Screens/Test";
 import {NavigationContainer} from "@react-navigation/native";
@@ -10,6 +10,7 @@ import TimeAttackOpeningScreen from "./Screens/TimeAttackOpening";
 import TimeAttackPlayScreen from "./Screens/TimeAttackPlay";
 import TimeAttackEndScreen from "./Screens/TimeAttackEnd";
 import ImportAlgorithmSetScreen from "./Screens/ImportAlgorithmSet";
+import {CaseStoreContext, globalCaseStore} from "./CaseStore";
 
 const Stack = createStackNavigator();
 
@@ -34,5 +35,9 @@ class AppNavigationStack extends Component {
 }
 
 export default function App() {
-    return <AppNavigationStack />;
+    return (
+        <CaseStoreContext.Provider value={globalCaseStore}>
+            <AppNavigationStack />
+        </CaseStoreContext.Provider>
+    );
 }

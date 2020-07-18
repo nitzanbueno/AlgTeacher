@@ -1,12 +1,13 @@
-import React, {FC, useState, useEffect} from "react";
+import React, {FC, useState, useEffect, useContext} from "react";
 import {Text, View, FlatList, StyleSheet, Alert} from "react-native";
 import {Case} from "../Models";
 import TouchableImage from "../CommonComponents/TouchableImage";
-import CaseStorage from "../CaseStorage";
+import {CaseStoreContext} from "../CaseStore";
 import {MenuTrigger, Menu, MenuOptions, MenuOption, withMenuContext, MenuContext} from "react-native-popup-menu";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import {TouchableNativeFeedback} from "react-native-gesture-handler";
 import MenuIcon from "../CommonComponents/MenuIcon";
+import {observer} from "mobx-react";
 
 const CASE_COLUMNS = 2;
 
@@ -79,14 +80,14 @@ interface Props {
 }
 
 const MainScreen: FC<Props> = props => {
-    const [cases, setCases] = useState<Case[]>([]);
+    const caseStore = useContext(CaseStoreContext);
 
     function startTimeAttack() {
         props.navigation.navigate("TimeAttackOpening");
     }
 
     function deleteCase(chosenCase: Case) {
-        CaseStorage.DeleteCase(chosenCase.id).then(resetCases);
+        caseStore.DeleteCase(chosenCase.id);
     }
 
     function openDeleteConfirmation(chosenCase: Case) {
@@ -99,34 +100,19 @@ const MainScreen: FC<Props> = props => {
         ]);
     }
 
-    function resetCases() {
-        CaseStorage.GetAllCases().then(newCases => {
-            setCases(newCases);
-        });
-    }
-
     function openAddScreen() {
-        props.navigation.navigate("Add", {caseId: -1, callerScreen: "Main"});
+        props.navigation.navigate("Add", {caseId: -1});
     }
 
     function openEditScreen(chosenCase: Case) {
-        props.navigation.setOptions({
-            addCallback: resetCases,
-        });
-
         props.navigation.navigate("Add", {
             caseId: chosenCase.id,
-            algorithm: chosenCase.algorithm,
-            description: chosenCase.description,
-            imageUrl: chosenCase.imageUrl,
-            category: chosenCase.category,
             title: "Edit",
-            callerScreen: "Main",
         });
     }
 
     function openTestScreen(chosenCase: Case) {
-        props.navigation.navigate("Test", {case: chosenCase});
+        props.navigation.navigate("Test", {caseId: chosenCase.id});
     }
 
     function renderCase({item}: {item: Case}) {
@@ -145,7 +131,7 @@ const MainScreen: FC<Props> = props => {
     }
 
     function clearCases() {
-        CaseStorage.ClearAllCases().then(resetCases);
+        caseStore.ClearAllCases();
     }
 
     function openClearConfirmation() {
@@ -157,8 +143,6 @@ const MainScreen: FC<Props> = props => {
             {text: "Delete", onPress: () => clearCases()},
         ]);
     }
-
-    useEffect(resetCases, [props?.route?.params?.case]);
 
     useEffect(() => {
         props.navigation.setOptions({
@@ -183,9 +167,10 @@ const MainScreen: FC<Props> = props => {
 
     return (
         <View style={styles.container}>
-            <FlatList data={cases} renderItem={renderCase} keyExtractor={item => item.id.toString()} numColumns={CASE_COLUMNS} />
+            {/* Using slice() on cases because mobx observable arrays aren't actual arrays */}
+            <FlatList data={caseStore.cases.slice()} renderItem={renderCase} keyExtractor={item => item.id.toString()} numColumns={CASE_COLUMNS} />
         </View>
     );
 };
 
-export default MainScreen;
+export default observer(MainScreen);

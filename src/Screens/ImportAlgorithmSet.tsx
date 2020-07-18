@@ -1,8 +1,9 @@
-import React, {FC} from "react";
+import React, {FC, useContext} from "react";
 import {View, Text, StyleSheet, Alert} from "react-native";
-import CaseStorage from "../CaseStorage";
+import {CaseStoreContext} from "../CaseStore";
 import ALGORITHM_SETS from "../AlgorithmSets.json";
 import { Case } from "../Models";
+import { observer } from "mobx-react";
 
 const styles = StyleSheet.create({
     container: {
@@ -33,14 +34,16 @@ interface AlgorithmSet {
 }
 
 const ImportAlgorithmSetScreen: FC<{navigation: any}> = props => {
+    const caseStore = useContext(CaseStoreContext);
+
     function importAlgorithmSet(algorithmSet: AlgorithmSet) {
         const {cases} = algorithmSet;
 
         if (!cases || cases.length == 0) return;
 
-        CaseStorage.StoreCaseList(cases).then(() => {
-            props.navigation.navigate("Main", {case: cases[0]});
-        });
+        caseStore.StoreCaseList(cases);
+
+        props.navigation.goBack();
     }
 
     function promptImportSet(algorithmSet: AlgorithmSet) {
@@ -69,4 +72,4 @@ const ImportAlgorithmSetScreen: FC<{navigation: any}> = props => {
     );
 };
 
-export default ImportAlgorithmSetScreen;
+export default observer(ImportAlgorithmSetScreen);

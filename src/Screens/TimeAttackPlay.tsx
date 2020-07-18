@@ -1,12 +1,13 @@
-import React, { useState, FC, useEffect } from 'react';
+import React, { useState, FC, useEffect, useContext } from 'react';
 import {Component} from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import {TouchableNativeFeedback} from 'react-native-gesture-handler';
 import {TOUCHABLE_BACKGROUND, Case} from '../Models';
-import CaseStorage from '../CaseStorage';
+import { CaseStoreContext } from '../CaseStore';
 import {GenerateScramble} from '../ScrambleLib';
 import {GetTimeText, ShuffleArray} from '../Utils';
 import Timer from '../CommonComponents/Timer';
+import { observer } from 'mobx-react';
 
 const UNDEFINED_SCRAMBLE_TEXT: string = 'Loading...';
 
@@ -91,6 +92,7 @@ interface Props {
 }
 
 const TimeAttackPlayScreen: FC<Props> = (props) => {
+    const caseStore = useContext(CaseStoreContext);
     const [currentCaseIndex, setCurrentCaseIndex] = useState(-1);
     const [scramble, setScramble] = useState(UNDEFINED_SCRAMBLE_TEXT);
     const [shouldDisplaySolution, setShouldDisplaySolution] = useState(false);
@@ -145,9 +147,9 @@ const TimeAttackPlayScreen: FC<Props> = (props) => {
         }
     }, [currentCaseIndex, cases]);
 
-    function initCases(newCases: Case[]) {
+    useEffect(() => {
         let categories = props.route.params.categories;
-        let testedCases = ShuffleArray(newCases);
+        let testedCases = ShuffleArray(caseStore.cases);
 
         if (categories) {
             testedCases = testedCases.filter(c => c.category && categories.includes(c.category));
@@ -155,13 +157,7 @@ const TimeAttackPlayScreen: FC<Props> = (props) => {
 
         setCases(testedCases);
         setCurrentCaseIndex(0);
-    };
-
-    useEffect(() => {
-        CaseStorage.GetAllCases().then(fetchedCases => {
-            initCases(fetchedCases);
-        });
-    }, []);
+    }, [caseStore.cases]);
 
     function startTimer() {
         setButtonToDisplay(TimeAttackButtonOption.STOP_TIMER);
@@ -224,4 +220,4 @@ const TimeAttackPlayScreen: FC<Props> = (props) => {
     );
 }
 
-export default TimeAttackPlayScreen;
+export default observer(TimeAttackPlayScreen);

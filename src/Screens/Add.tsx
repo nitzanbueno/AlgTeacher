@@ -1,13 +1,13 @@
-import React, {Component, FC, useState, useEffect} from "react";
+import React, {Component, FC, useState, useEffect, useContext} from "react";
 import {Text, FlatList, StyleSheet, Button, View} from "react-native";
 import TouchableImage from "../CommonComponents/TouchableImage";
 import {GenerateCaseImageOptions} from "../ImageOptionGenerator";
 import {TextInput, ScrollView} from "react-native-gesture-handler";
 import {Case} from "../Models";
-import CaseStorage from "../CaseStorage";
+import { CaseStoreContext } from "../CaseStore";
 import FixedSizeSvgUri from "../CommonComponents/FixedSizeSvgUri";
 import PickerWithAddOption from "../CommonComponents/PickerWithAddOption";
-import { useAsyncLoad } from "../Utils";
+import { observer } from "mobx-react";
 
 const styles = StyleSheet.create({
     formField: {
@@ -45,12 +45,27 @@ interface Props {
 }
 
 const AddScreen: FC<Props> = (props) => {
-    const [description, setDescription] = useState(props.route.params.description || "");
-    const [algorithm, setAlgorithm] = useState(props.route.params.algorithm || "");
-    const [category, setCategory] = useState(props.route.params.category || "");
-    const [selectedImage, setSelectedImage] = useState(props.route.params.imageUrl || "");
+    const caseStore = useContext(CaseStoreContext);
+    const [description, setDescription] = useState("");
+    const [algorithm, setAlgorithm] = useState("");
+    const [category, setCategory] = useState("");
+    const [selectedImage, setSelectedImage] = useState("");
     const [isError, setIsError] = useState(false);
-    const [categoryOptions, didLoadCategoryOptions] = useAsyncLoad(CaseStorage.GetAllCategories);
+
+    useEffect(function updateFormStateFromProps() {
+        const {caseId} = props.route.params;
+
+        if (caseId < 0) return;
+        
+        const propCase = caseStore.GetCaseById(caseId);
+
+        if (propCase) {
+            setDescription(propCase.description);
+            setAlgorithm(propCase.algorithm);
+            setCategory(propCase.category || "");
+            setSelectedImage(propCase.imageUrl);
+        }
+    }, [props.route.params.caseId]);
 
     useEffect(() => {
         if(props.route.params.title) {
@@ -82,10 +97,10 @@ const AddScreen: FC<Props> = (props) => {
             category,
         };
 
-        // Store the case, then call the callback
-        CaseStorage.StoreCase(caseToSave).then(() => {
-            props.navigation.navigate(props.route.params.callerScreen, {case: caseToSave});
-        });
+        // Store the case, then go back
+        caseStore.StoreCase(caseToSave);
+
+        props.navigation.goBack();
     };
 
     /**
@@ -113,12 +128,12 @@ const AddScreen: FC<Props> = (props) => {
                 onChangeText={setDescription}
             />
             <Text style={styles.formLabel}>Category:</Text>
-            {(didLoadCategoryOptions && categoryOptions != null) ? (
+            {caseStore.isLoaded ? (
                 <PickerWithAddOption
                     style={styles.formField}
                     selectedValue={category}
                     onValueChange={setCategory}
-                    options={categoryOptions}
+                    options={caseStore.categories}
                     addPromptText="Add category"
                 />
             ) : (
@@ -153,4 +168,4 @@ const AddScreen: FC<Props> = (props) => {
     );
 };
 
-export default AddScreen;
+export default observer(AddScreen);

@@ -1,10 +1,12 @@
-import React, {useState, useEffect, FC} from "react";
+import React, {useState, useEffect, FC, useContext} from "react";
 import {Text, View, StyleSheet, ViewStyle} from "react-native";
 import {TouchableNativeFeedback} from "react-native-gesture-handler";
 import {TOUCHABLE_BACKGROUND, Case} from "../Models";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {GenerateScramble} from "../ScrambleLib";
 import FixedSizeSvgUri from "../CommonComponents/FixedSizeSvgUri";
+import {CaseStoreContext} from "../CaseStore";
+import {observer} from "mobx-react";
 
 const styles = StyleSheet.create({
     container: {
@@ -83,7 +85,7 @@ const Button: FC<{style: ViewStyle, onPress: () => void}> = props => {
 };
 
 interface Props {
-    route: {params: {case: Case}};
+    route: {params: {caseId: number}};
     navigation: any;
 }
 
@@ -91,7 +93,11 @@ const TestScreen: FC<Props> = props => {
     const [shouldDisplaySolution, setShouldDisplaySolution] = useState(false);
     const [scramble, setScramble] = useState("");
 
-    const {category, description, imageUrl, algorithm} = props.route.params.case;
+    const caseStore = useContext(CaseStoreContext);
+
+    const {caseId} = props.route.params;
+    const propCase = caseStore.GetCaseById(caseId);
+    const {category, description, imageUrl, algorithm} = propCase || {};
 
     function onClickYes() {
         props.navigation.navigate("Main");
@@ -102,16 +108,9 @@ const TestScreen: FC<Props> = props => {
     }
 
     function openEditScreen() {
-        const {id, category, description, imageUrl, algorithm} = props.route.params.case;
-
         props.navigation.navigate("Add", {
-            caseId: id,
-            algorithm,
-            description,
-            imageUrl,
-            category,
+            caseId,
             title: "Edit",
-            callerScreen: "Test",
         });
     }
 
@@ -126,23 +125,36 @@ const TestScreen: FC<Props> = props => {
             ),
         });
 
-        GenerateScramble(props.route.params.case.algorithm, (success, newScramble) => {
-            if (success) {
-                setScramble(newScramble);
-            } else {
-                setScramble("Error");
-            }
-        });
+        if (algorithm) {
+            GenerateScramble(algorithm, (success, newScramble) => {
+                if (success) {
+                    setScramble(newScramble);
+                } else {
+                    setScramble("Error");
+                }
+            });
+        }
     }, [algorithm]);
 
     const onClickOk = onClickYes;
+
+    if (propCase === undefined) {
+        return (
+            <View style={styles.container}>
+                <Text>
+                    An error has occured - the chosen case seems to not exist. {"\n"}
+                    Please report this issue to the developers.
+                </Text>
+            </View>
+        );
+    }
 
     return (
         <View style={styles.container}>
             {/* In case category/description are empty, we can't output the strings (React Native doesn't like it) */}
             {!!category && <Text style={styles.categoryText}>{category}</Text>}
             {!!description && <Text style={styles.descriptionText}>Description: {description}</Text>}
-            <FixedSizeSvgUri {...caseImageSize} uri={imageUrl} />
+            <FixedSizeSvgUri {...caseImageSize} uri={imageUrl as string} />
             {shouldDisplaySolution ? (
                 <>
                     <Text style={styles.scrambleText}>Solution:</Text>
@@ -169,4 +181,4 @@ const TestScreen: FC<Props> = props => {
     );
 };
 
-export default TestScreen;
+export default observer(TestScreen);
