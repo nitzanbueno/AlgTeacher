@@ -980,6 +980,20 @@
                 "category": "Winter Variation",
                 "algorithm": "(U) R U2 R2 U2 R U R' U R",
                 "imageUrl": "https://algteacher.000webhostapp.com/visualcube.php?fmt=svg&size=500&view=plan&stage=wv&case=(U) R U2 R2 U2 R U R' U R"
+            },
+            {
+                "id": -1,
+                "description": "",
+                "category": "Winter Variation",
+                "algorithm": "R U' R2 U' R U' R' U2 R",
+                "imageUrl": "https://algteacher.000webhostapp.com/visualcube.php?fmt=svg&size=500&view=plan&stage=wv&case=R U' R2 U' R U' R' U2 R"
+            },
+            {
+                "id": -1,
+                "description": "",
+                "category": "Winter Variation",
+                "algorithm": "R U R' U' R U R' U' R U' R'",
+                "imageUrl": "https://algteacher.000webhostapp.com/visualcube.php?fmt=svg&size=500&view=plan&stage=wv&case=R U R' U' R U R' U' R U' R'"
             }
         ]
     }
