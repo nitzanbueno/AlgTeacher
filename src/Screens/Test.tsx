@@ -4,9 +4,11 @@ import {TouchableNativeFeedback} from "react-native-gesture-handler";
 import {TOUCHABLE_BACKGROUND, Case} from "../Models";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {GenerateScramble} from "../ScrambleLib";
-import FixedSizeSvgUri from "../CommonComponents/FixedSizeSvgUri";
+import FixedSizeCubeImage from "../CommonComponents/FixedSizeCubeImage";
 import {CaseStoreContext} from "../CaseStore";
 import {observer} from "mobx-react";
+import { CubeSvg } from "sr-visualizer";
+import { CubeImage } from "../CommonComponents/CubeImage";
 
 const styles = StyleSheet.create({
     container: {
@@ -151,10 +153,10 @@ const TestScreen: FC<Props> = props => {
 
     return (
         <View style={styles.container}>
-            {/* In case category/description are empty, we can't output the strings (React Native doesn't like it) */}
+            {/* In case category/description are empty, we can't output the strings (React Native doesn't like it), so we put !! */}
             {!!category && <Text style={styles.categoryText}>{category}</Text>}
             {!!description && <Text style={styles.descriptionText}>Description: {description}</Text>}
-            <FixedSizeSvgUri {...caseImageSize} uri={imageUrl as string} />
+            <CubeImage {...caseImageSize} case={algorithm || ""} />
             {shouldDisplaySolution ? (
                 <>
                     <Text style={styles.scrambleText}>Solution:</Text>

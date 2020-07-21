@@ -190,7 +190,6 @@ function ApplyRotation(move: string, rotation: string): string {
  * @param {string} algorithm The algorithm to normalize.
  */
 function NormalizeAlgorithm(algorithm: string) {
-    debugger;
     algorithm = SanitizeAlgorithm(algorithm);
 	algorithm = algorithm
         .replace(/M'/g, "R' L x")
@@ -223,6 +222,35 @@ function NormalizeAlgorithm(algorithm: string) {
 	}
 
 	return result.join(' ');
+}
+
+/**
+ * Inverts an algorithm.
+ * @param algorithm The algorithm to invert.
+ */
+export function InvertAlgorithm(algorithm: string): string {
+    const moves = SanitizeAlgorithm(algorithm).split(" ");
+	const invertedMoves = []
+
+	for (const move of moves) {
+		let invertedMove = "";
+		
+		if (move.endsWith('2')) {
+			// Inverted 2 moves are the same as the normal move
+			invertedMove = move;
+		} else if (move.endsWith("'")) {
+			// Remove the ' from the move
+			invertedMove = move.substring(0, move.length - 1);
+		} else {
+			// The move is a normal move so we just add a '
+			invertedMove = move + "'";
+		}
+
+		// Add the move in reverse order
+		invertedMoves.unshift(invertedMove);
+	}
+
+	return invertedMoves.join(" ");
 }
 
 export function GenerateScramble(

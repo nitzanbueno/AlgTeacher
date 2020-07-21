@@ -1,3 +1,7 @@
 [submodule "react-native-svg"]
 	path = react-native-svg
 	url = git@github.com:nitzanbueno/react-native-svg.git
+
+[submodule "visualcube"]
+	path = visualcube
+	url = https://github.com/tdecker91/visualcube.git

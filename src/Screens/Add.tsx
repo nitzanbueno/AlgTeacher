@@ -1,13 +1,13 @@
-import React, {Component, FC, useState, useEffect, useContext} from "react";
+import React, {FC, useState, useEffect, useContext} from "react";
 import {Text, FlatList, StyleSheet, Button, View} from "react-native";
-import TouchableImage from "../CommonComponents/TouchableImage";
+import TouchableCubeImage from "../CommonComponents/TouchableCubeImage";
 import {GenerateCaseImageOptions} from "../ImageOptionGenerator";
 import {TextInput, ScrollView} from "react-native-gesture-handler";
 import {Case} from "../Models";
 import { CaseStoreContext } from "../CaseStore";
-import FixedSizeSvgUri from "../CommonComponents/FixedSizeSvgUri";
 import PickerWithAddOption from "../CommonComponents/PickerWithAddOption";
 import { observer } from "mobx-react";
+import { CubeImage } from "../CommonComponents/CubeImage";
 
 const styles = StyleSheet.create({
     formField: {
@@ -85,7 +85,7 @@ const AddScreen: FC<Props> = (props) => {
     };
 
     function renderCaseImageOption({item}: {item: {url: string}}) {
-        return <TouchableImage onPress={() => setSelectedImage(item.url)} imageUrl={item.url} />;
+        return <TouchableCubeImage onPress={() => setSelectedImage(item.url)} algorithm={""} />;
     };
 
     function saveCase() {
@@ -158,7 +158,7 @@ const AddScreen: FC<Props> = (props) => {
             />
             <Text style={styles.formLabel}>Selected image:</Text>
             {selectedImage ? (
-                <FixedSizeSvgUri {...selectedImageSize} uri={selectedImage} />
+                <CubeImage {...selectedImageSize} case={selectedImage} />
             ) : (
                 <View style={styles.selectedImage} />
             )}
