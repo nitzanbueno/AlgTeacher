@@ -1,12 +1,12 @@
 import React, {useState, useEffect, FC, useContext} from "react";
 import {Text, View, StyleSheet, ViewStyle} from "react-native";
 import {TouchableNativeFeedback} from "react-native-gesture-handler";
-import {TOUCHABLE_BACKGROUND, Case} from "../Models";
+import {TOUCHABLE_BACKGROUND} from "../Models";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {GenerateScramble} from "../ScrambleLib";
-import FixedSizeSvgUri from "../CommonComponents/FixedSizeSvgUri";
 import {CaseStoreContext} from "../CaseStore";
 import {observer} from "mobx-react";
+import {CubeImage} from "../CommonComponents/CubeImage";
 
 const styles = StyleSheet.create({
     container: {
@@ -97,7 +97,7 @@ const TestScreen: FC<Props> = props => {
 
     const {caseId} = props.route.params;
     const propCase = caseStore.GetCaseById(caseId);
-    const {category, description, imageUrl, algorithm} = propCase || {};
+    const {category, description, imageOptions, algorithm} = propCase || {};
 
     function onClickYes() {
         props.navigation.navigate("Main");
@@ -151,10 +151,10 @@ const TestScreen: FC<Props> = props => {
 
     return (
         <View style={styles.container}>
-            {/* In case category/description are empty, we can't output the strings (React Native doesn't like it) */}
+            {/* In case category/description are empty, we can't output the strings (React Native doesn't like it), so we put !! */}
             {!!category && <Text style={styles.categoryText}>{category}</Text>}
             {!!description && <Text style={styles.descriptionText}>Description: {description}</Text>}
-            <FixedSizeSvgUri {...caseImageSize} uri={imageUrl as string} />
+            <CubeImage {...caseImageSize} case={algorithm || ""} {...imageOptions} />
             {shouldDisplaySolution ? (
                 <>
                     <Text style={styles.scrambleText}>Solution:</Text>

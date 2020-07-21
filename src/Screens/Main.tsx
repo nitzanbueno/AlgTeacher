@@ -1,7 +1,7 @@
-import React, {FC, useState, useEffect, useContext} from "react";
+import React, {FC, useEffect, useContext} from "react";
 import {Text, View, FlatList, StyleSheet, Alert} from "react-native";
 import {Case} from "../Models";
-import TouchableImage from "../CommonComponents/TouchableImage";
+import TouchableCubeImage from "../CommonComponents/TouchableCubeImage";
 import {CaseStoreContext} from "../CaseStore";
 import {MenuTrigger, Menu, MenuOptions, MenuOption, withMenuContext, MenuContext} from "react-native-popup-menu";
 import Icon from "react-native-vector-icons/FontAwesome5";
@@ -57,13 +57,13 @@ interface CaseImageProps {
 const CaseImage: FC<CaseImageProps> = withMenuContext((props: CaseImageProps & {ctx: MenuContext}) => {
     return (
         <Menu name={"case_" + props.case.id}>
-            <MenuTrigger>
-                <TouchableImage
-                    onPress={props.onPress}
-                    onLongPress={() => props.ctx.menuActions.openMenu("case_" + props.case.id)}
-                    imageUrl={props.case.imageUrl}
-                />
-            </MenuTrigger>
+            <TouchableCubeImage
+                onPress={props.onPress}
+                onLongPress={() => props.ctx.menuActions.openMenu("case_" + props.case.id)}
+                algorithm={props.case.algorithm}
+                {...props.case.imageOptions}
+            />
+            <MenuTrigger />
             <MenuOptions>
                 <MenuOption onSelect={props.onEdit} text="Edit" />
                 <MenuOption onSelect={props.onDelete}>
@@ -168,7 +168,12 @@ const MainScreen: FC<Props> = props => {
     return (
         <View style={styles.container}>
             {/* Using slice() on cases because mobx observable arrays aren't actual arrays */}
-            <FlatList data={caseStore.cases.slice()} renderItem={renderCase} keyExtractor={item => item.id.toString()} numColumns={CASE_COLUMNS} />
+            <FlatList
+                data={caseStore.cases.slice()}
+                renderItem={renderCase}
+                keyExtractor={item => item.id.toString()}
+                numColumns={CASE_COLUMNS}
+            />
         </View>
     );
 };
