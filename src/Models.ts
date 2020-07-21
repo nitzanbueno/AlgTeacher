@@ -1,10 +1,11 @@
 import { Platform, TouchableNativeFeedback } from "react-native";
+import { CubeOptions } from "sr-visualizer";
 
 export interface Case {
     id: number;
     description: string;
     algorithm: string;
-    imageUrl: string;
+    imageOptions: CubeOptions;
     category?: string;
 }
 

@@ -1,4 +1,4 @@
-import React, {FC, useState, useEffect, useContext} from "react";
+import React, {FC, useEffect, useContext} from "react";
 import {Text, View, FlatList, StyleSheet, Alert} from "react-native";
 import {Case} from "../Models";
 import TouchableCubeImage from "../CommonComponents/TouchableCubeImage";
@@ -8,7 +8,6 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import {TouchableNativeFeedback} from "react-native-gesture-handler";
 import MenuIcon from "../CommonComponents/MenuIcon";
 import {observer} from "mobx-react";
-import {CubeImage} from "../CommonComponents/CubeImage";
 
 const CASE_COLUMNS = 2;
 
@@ -62,6 +61,7 @@ const CaseImage: FC<CaseImageProps> = withMenuContext((props: CaseImageProps & {
                 onPress={props.onPress}
                 onLongPress={() => props.ctx.menuActions.openMenu("case_" + props.case.id)}
                 algorithm={props.case.algorithm}
+                {...props.case.imageOptions}
             />
             <MenuTrigger />
             <MenuOptions>
