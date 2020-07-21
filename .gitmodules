@@ -5,3 +5,5 @@
 [submodule "visualcube"]
 	path = visualcube
 	url = https://github.com/tdecker91/visualcube
+[submodule "visualcube/"]
+	url = git@github.com:nitzanbueno/visualcube.git
