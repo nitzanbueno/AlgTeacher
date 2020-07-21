@@ -4,4 +4,4 @@
 
 [submodule "visualcube"]
 	path = visualcube
-	url = https://github.com/tdecker91/visualcube.git
+	url = https://github.com/tdecker91/visualcube
