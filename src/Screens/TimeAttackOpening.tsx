@@ -1,9 +1,10 @@
-import React, {FC, useContext} from "react";
-import {Text, StyleSheet, ScrollView} from "react-native";
+import React, {FC, useContext, useState} from "react";
+import {Text, StyleSheet, ScrollView, CheckBox, Button} from "react-native";
 import {Case} from "../Models";
 import {CaseStoreContext} from "../CaseStore";
-import CheckboxPicker, {CheckboxPickerOptionArray} from "../CommonComponents/CheckboxPicker";
+import CheckboxPicker, {CheckboxPickerOptionArray, useCheckboxPickerState} from "../CommonComponents/CheckboxPicker";
 import {observer} from "mobx-react";
+import CheckboxWithLabel from "../CommonComponents/CheckboxWithLabel";
 
 const styles = StyleSheet.create({
     container: {
@@ -30,12 +31,12 @@ interface State {
 
 const TimeAttackOpeningScreen: FC<Props> = props => {
     const caseStore = useContext(CaseStoreContext);
+    const [shouldRandomlyMirror, setShouldRandomlyMirror] = useState(false);
+    const {getSelectedOptions: getSelectedCategories, checkboxPickerState} = useCheckboxPickerState(caseStore.categories);
 
-    function confirmCategorySelection(options: CheckboxPickerOptionArray) {
-        let chosenCategories = options.filter(option => option.value).map(option => option.name);
-
+    function confirmCategorySelection() {
         props.navigation.replace("TimeAttackPlay", {
-            categories: chosenCategories,
+            categories: getSelectedCategories(),
         });
     }
 
@@ -55,7 +56,10 @@ const TimeAttackOpeningScreen: FC<Props> = props => {
             {caseStore.categories.length > 0 ? (
                 <>
                     <Text style={styles.header}>Choose categories:</Text>
-                    <CheckboxPicker options={caseStore.categories} onSubmit={confirmCategorySelection} />
+                    <CheckboxPicker {...checkboxPickerState} />
+                    <Text style={styles.header}>Choose options:</Text>
+                    <CheckboxWithLabel value={shouldRandomlyMirror} onValueChange={setShouldRandomlyMirror} labelText="Randomly mirror" />
+                    <Button title="Done" onPress={confirmCategorySelection} />
                 </>
             ) : (
                 <Text style={styles.header}>
