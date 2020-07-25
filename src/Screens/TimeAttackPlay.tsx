@@ -4,8 +4,8 @@ import {Text, View, StyleSheet} from 'react-native';
 import {TouchableNativeFeedback} from 'react-native-gesture-handler';
 import {TOUCHABLE_BACKGROUND, Case} from '../Models';
 import { CaseStoreContext } from '../CaseStore';
-import {GenerateScramble} from '../ScrambleLib';
-import {GetTimeText, ShuffleArray} from '../Utils';
+import {GenerateScramble, MirrorAlgorithm} from '../ScrambleLib';
+import {GetTimeText, ShuffleArray, RandomChoice} from '../Utils';
 import Timer from '../CommonComponents/Timer';
 import { observer } from 'mobx-react';
 
@@ -87,7 +87,7 @@ function BottomScreenButton(props: {style: Object; onPress: () => void; text: st
 }
 
 interface Props {
-    route: {params: {categories: string[]}};
+    route: {params: {categories: string[], shouldRandomlyMirror: boolean, shouldRandomlyAUF: boolean}};
     navigation: any;
 }
 
@@ -129,7 +129,7 @@ const TimeAttackPlayScreen: FC<Props> = (props) => {
         setCurrentCaseIndex(x => x + 1);
     };
 
-    useEffect(() => {
+    useEffect(function updateDisplayedCase() {
         if (currentCaseIndex >= cases.length) {
             goToEndScreen();
             return;
@@ -147,12 +147,27 @@ const TimeAttackPlayScreen: FC<Props> = (props) => {
         }
     }, [currentCaseIndex, cases]);
 
-    useEffect(() => {
-        let categories = props.route.params.categories;
+    useEffect(function initializeCases() {
+        const {categories, shouldRandomlyAUF, shouldRandomlyMirror} = props.route.params;
         let testedCases = ShuffleArray(caseStore.cases);
 
-        if (categories) {
+        if (categories.length > 0) {
             testedCases = testedCases.filter(c => c.category && categories.includes(c.category));
+        }
+
+        if (shouldRandomlyAUF) {
+            for (const testedCase of testedCases) {
+                if (RandomChoice([true, false])) {
+                    testedCase.algorithm = MirrorAlgorithm(testedCase.algorithm);
+                }
+            }
+        }
+
+        if (shouldRandomlyAUF) {
+            for (const testedCase of testedCases) {
+                const randomAUF = RandomChoice(["", "(U) ", "(U') ", "(U2) "]);
+                testedCase.algorithm = randomAUF + testedCase.algorithm;
+            }
         }
 
         setCases(testedCases);

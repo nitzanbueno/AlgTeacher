@@ -32,11 +32,14 @@ interface State {
 const TimeAttackOpeningScreen: FC<Props> = props => {
     const caseStore = useContext(CaseStoreContext);
     const [shouldRandomlyMirror, setShouldRandomlyMirror] = useState(false);
+    const [shouldRandomlyAUF, setShouldRandomlyAUF] = useState(false);
     const {getSelectedOptions: getSelectedCategories, checkboxPickerState} = useCheckboxPickerState(caseStore.categories);
 
     function confirmCategorySelection() {
         props.navigation.replace("TimeAttackPlay", {
             categories: getSelectedCategories(),
+            shouldRandomlyMirror,
+            shouldRandomlyAUF,
         });
     }
 
@@ -59,6 +62,7 @@ const TimeAttackOpeningScreen: FC<Props> = props => {
                     <CheckboxPicker {...checkboxPickerState} />
                     <Text style={styles.header}>Choose options:</Text>
                     <CheckboxWithLabel value={shouldRandomlyMirror} onValueChange={setShouldRandomlyMirror} labelText="Randomly mirror" />
+                    <CheckboxWithLabel value={shouldRandomlyAUF} onValueChange={setShouldRandomlyAUF} labelText="Add random U moves at start" />
                     <Button title="Done" onPress={confirmCategorySelection} />
                 </>
             ) : (

@@ -80,3 +80,11 @@ export function useAsyncLoad<T>(asyncLoad: () => Promise<T>, dependencies?: Arra
 
     return [result, didLoad];
 }
+
+/**
+ * Returns one of the array elements, chosen randomly.
+ * @param arr The array to randomly pick from.
+ */
+export function RandomChoice<T>(arr: T[]) {
+    return arr[Math.floor(Math.random() * arr.length)];
+}

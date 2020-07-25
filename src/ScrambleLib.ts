@@ -253,6 +253,38 @@ export function InvertAlgorithm(algorithm: string): string {
 	return invertedMoves.join(" ");
 }
 
+/**
+ * Returns the mirror of the given algorithm along the M-slice.
+ * @param algorithm The algorithm to mirror.
+ */
+export function MirrorAlgorithm(algorithm: string) {
+	// TODO: I'm not entirely sure cube rotations work properly with this implementation.
+	// This doesn't come up often and it works in one case I've checked (with a y) but I haven't covered all edge-cases (such as z).
+	const moves = SanitizeAlgorithm(algorithm).split(" ");
+	const mirroredMoves = [];
+
+	for (const move of moves) {
+		// All moves are inverted except M and x moves, and R and L moves switch sides
+		let mirroredMove = InvertAlgorithm(move);
+		
+		if (move.startsWith("Rw")) {
+			mirroredMove = "Lw" + mirroredMove.substring(2);
+		} else if (move.startsWith("Lw")) {
+			mirroredMove = "Rw" + mirroredMove.substring(2);
+		} else if (move.startsWith("R")) {
+			mirroredMove = "L" + mirroredMove.substring(1);
+		} else if (move.startsWith("L")) {
+			mirroredMove = "R" + mirroredMove.substring(1);
+		} else if (move.startsWith("M") || move.startsWith("x")) {
+			mirroredMove = move;
+		}
+		
+		mirroredMoves.push(mirroredMove);
+	}
+
+	return mirroredMoves.join(" ");
+}
+
 export function GenerateScramble(
     algorithm: string,
     done: (success: boolean, scramble: string) => void,
