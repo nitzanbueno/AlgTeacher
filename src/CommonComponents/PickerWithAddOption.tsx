@@ -48,10 +48,10 @@ const PickerWithAddOption: FC<Props> = props => {
             newOptions.push(selectedOption);
         }
 
-        let pickerItems = newOptions.map(option => <Picker.Item label={option.toString()} value={option} key={option} />);
+        let pickerItems = newOptions.map(option => <Picker.Item color="black" label={option.toString()} value={option} key={option} />);
 
-        pickerItems.unshift(<Picker.Item key={""} label="None" value={""} />);
-        pickerItems.push(<Picker.Item key={ADD_OPTION_KEY} label={props.addOptionText} value={ADD_OPTION_KEY} />);
+        pickerItems.unshift(<Picker.Item color="black" key={""} label="None" value={""} />);
+        pickerItems.push(<Picker.Item color="blue" key={ADD_OPTION_KEY} label={props.addOptionText} value={ADD_OPTION_KEY} />);
 
         return pickerItems;
     }
