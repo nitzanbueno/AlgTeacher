@@ -122,9 +122,9 @@ const AddScreen: FC<Props> = props => {
     return (
         <ScrollView>
             <Text style={styles.formLabel}>Algorithm:</Text>
-            <TextInput style={[styles.formField, styles.formTextInput]} value={algorithm} onChangeText={setAlgorithm} />
-            <Text style={styles.formLabel}>Description (Optional):</Text>
-            <TextInput style={[styles.formField, styles.formTextInput]} value={description} onChangeText={setDescription} />
+            <TextInput placeholder="e.g. F R U R' U' F'" style={[styles.formField, styles.formTextInput]} value={algorithm} onChangeText={setAlgorithm} />
+            <Text style={styles.formLabel}>Description:</Text>
+            <TextInput placeholder="e.g. T-shape (optional)" style={[styles.formField, styles.formTextInput]} value={description} onChangeText={setDescription} />
             <Text style={styles.formLabel}>Category:</Text>
             {caseStore.isLoaded ? (
                 <View style={[styles.categoryPicker, styles.formField]}>
