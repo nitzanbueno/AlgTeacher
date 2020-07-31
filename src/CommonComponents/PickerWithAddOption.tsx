@@ -6,7 +6,7 @@ import TextPrompt from "./TextPrompt";
 const ADD_OPTION_KEY: string = "add";
 
 interface Props {
-    style: ViewStyle;
+    style?: ViewStyle;
     options: string[];
     onValueChange: (value: string) => void;
     addPromptText: string;

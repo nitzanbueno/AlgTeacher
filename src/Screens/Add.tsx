@@ -18,6 +18,14 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         height: 40,
     },
+    categoryPicker: {
+        borderColor: "black",
+        borderWidth: 1,
+        flexDirection: "column",
+        display: "flex",
+        justifyContent: "center",
+        backgroundColor: "white",
+    },
     pickerStandin: {
         height: 40,
         justifyContent: "center",
@@ -119,13 +127,14 @@ const AddScreen: FC<Props> = props => {
             <TextInput style={[styles.formField, styles.formTextInput]} value={description} onChangeText={setDescription} />
             <Text style={styles.formLabel}>Category:</Text>
             {caseStore.isLoaded ? (
+                <View style={[styles.categoryPicker, styles.formField]}>
                 <PickerWithAddOption
-                    style={styles.formField}
                     selectedValue={category}
                     onValueChange={setCategory}
                     options={caseStore.categories}
                     addPromptText="Add category"
                 />
+                </View>
             ) : (
                 // You might be asking yourself, "What the hell is that?"
                 // "Why do I need to have "Loading" text for a picker? Can't I just have a "Loading" option or something?"
