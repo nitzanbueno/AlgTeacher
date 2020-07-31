@@ -165,6 +165,7 @@ const AddScreen: FC<Props> = props => {
                         onValueChange={setCategory}
                         options={caseStore.categories}
                         addPromptText="Add category"
+                        addOptionText="Tap to add new category"
                     />
                 </View>
             ) : (

@@ -10,6 +10,7 @@ interface Props {
     options: string[];
     onValueChange: (value: string) => void;
     addPromptText: string;
+    addOptionText: string;
     selectedValue: string;
 }
 
@@ -50,7 +51,7 @@ const PickerWithAddOption: FC<Props> = props => {
         let pickerItems = newOptions.map(option => <Picker.Item label={option.toString()} value={option} key={option} />);
 
         pickerItems.unshift(<Picker.Item key={""} label="None" value={""} />);
-        pickerItems.push(<Picker.Item key={ADD_OPTION_KEY} label="Add..." value={ADD_OPTION_KEY} />);
+        pickerItems.push(<Picker.Item key={ADD_OPTION_KEY} label={props.addOptionText} value={ADD_OPTION_KEY} />);
 
         return pickerItems;
     }
