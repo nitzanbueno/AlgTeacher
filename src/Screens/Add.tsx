@@ -51,8 +51,12 @@ const styles = StyleSheet.create({
         margin: 1, // To make them flush with the selected border
     },
     imageList: {
-        marginTop: 10,
-        marginBottom: 10,
+        margin: 10,
+        paddingBottom: 5 // For the scrollbar
+    },
+    saveButton: {
+        marginLeft: 10,
+        marginRight: 10,
     },
 });
 
@@ -189,7 +193,9 @@ const AddScreen: FC<Props> = props => {
                 renderItem={renderCaseImageOption}
                 keyExtractor={(item, index) => index.toString()}
             />
-            <Button title="Save" onPress={saveCase} />
+            <View style={styles.saveButton}>
+                <Button title="Save" onPress={saveCase} />
+            </View>
         </ScrollView>
     );
 };
