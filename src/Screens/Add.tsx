@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
         borderColor: "gray",
         borderWidth: 1,
         height: 40,
+        fontSize: 17,
     },
     categoryPicker: {
         borderColor: "black",
@@ -35,7 +36,9 @@ const styles = StyleSheet.create({
     },
     formLabel: {
         marginLeft: 10,
-        marginTop: 10,
+        marginTop: 13,
+        fontSize: 17,
+        marginBottom: 3,
     },
     imageSelectionStandin: {
         width: 150,
