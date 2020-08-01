@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     scrambleText: {
-        fontSize: 15,
+        fontSize: 20,
         textAlign: "center",
     },
     iconContainer: {
@@ -65,11 +65,14 @@ const styles = StyleSheet.create({
         height: "100%",
         textAlignVertical: "center",
     },
+    caseImageContainer: {
+        margin: 10
+    }
 });
 
 const caseImageSize = {
-    width: 300,
-    height: 300,
+    width: 250,
+    height: 250,
 };
 
 const Button: FC<{style: ViewStyle, onPress: () => void}> = props => {
@@ -121,7 +124,7 @@ const TestScreen: FC<Props> = props => {
     }, []);
 
     useEffect(() => {
-        if (algorithm) {
+        if (algorithm !== undefined) {
             GenerateScramble(algorithm, (success, newScramble) => {
                 if (success) {
                     setScramble(newScramble);
@@ -148,10 +151,12 @@ const TestScreen: FC<Props> = props => {
             {/* In case category/description are empty, we can't output the strings (React Native doesn't like it), so we put !! */}
             {!!category && <Text style={styles.categoryText}>{category}</Text>}
             {!!description && <Text style={styles.descriptionText}>Description: {description}</Text>}
+            <View style={styles.caseImageContainer}>
             <CubeImage {...caseImageSize} case={algorithm || ""} {...imageOptions} />
+            </View>
 
             <Text style={styles.scrambleText}>Scramble:</Text>
-            <Text style={styles.scrambleText}>{scramble || "Loading..."}</Text>
+            <Text style={styles.scrambleText}>{scramble === undefined ? "Loading..." : scramble}</Text>
 
             <View style={styles.buttonContainer}>
                 {shouldDisplaySolution ? (
