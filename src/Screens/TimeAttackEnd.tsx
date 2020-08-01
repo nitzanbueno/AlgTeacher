@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
         fontSize: 40,
     },
     descriptionText: {
-        fontSize: 25,
+        fontSize: 30,
         textAlign: "center",
     },
     highScoreView: {
