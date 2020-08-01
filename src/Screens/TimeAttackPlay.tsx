@@ -149,13 +149,15 @@ const TimeAttackPlayScreen: FC<Props> = (props) => {
 
     useEffect(function initializeCases() {
         const {categories, shouldRandomlyAUF, shouldRandomlyMirror} = props.route.params;
-        let testedCases = ShuffleArray(caseStore.cases);
+
+        // Detach the cases from mobx, so that when we randomly mirror and AUF, the actual cases don't get edited
+        let testedCases = ShuffleArray(caseStore.cases.map(x => Object.assign({}, x)));
 
         if (categories.length > 0) {
             testedCases = testedCases.filter(c => c.category && categories.includes(c.category));
         }
 
-        if (shouldRandomlyAUF) {
+        if (shouldRandomlyMirror) {
             for (const testedCase of testedCases) {
                 if (RandomChoice([true, false])) {
                     testedCase.algorithm = MirrorAlgorithm(testedCase.algorithm);
