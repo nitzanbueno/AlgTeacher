@@ -1,8 +1,8 @@
 import React, {FC, useContext, useState} from "react";
-import {Text, StyleSheet, ScrollView, CheckBox, Button} from "react-native";
+import {Text, StyleSheet, ScrollView, CheckBox, Button, View} from "react-native";
 import {Case} from "../Models";
 import {CaseStoreContext} from "../CaseStore";
-import CheckboxPicker, {CheckboxPickerOptionArray, useCheckboxPickerState} from "../CommonComponents/CheckboxPicker";
+import CheckboxPicker, {useCheckboxPickerState} from "../CommonComponents/CheckboxPicker";
 import {observer} from "mobx-react";
 import CheckboxWithLabel from "../CommonComponents/CheckboxWithLabel";
 
@@ -18,15 +18,14 @@ const styles = StyleSheet.create({
     header: {
         fontSize: 20,
     },
+    paragraph: {
+        marginBottom: 20,
+    },
 });
 
 interface Props {
     route: {params: {case: Case}};
     navigation: any;
-}
-
-interface State {
-    allCategories: string[];
 }
 
 const TimeAttackOpeningScreen: FC<Props> = props => {
@@ -58,12 +57,24 @@ const TimeAttackOpeningScreen: FC<Props> = props => {
         <ScrollView style={styles.container}>
             {caseStore.categories.length > 0 ? (
                 <>
-                    <Text style={styles.header}>Choose categories:</Text>
-                    <CheckboxPicker {...checkboxPickerState} />
-                    <Text style={styles.header}>Choose options:</Text>
-                    <CheckboxWithLabel value={shouldRandomlyMirror} onValueChange={setShouldRandomlyMirror} labelText="Randomly mirror" />
-                    <CheckboxWithLabel value={shouldRandomlyAUF} onValueChange={setShouldRandomlyAUF} labelText="Add random U moves at start" />
-                    <Button title="Done" onPress={confirmCategorySelection} />
+                    <View style={styles.paragraph}>
+                        <Text style={styles.header}>Choose options:</Text>
+                        <CheckboxWithLabel
+                            value={shouldRandomlyMirror}
+                            onValueChange={setShouldRandomlyMirror}
+                            labelText="Randomly mirror"
+                        />
+                        <CheckboxWithLabel
+                            value={shouldRandomlyAUF}
+                            onValueChange={setShouldRandomlyAUF}
+                            labelText="Add random U moves at start"
+                        />
+                    </View>
+                    <View style={styles.paragraph}>
+                        <Text style={styles.header}>Select algorithm categories:</Text>
+                        <CheckboxPicker {...checkboxPickerState} />
+                    </View>
+                    <Button title="Start!" onPress={confirmCategorySelection} />
                 </>
             ) : (
                 <Text style={styles.header}>

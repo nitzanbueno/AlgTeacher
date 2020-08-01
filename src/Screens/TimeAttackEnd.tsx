@@ -1,30 +1,54 @@
 import React, {FC, useState, useEffect} from "react";
-import {Component} from "react";
-import {Text, View, StyleSheet, Button} from "react-native";
+import {Text, View, StyleSheet, StyleProp, TextStyle} from "react-native";
 import {GetTimeText} from "../Utils";
 import {Case} from "../Models";
 import TimeAttackStorage, {HighScoreType} from "../TimeAttackStorage";
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         backgroundColor: "#fff",
         alignItems: "center",
         textAlign: "center",
+        height: "100%",
         // justifyContent: "center",
     },
     header: {
-        fontSize: 60,
+        marginTop: 80,
         marginBottom: 20,
         textAlign: "center",
     },
+    done: {
+        fontSize: 50,
+    },
+    beatHighScore: {
+        fontSize: 40,
+    },
     descriptionText: {
-        fontSize: 20,
+        fontSize: 30,
+        textAlign: "center",
     },
     highScoreView: {
-        marginTop: 10,
+        marginTop: 30,
         textAlign: "center",
         alignItems: "center",
+    },
+    highScoreText: {
+        color: "#2343C1",
+    },
+    scoreLabel: {
+        width: 180,
+        textAlign: "left",
+    },
+    scoreField: {
+        textAlign: "left",
+    },
+    scoreTable: {
+        width: 250,
+        marginTop: 10,
+    },
+    row: {
+        display: "flex",
+        flexDirection: "row",
     },
 });
 
@@ -56,25 +80,39 @@ const TimeAttackEndScreen: FC<Props> = props => {
         checkHighScore();
     }, [cases, timeAttackScore]);
 
-    function getScoreText(scoreObject: {totalTime: number, solveCount: number}) {
-        return `${scoreObject.solveCount}/${cases.length} solves in ${GetTimeText(scoreObject.totalTime)}`;
+    function ScoreText(props: {scoreObject: {totalTime: number, solveCount: number}, title?: string, style?: StyleProp<TextStyle>}) {
+        const {scoreObject, style, title} = props;
+        return (
+            <>
+                {title && <Text style={[styles.descriptionText, style]} children={title} />}
+                <View style={styles.scoreTable}>
+                    <View style={styles.row}>
+                        <Text style={[styles.descriptionText, styles.scoreLabel, style]}>Solves:</Text>
+                        <Text style={[styles.descriptionText, styles.scoreField, style]}>
+                            {scoreObject.solveCount}/{cases.length}
+                        </Text>
+                    </View>
+                    <View style={styles.row}>
+                        <Text style={[styles.descriptionText, styles.scoreLabel, style]}>Total Time:</Text>
+                        <Text style={[styles.descriptionText, styles.scoreField, style]}>{GetTimeText(scoreObject.totalTime)}</Text>
+                    </View>
+                </View>
+            </>
+        );
     }
 
     return (
         <View style={styles.container}>
-            <Text style={styles.header}>Done!</Text>
+            {highScore ? (
+                <Text style={[styles.header, styles.done]}>Done!</Text>
+            ) : (
+                <Text style={[styles.header, styles.beatHighScore]}>You beat your high score! Congratulations!</Text>
+            )}
 
-            <Text style={styles.descriptionText}>Your total time is: </Text>
-            <Text style={styles.descriptionText}>{getScoreText(timeAttackScore)}.</Text>
+            <ScoreText title="Your score is:" style={!highScore && styles.highScoreText} scoreObject={timeAttackScore} />
             <View style={styles.highScoreView}>
-                {highScore ? (
-                    <>
-                        <Text style={styles.descriptionText}>You didn't beat your high score!</Text>
-                        <Text style={styles.descriptionText}>Your high score for this category is:</Text>
-                        <Text style={styles.descriptionText}>{getScoreText(highScore)}.</Text>
-                    </>
-                ) : (
-                    <Text>You beat your high score! Congratulations!</Text>
+                {highScore && (
+                    <ScoreText title="Your high score for this category is:" style={styles.highScoreText} scoreObject={highScore} />
                 )}
             </View>
         </View>

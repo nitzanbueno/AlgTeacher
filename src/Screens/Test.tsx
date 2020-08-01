@@ -28,12 +28,6 @@ const styles = StyleSheet.create({
         color: "white",
         textAlign: "center",
     },
-    yesButton: {
-        backgroundColor: "chartreuse",
-    },
-    noButton: {
-        backgroundColor: "orangered",
-    },
     okButton: {
         backgroundColor: "dodgerblue",
     },
@@ -42,6 +36,10 @@ const styles = StyleSheet.create({
         textAlignVertical: "center",
         textAlign: "center",
         color: "white",
+    },
+    textContainer: {
+        display: "flex",
+        flexDirection: "column",
     },
     categoryText: {
         marginTop: 30,
@@ -52,7 +50,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     scrambleText: {
-        fontSize: 15,
+        fontSize: 20,
         textAlign: "center",
     },
     iconContainer: {
@@ -67,11 +65,14 @@ const styles = StyleSheet.create({
         height: "100%",
         textAlignVertical: "center",
     },
+    caseImageContainer: {
+        margin: 10
+    }
 });
 
 const caseImageSize = {
-    width: 300,
-    height: 300,
+    width: 250,
+    height: 250,
 };
 
 const Button: FC<{style: ViewStyle, onPress: () => void}> = props => {
@@ -99,11 +100,7 @@ const TestScreen: FC<Props> = props => {
     const propCase = caseStore.GetCaseById(caseId);
     const {category, description, imageOptions, algorithm} = propCase || {};
 
-    function onClickYes() {
-        props.navigation.navigate("Main");
-    }
-
-    function onClickNo() {
+    function showSolution() {
         setShouldDisplaySolution(true);
     }
 
@@ -124,8 +121,10 @@ const TestScreen: FC<Props> = props => {
                 </View>
             ),
         });
+    }, []);
 
-        if (algorithm) {
+    useEffect(() => {
+        if (algorithm !== undefined) {
             GenerateScramble(algorithm, (success, newScramble) => {
                 if (success) {
                     setScramble(newScramble);
@@ -135,8 +134,6 @@ const TestScreen: FC<Props> = props => {
             });
         }
     }, [algorithm]);
-
-    const onClickOk = onClickYes;
 
     if (propCase === undefined) {
         return (
@@ -154,27 +151,21 @@ const TestScreen: FC<Props> = props => {
             {/* In case category/description are empty, we can't output the strings (React Native doesn't like it), so we put !! */}
             {!!category && <Text style={styles.categoryText}>{category}</Text>}
             {!!description && <Text style={styles.descriptionText}>Description: {description}</Text>}
+            <View style={styles.caseImageContainer}>
             <CubeImage {...caseImageSize} case={algorithm || ""} {...imageOptions} />
-            {shouldDisplaySolution ? (
-                <>
-                    <Text style={styles.scrambleText}>Solution:</Text>
-                    <Text style={styles.scrambleText}>{algorithm}</Text>
-                </>
-            ) : (
-                <>
-                    <Text style={styles.scrambleText}>Scramble:</Text>
-                    <Text style={styles.scrambleText}>{scramble || "Loading..."}</Text>
-                    <Text style={styles.scrambleText}>Do you remember the solution to this case?</Text>
-                </>
-            )}
+            </View>
+
+            <Text style={styles.scrambleText}>Scramble:</Text>
+            <Text style={styles.scrambleText}>{scramble === undefined ? "Loading..." : scramble}</Text>
+
             <View style={styles.buttonContainer}>
-                {!shouldDisplaySolution ? (
-                    <>
-                        <Button style={styles.yesButton} onPress={onClickYes} children="Yes" />
-                        <Button style={styles.noButton} onPress={onClickNo} children="No" />
-                    </>
+                {shouldDisplaySolution ? (
+                    <View style={styles.textContainer}>
+                        <Text style={styles.scrambleText} children={"Solution:"} />
+                        <Text style={styles.scrambleText}>{algorithm}</Text>
+                    </View>
                 ) : (
-                    <Button style={styles.okButton} onPress={onClickOk} children="Got it!" />
+                    <Button style={styles.okButton} onPress={showSolution} children="Show Solution" />
                 )}
             </View>
         </View>

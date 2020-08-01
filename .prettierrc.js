@@ -4,6 +4,5 @@ module.exports = {
   singleQuote: false,
   trailingComma: 'all',
   tabWidth: 4,
-  printWidth: 140,
-  parser: "babel"
+  printWidth: 140
 };

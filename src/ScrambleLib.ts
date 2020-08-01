@@ -288,6 +288,14 @@ export function MirrorAlgorithm(algorithm: string) {
 export function GenerateScramble(
     algorithm: string,
     done: (success: boolean, scramble: string) => void,
-): string {
-    return ScrambleLib.generateScramble(NormalizeAlgorithm(algorithm), done);
+): void {
+    const normalizedAlgorithm = NormalizeAlgorithm(algorithm);
+
+    if (normalizedAlgorithm === "") {
+        console.log("Empty alg");
+        done(true, "");
+        return;
+    }
+
+    ScrambleLib.generateScramble(normalizedAlgorithm, done);
 }
