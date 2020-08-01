@@ -28,12 +28,6 @@ const styles = StyleSheet.create({
         color: "white",
         textAlign: "center",
     },
-    yesButton: {
-        backgroundColor: "chartreuse",
-    },
-    noButton: {
-        backgroundColor: "orangered",
-    },
     okButton: {
         backgroundColor: "dodgerblue",
     },
@@ -42,6 +36,10 @@ const styles = StyleSheet.create({
         textAlignVertical: "center",
         textAlign: "center",
         color: "white",
+    },
+    textContainer: {
+        display: "flex",
+        flexDirection: "column",
     },
     categoryText: {
         marginTop: 30,
@@ -99,11 +97,7 @@ const TestScreen: FC<Props> = props => {
     const propCase = caseStore.GetCaseById(caseId);
     const {category, description, imageOptions, algorithm} = propCase || {};
 
-    function onClickYes() {
-        props.navigation.navigate("Main");
-    }
-
-    function onClickNo() {
+    function showSolution() {
         setShouldDisplaySolution(true);
     }
 
@@ -124,7 +118,9 @@ const TestScreen: FC<Props> = props => {
                 </View>
             ),
         });
+    }, []);
 
+    useEffect(() => {
         if (algorithm) {
             GenerateScramble(algorithm, (success, newScramble) => {
                 if (success) {
@@ -135,8 +131,6 @@ const TestScreen: FC<Props> = props => {
             });
         }
     }, [algorithm]);
-
-    const onClickOk = onClickYes;
 
     if (propCase === undefined) {
         return (
@@ -155,26 +149,18 @@ const TestScreen: FC<Props> = props => {
             {!!category && <Text style={styles.categoryText}>{category}</Text>}
             {!!description && <Text style={styles.descriptionText}>Description: {description}</Text>}
             <CubeImage {...caseImageSize} case={algorithm || ""} {...imageOptions} />
-            {shouldDisplaySolution ? (
-                <>
-                    <Text style={styles.scrambleText}>Solution:</Text>
-                    <Text style={styles.scrambleText}>{algorithm}</Text>
-                </>
-            ) : (
-                <>
-                    <Text style={styles.scrambleText}>Scramble:</Text>
-                    <Text style={styles.scrambleText}>{scramble || "Loading..."}</Text>
-                    <Text style={styles.scrambleText}>Do you remember the solution to this case?</Text>
-                </>
-            )}
+
+            <Text style={styles.scrambleText}>Scramble:</Text>
+            <Text style={styles.scrambleText}>{scramble || "Loading..."}</Text>
+
             <View style={styles.buttonContainer}>
-                {!shouldDisplaySolution ? (
-                    <>
-                        <Button style={styles.yesButton} onPress={onClickYes} children="Yes" />
-                        <Button style={styles.noButton} onPress={onClickNo} children="No" />
-                    </>
+                {shouldDisplaySolution ? (
+                    <View style={styles.textContainer}>
+                        <Text style={styles.scrambleText} children={"Solution:"} />
+                        <Text style={styles.scrambleText}>{algorithm}</Text>
+                    </View>
                 ) : (
-                    <Button style={styles.okButton} onPress={onClickOk} children="Got it!" />
+                    <Button style={styles.okButton} onPress={showSolution} children="Show Solution" />
                 )}
             </View>
         </View>
