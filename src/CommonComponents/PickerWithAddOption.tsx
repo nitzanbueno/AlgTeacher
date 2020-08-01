@@ -16,14 +16,16 @@ interface Props {
 
 const PickerWithAddOption: FC<Props> = props => {
     const [shouldDisplayAddPrompt, setShouldDisplayAddPrompt] = useState(false);
-    const {selectedValue: selectedOption} = props;
+    const [addedOptions, setAddedOptions] = useState<string[]>([]);
 
     function addOption(option: string) {
         // We can't add an option with the same name as ADD_OPTION_KEY, because that's
-        // already the name of the "Add..." option.
+        // already the name of the "Tap to add" option.
         // (not a great loss, I don't care enough to add an error message either)
         if (option != "" && option != ADD_OPTION_KEY) {
-            // The rest will take care of itself
+            if (!props.options.includes(option) && !addedOptions.includes(option)) {
+                setAddedOptions([...addedOptions, option]);
+            }
             props.onValueChange(option);
         }
     }
@@ -43,10 +45,7 @@ const PickerWithAddOption: FC<Props> = props => {
     function Options() {
         const newOptions = [...props.options];
 
-        // In case the user has added a new option
-        if (selectedOption != "" && selectedOption != ADD_OPTION_KEY && !newOptions.includes(selectedOption)) {
-            newOptions.push(selectedOption);
-        }
+        newOptions.push(...addedOptions);
 
         let pickerItems = newOptions.map(option => <Picker.Item color="black" label={option.toString()} value={option} key={option} />);
 
@@ -65,8 +64,8 @@ const PickerWithAddOption: FC<Props> = props => {
                 visible={shouldDisplayAddPrompt}
                 prompt={props.addPromptText}
                 onSubmit={result => {
-                    setShouldDisplayAddPrompt(false);
                     addOption(result);
+                    setShouldDisplayAddPrompt(false);
                 }}
                 onCancel={() => {
                     setShouldDisplayAddPrompt(false);
