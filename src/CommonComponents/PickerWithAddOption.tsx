@@ -26,7 +26,7 @@ const PickerWithAddOption: FC<Props> = props => {
             // The rest will take care of itself
             props.onValueChange(option);
         }
-    };
+    }
 
     function promptAddOption() {
         setShouldDisplayAddPrompt(true);
@@ -38,7 +38,7 @@ const PickerWithAddOption: FC<Props> = props => {
         } else {
             promptAddOption();
         }
-    };
+    }
 
     function Options() {
         const newOptions = [...props.options];
@@ -58,11 +58,11 @@ const PickerWithAddOption: FC<Props> = props => {
 
     return (
         <>
-        <Picker style={props.style} selectedValue={props.selectedValue} onValueChange={onOptionChange}>
-            {Options()}
-        </Picker>
-        {shouldDisplayAddPrompt && (
+            <Picker style={props.style} selectedValue={props.selectedValue} onValueChange={onOptionChange}>
+                {Options()}
+            </Picker>
             <TextPrompt
+                visible={shouldDisplayAddPrompt}
                 prompt={props.addPromptText}
                 onSubmit={result => {
                     setShouldDisplayAddPrompt(false);
@@ -72,7 +72,6 @@ const PickerWithAddOption: FC<Props> = props => {
                     setShouldDisplayAddPrompt(false);
                 }}
             />
-        )}
         </>
     );
 };

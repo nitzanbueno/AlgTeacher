@@ -8,7 +8,6 @@ import {Case} from "../Models";
 import {CaseStoreContext} from "../CaseStore";
 import PickerWithAddOption from "../CommonComponents/PickerWithAddOption";
 import {observer} from "mobx-react";
-import {CubeImage} from "../CommonComponents/CubeImage";
 import {CubeOptions} from "sr-visualizer";
 
 const styles = StyleSheet.create({
