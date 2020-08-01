@@ -42,6 +42,10 @@ const styles = StyleSheet.create({
         height: "100%",
         textAlignVertical: "center",
     },
+    helpText: {
+        fontSize: 20,
+        textAlign: "center"
+    },
 });
 
 interface CaseImageProps {
@@ -167,13 +171,27 @@ const MainScreen: FC<Props> = props => {
 
     return (
         <View style={styles.container}>
-            {/* Using slice() on cases because mobx observable arrays aren't actual arrays */}
-            <FlatList
-                data={caseStore.cases.slice()}
-                renderItem={renderCase}
-                keyExtractor={item => item.id.toString()}
-                numColumns={CASE_COLUMNS}
-            />
+            {caseStore.cases.length > 0 ? (
+                /* Using slice() on cases because mobx observable arrays aren't actual arrays */
+                <FlatList
+                    data={caseStore.cases.slice()}
+                    renderItem={renderCase}
+                    keyExtractor={item => item.id.toString()}
+                    numColumns={CASE_COLUMNS}
+                />
+            ) : (
+                <Text style={styles.helpText}>
+                    {"You don't have any cases.\nHow about "}
+                    <Text style={{color: "blue", textDecorationLine: "underline"}} onPress={openAddScreen}>
+                        adding one
+                    </Text>
+                    {" or maybe "}
+                    <Text style={{color: "blue", textDecorationLine: "underline"}} onPress={openAlgorithmSetScreen}>
+                        importing an algorithm set
+                    </Text>
+                    ?
+                </Text>
+            )}
         </View>
     );
 };
