@@ -7,8 +7,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         height: 30,
         alignItems: "center",
-        marginTop: 5,
-        marginBottom: 5,
     },
 });
 
