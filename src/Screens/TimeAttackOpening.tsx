@@ -100,7 +100,7 @@ const TimeAttackOpeningScreen: FC<Props> = props => {
                 </>
             ) : (
                 <Text style={styles.header}>
-                    {"You don't have any algorithm set.\nHow about "}
+                    {"You don't have any algorithm sets.\nHow about "}
                     <Text style={{color: "blue", textDecorationLine: "underline"}} onPress={goToAddScreen}>
                         adding a case with one
                     </Text>
