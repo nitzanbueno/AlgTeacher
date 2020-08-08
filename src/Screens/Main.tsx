@@ -48,17 +48,18 @@ const styles = StyleSheet.create({
     },
 });
 
-interface CaseImageProps {
+type CaseImagePropsWithContext = {
     case: Case;
     onPress: () => void;
     onEdit: () => void;
     onDelete: () => void;
-}
+    ctx: MenuContext;
+};
 
 /**
  * This component uses the react-native-popup-menu library to wrap a TouchableImage component with a context menu.
  */
-const CaseImage: FC<CaseImageProps> = withMenuContext((props: CaseImageProps & {ctx: MenuContext}) => {
+const CaseImage = withMenuContext<CaseImagePropsWithContext>((props) => {
     return (
         <Menu name={"case_" + props.case.id}>
             <TouchableCubeImage
