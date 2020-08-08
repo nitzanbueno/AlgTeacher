@@ -1,6 +1,7 @@
 import React, {useEffect, FC, useState} from "react";
 import {Text, View, StyleSheet, TextInput, TouchableWithoutFeedback} from "react-native";
 import Modal from "react-native-modal";
+import Button from "./Button";
 
 const styles = StyleSheet.create({
     promptContainer: {
@@ -20,16 +21,6 @@ const styles = StyleSheet.create({
         borderColor: "#444",
         marginBottom: 10,
         marginTop: 10,
-    },
-    button: {
-        backgroundColor: "#2194f2",
-        height: 30,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    buttonText: {
-        color: "white",
     },
 });
 
@@ -58,12 +49,7 @@ const TextPrompt: FC<Props> = props => {
             <View style={styles.promptContainer} key="prompt">
                 <Text style={styles.promptText}>{props.prompt}</Text>
                 <TextInput style={styles.promptInput} value={input} onChangeText={(value: string) => setInput(value)} />
-                {/* <Button> elements render weirdly when the backdrop fades so I used a Touchable instead */}
-                <TouchableWithoutFeedback onPress={() => props.onSubmit(input)}>
-                    <View style={styles.button}>
-                        <Text style={styles.buttonText}>OK</Text>
-                    </View>
-                </TouchableWithoutFeedback>
+                <Button onPress={() => props.onSubmit(input)} title="OK" />
             </View>
         </Modal>
     );
