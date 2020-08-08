@@ -556,6 +556,200 @@
         ]
     },
     {
+        "name": "Winter Variation",
+        "cases": [
+            {
+                "id": -1,
+                "description": "",
+                "algorithmSet": "Winter Variation",
+                "algorithm": "R U' R D R' U R D' R' U' R'",
+                "imageOptions": {"view": "plan", "mask": "wv"}
+            },
+            {
+                "id": -1,
+                "description": "",
+                "algorithmSet": "Winter Variation",
+                "algorithm": "R U' R'",
+                "imageOptions": {"view": "plan", "mask": "wv"}
+            },
+            {
+                "id": -1,
+                "description": "",
+                "algorithmSet": "Winter Variation",
+                "algorithm": "(U') R' F R U R U' R' F' ",
+                "imageOptions": {"view": "plan", "mask": "wv"}
+            },
+            {
+                "id": -1,
+                "description": "",
+                "algorithmSet": "Winter Variation",
+                "algorithm": "R2 D R' U' R D' R2",
+                "imageOptions": {"view": "plan", "mask": "wv"}
+            },
+            {
+                "id": -1,
+                "description": "",
+                "algorithmSet": "Winter Variation",
+                "algorithm": "R U' R' U R' U' R U' R' U2 R",
+                "imageOptions": {"view": "plan", "mask": "wv"}
+            },
+            {
+                "id": -1,
+                "description": "",
+                "algorithmSet": "Winter Variation",
+                "algorithm": "(U2) R' D' R U2 R' D R2 U' R'",
+                "imageOptions": {"view": "plan", "mask": "wv"}
+            },
+            {
+                "id": -1,
+                "description": "",
+                "algorithmSet": "Winter Variation",
+                "algorithm": "R U R' U' R U' R'",
+                "imageOptions": {"view": "plan", "mask": "wv"}
+            },
+            {
+                "id": -1,
+                "description": "",
+                "algorithmSet": "Winter Variation",
+                "algorithm": "(U) R U' R' U R U2 R'",
+                "imageOptions": {"view": "plan", "mask": "wv"}
+            },
+            {
+                "id": -1,
+                "description": "",
+                "algorithmSet": "Winter Variation",
+                "algorithm": "L' U2 R U L U' L' U R' U2 L",
+                "imageOptions": {"view": "plan", "mask": "wv"}
+            },
+            {
+                "id": -1,
+                "description": "",
+                "algorithmSet": "Winter Variation",
+                "algorithm": "R U R2 U' R2 U' R2 U2 R",
+                "imageOptions": {"view": "plan", "mask": "wv"}
+            },
+            {
+                "id": -1,
+                "description": "",
+                "algorithmSet": "Winter Variation",
+                "algorithm": "(U) R' U' R2 U' R2 U2 R",
+                "imageOptions": {"view": "plan", "mask": "wv"}
+            },
+            {
+                "id": -1,
+                "description": "",
+                "algorithmSet": "Winter Variation",
+                "algorithm": "R U' x' U R' D R U' R' D'",
+                "imageOptions": {"view": "plan", "mask": "wv"}
+            },
+            {
+                "id": -1,
+                "description": "",
+                "algorithmSet": "Winter Variation",
+                "algorithm": "(U) R U2 R2 U' R U' R' U2 R",
+                "imageOptions": {"view": "plan", "mask": "wv"}
+            },
+            {
+                "id": -1,
+                "description": "",
+                "algorithmSet": "Winter Variation",
+                "algorithm": "(U) R2 D R' U2 R D' R2",
+                "imageOptions": {"view": "plan", "mask": "wv"}
+            },
+            {
+                "id": -1,
+                "description": "",
+                "algorithmSet": "Winter Variation",
+                "algorithm": "(U') L' U R U' R' L",
+                "imageOptions": {"view": "plan", "mask": "wv"}
+            },
+            {
+                "id": -1,
+                "description": "",
+                "algorithmSet": "Winter Variation",
+                "algorithm": "(U) R U' R' U' R' F R U R U' R' F'",
+                "imageOptions": {"view": "plan", "mask": "wv"}
+            },
+            {
+                "id": -1,
+                "description": "",
+                "algorithmSet": "Winter Variation",
+                "algorithm": "(U) R U2 R'",
+                "imageOptions": {"view": "plan", "mask": "wv"}
+            },
+            {
+                "id": -1,
+                "description": "",
+                "algorithmSet": "Winter Variation",
+                "algorithm": "(U') R' F' R U2 R U2 R' F",
+                "imageOptions": {"view": "plan", "mask": "wv"}
+            },
+            {
+                "id": -1,
+                "description": "",
+                "algorithmSet": "Winter Variation",
+                "algorithm": "(U) L' U R U' R' L U' R U' R'",
+                "imageOptions": {"view": "plan", "mask": "wv"}
+            },
+            {
+                "id": -1,
+                "description": "",
+                "algorithmSet": "Winter Variation",
+                "algorithm": "R U' R' U' R U R' U R U2 R'",
+                "imageOptions": {"view": "plan", "mask": "wv"}
+            },
+            {
+                "id": -1,
+                "description": "",
+                "algorithmSet": "Winter Variation",
+                "algorithm": "R U' R2 U2 R U R' U R",
+                "imageOptions": {"view": "plan", "mask": "wv"}
+            },
+            {
+                "id": -1,
+                "description": "",
+                "algorithmSet": "Winter Variation",
+                "algorithm": "R2 D R' U R D' R' U2 R'",
+                "imageOptions": {"view": "plan", "mask": "wv"}
+            },
+            {
+                "id": -1,
+                "description": "",
+                "algorithmSet": "Winter Variation",
+                "algorithm": "(U) R' U L U' R2 U L' U R'",
+                "imageOptions": {"view": "plan", "mask": "wv"}
+            },
+            {
+                "id": -1,
+                "description": "",
+                "algorithmSet": "Winter Variation",
+                "algorithm": "(U) R U' R' U R U' R' U R U2 R'",
+                "imageOptions": {"view": "plan", "mask": "wv"}
+            },
+            {
+                "id": -1,
+                "description": "",
+                "algorithmSet": "Winter Variation",
+                "algorithm": "(U) R U2 R2 U2 R U R' U R",
+                "imageOptions": {"view": "plan", "mask": "wv"}
+            },
+            {
+                "id": -1,
+                "description": "",
+                "algorithmSet": "Winter Variation",
+                "algorithm": "R U' R2 U' R U' R' U2 R",
+                "imageOptions": {"view": "plan", "mask": "wv"}
+            },
+            {
+                "id": -1,
+                "description": "",
+                "algorithmSet": "Winter Variation",
+                "algorithm": "R U R' U' R U R' U' R U' R'",
+                "imageOptions": {"view": "plan", "mask": "wv"}
+            }
+        ]
+    },
+    {
         "name": "Oriented LS",
         "cases": [
             {
@@ -800,200 +994,6 @@
                 "description": "",
                 "imageOptions": {"view": "plan", "mask": "wv"},
                 "algorithmSet": "Summer Variation"
-            }
-        ]
-    },
-    {
-        "name": "Winter Variation",
-        "cases": [
-            {
-                "id": -1,
-                "description": "",
-                "algorithmSet": "Winter Variation",
-                "algorithm": "R U' R D R' U R D' R' U' R'",
-                "imageOptions": {"view": "plan", "mask": "wv"}
-            },
-            {
-                "id": -1,
-                "description": "",
-                "algorithmSet": "Winter Variation",
-                "algorithm": "R U' R'",
-                "imageOptions": {"view": "plan", "mask": "wv"}
-            },
-            {
-                "id": -1,
-                "description": "",
-                "algorithmSet": "Winter Variation",
-                "algorithm": "(U') R' F R U R U' R' F' ",
-                "imageOptions": {"view": "plan", "mask": "wv"}
-            },
-            {
-                "id": -1,
-                "description": "",
-                "algorithmSet": "Winter Variation",
-                "algorithm": "R2 D R' U' R D' R2",
-                "imageOptions": {"view": "plan", "mask": "wv"}
-            },
-            {
-                "id": -1,
-                "description": "",
-                "algorithmSet": "Winter Variation",
-                "algorithm": "R U' R' U R' U' R U' R' U2 R",
-                "imageOptions": {"view": "plan", "mask": "wv"}
-            },
-            {
-                "id": -1,
-                "description": "",
-                "algorithmSet": "Winter Variation",
-                "algorithm": "(U2) R' D' R U2 R' D R2 U' R'",
-                "imageOptions": {"view": "plan", "mask": "wv"}
-            },
-            {
-                "id": -1,
-                "description": "",
-                "algorithmSet": "Winter Variation",
-                "algorithm": "R U R' U' R U' R'",
-                "imageOptions": {"view": "plan", "mask": "wv"}
-            },
-            {
-                "id": -1,
-                "description": "",
-                "algorithmSet": "Winter Variation",
-                "algorithm": "(U) R U' R' U R U2 R'",
-                "imageOptions": {"view": "plan", "mask": "wv"}
-            },
-            {
-                "id": -1,
-                "description": "",
-                "algorithmSet": "Winter Variation",
-                "algorithm": "L' U2 R U L U' L' U R' U2 L",
-                "imageOptions": {"view": "plan", "mask": "wv"}
-            },
-            {
-                "id": -1,
-                "description": "",
-                "algorithmSet": "Winter Variation",
-                "algorithm": "R U R2 U' R2 U' R2 U2 R",
-                "imageOptions": {"view": "plan", "mask": "wv"}
-            },
-            {
-                "id": -1,
-                "description": "",
-                "algorithmSet": "Winter Variation",
-                "algorithm": "(U) R' U' R2 U' R2 U2 R",
-                "imageOptions": {"view": "plan", "mask": "wv"}
-            },
-            {
-                "id": -1,
-                "description": "",
-                "algorithmSet": "Winter Variation",
-                "algorithm": "R U' x' U R' D R U' R' D'",
-                "imageOptions": {"view": "plan", "mask": "wv"}
-            },
-            {
-                "id": -1,
-                "description": "",
-                "algorithmSet": "Winter Variation",
-                "algorithm": "(U) R U2 R2 U' R U' R' U2 R",
-                "imageOptions": {"view": "plan", "mask": "wv"}
-            },
-            {
-                "id": -1,
-                "description": "",
-                "algorithmSet": "Winter Variation",
-                "algorithm": "(U) R2 D R' U2 R D' R2",
-                "imageOptions": {"view": "plan", "mask": "wv"}
-            },
-            {
-                "id": -1,
-                "description": "",
-                "algorithmSet": "Winter Variation",
-                "algorithm": "(U') L' U R U' R' L",
-                "imageOptions": {"view": "plan", "mask": "wv"}
-            },
-            {
-                "id": -1,
-                "description": "",
-                "algorithmSet": "Winter Variation",
-                "algorithm": "(U) R U' R' U' R' F R U R U' R' F'",
-                "imageOptions": {"view": "plan", "mask": "wv"}
-            },
-            {
-                "id": -1,
-                "description": "",
-                "algorithmSet": "Winter Variation",
-                "algorithm": "(U) R U2 R'",
-                "imageOptions": {"view": "plan", "mask": "wv"}
-            },
-            {
-                "id": -1,
-                "description": "",
-                "algorithmSet": "Winter Variation",
-                "algorithm": "(U') R' F' R U2 R U2 R' F",
-                "imageOptions": {"view": "plan", "mask": "wv"}
-            },
-            {
-                "id": -1,
-                "description": "",
-                "algorithmSet": "Winter Variation",
-                "algorithm": "(U) L' U R U' R' L U' R U' R'",
-                "imageOptions": {"view": "plan", "mask": "wv"}
-            },
-            {
-                "id": -1,
-                "description": "",
-                "algorithmSet": "Winter Variation",
-                "algorithm": "R U' R' U' R U R' U R U2 R'",
-                "imageOptions": {"view": "plan", "mask": "wv"}
-            },
-            {
-                "id": -1,
-                "description": "",
-                "algorithmSet": "Winter Variation",
-                "algorithm": "R U' R2 U2 R U R' U R",
-                "imageOptions": {"view": "plan", "mask": "wv"}
-            },
-            {
-                "id": -1,
-                "description": "",
-                "algorithmSet": "Winter Variation",
-                "algorithm": "R2 D R' U R D' R' U2 R'",
-                "imageOptions": {"view": "plan", "mask": "wv"}
-            },
-            {
-                "id": -1,
-                "description": "",
-                "algorithmSet": "Winter Variation",
-                "algorithm": "(U) R' U L U' R2 U L' U R'",
-                "imageOptions": {"view": "plan", "mask": "wv"}
-            },
-            {
-                "id": -1,
-                "description": "",
-                "algorithmSet": "Winter Variation",
-                "algorithm": "(U) R U' R' U R U' R' U R U2 R'",
-                "imageOptions": {"view": "plan", "mask": "wv"}
-            },
-            {
-                "id": -1,
-                "description": "",
-                "algorithmSet": "Winter Variation",
-                "algorithm": "(U) R U2 R2 U2 R U R' U R",
-                "imageOptions": {"view": "plan", "mask": "wv"}
-            },
-            {
-                "id": -1,
-                "description": "",
-                "algorithmSet": "Winter Variation",
-                "algorithm": "R U' R2 U' R U' R' U2 R",
-                "imageOptions": {"view": "plan", "mask": "wv"}
-            },
-            {
-                "id": -1,
-                "description": "",
-                "algorithmSet": "Winter Variation",
-                "algorithm": "R U R' U' R U R' U' R U' R'",
-                "imageOptions": {"view": "plan", "mask": "wv"}
             }
         ]
     }
