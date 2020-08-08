@@ -52,7 +52,8 @@ const styles = StyleSheet.create({
     scrambleText: {
         fontSize: 20,
         textAlign: "center",
-        maxWidth: "90%"
+        maxWidth: "90%",
+        minWidth: "40%",
     },
     iconContainer: {
         flexDirection: "row",
