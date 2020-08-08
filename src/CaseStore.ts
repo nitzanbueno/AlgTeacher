@@ -96,19 +96,19 @@ export class CaseStore {
     }
 
     /**
-     * All categories within stored cases, except undefined and empty strings.
+     * All algorithm sets within stored cases, except undefined and empty strings.
      */
-    get categories(): string[] {
-        let loadedCategories = this.cases.map(case_ => case_.category).filter(case_ => case_ != '' && case_ != undefined);
-        loadedCategories = [...new Set(loadedCategories)];
+    get algorithmSets(): string[] {
+        let loadedSets = this.cases.map(case_ => case_.algorithmSet).filter(case_ => case_ != '' && case_ != undefined);
+        loadedSets = [...new Set(loadedSets)];
 
-        return loadedCategories as string[];
+        return loadedSets as string[];
     }
 }
 
 decorate(CaseStore, {
     cases: observable,
-    categories: computed,
+    algorithmSets: computed,
     StoreCase: action,
     StoreCaseList: action,
     DeleteCase: action,

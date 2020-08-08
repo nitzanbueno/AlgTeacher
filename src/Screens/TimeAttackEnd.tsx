@@ -112,7 +112,7 @@ const TimeAttackEndScreen: FC<Props> = props => {
             <ScoreText title="Your score is:" style={!highScore && styles.highScoreText} scoreObject={timeAttackScore} />
             <View style={styles.highScoreView}>
                 {highScore && (
-                    <ScoreText title="Your high score for this category is:" style={styles.highScoreText} scoreObject={highScore} />
+                    <ScoreText title="Your high score for this algorithm set is:" style={styles.highScoreText} scoreObject={highScore} />
                 )}
             </View>
         </View>

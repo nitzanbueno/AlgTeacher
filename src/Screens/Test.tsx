@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "column",
     },
-    categoryText: {
+    algorithmSetText: {
         marginTop: 30,
         fontSize: 30,
     },
@@ -98,7 +98,7 @@ const TestScreen: FC<Props> = props => {
 
     const {caseId} = props.route.params;
     const propCase = caseStore.GetCaseById(caseId);
-    const {category, description, imageOptions, algorithm} = propCase || {};
+    const {algorithmSet, description, imageOptions, algorithm} = propCase || {};
 
     function showSolution() {
         setShouldDisplaySolution(true);
@@ -148,8 +148,8 @@ const TestScreen: FC<Props> = props => {
 
     return (
         <View style={styles.container}>
-            {/* In case category/description are empty, we can't output the strings (React Native doesn't like it), so we put !! */}
-            {!!category && <Text style={styles.categoryText}>{category}</Text>}
+            {/* In case algorithm set/description are empty, we can't output the strings (React Native doesn't like it), so we put !! */}
+            {!!algorithmSet && <Text style={styles.algorithmSetText}>{algorithmSet}</Text>}
             {!!description && <Text style={styles.descriptionText}>Description: {description}</Text>}
             <View style={styles.caseImageContainer}>
             <CubeImage {...caseImageSize} case={algorithm || ""} {...imageOptions} />

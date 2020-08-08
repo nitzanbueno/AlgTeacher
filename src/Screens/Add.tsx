@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
         height: 40,
         fontSize: 17,
     },
-    categoryPicker: {
+    algorithmSetPicker: {
         borderColor: "black",
         borderWidth: 1,
         flexDirection: "column",
@@ -80,7 +80,7 @@ const AddScreen: FC<Props> = props => {
     const caseStore = useContext(CaseStoreContext);
     const [description, setDescription] = useState("");
     const [algorithm, setAlgorithm] = useState("");
-    const [category, setCategory] = useState("");
+    const [algorithmSet, setAlgorithmSet] = useState("");
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
     const [didLoad, setDidLoad] = useState(false);
     const [imageOptions, setImageOptions] = useState(CUBE_IMAGE_OPTIONS);
@@ -97,7 +97,7 @@ const AddScreen: FC<Props> = props => {
             if (!propCase) return;
             setDescription(propCase.description);
             setAlgorithm(propCase.algorithm);
-            setCategory(propCase.category || "");
+            setAlgorithmSet(propCase.algorithmSet || "");
 
             let newSelectedImageIndex = CUBE_IMAGE_OPTIONS.findIndex(o => _.isEqual(o, propCase.imageOptions));
 
@@ -138,7 +138,7 @@ const AddScreen: FC<Props> = props => {
             algorithm,
             description,
             imageOptions: imageOptions[selectedImageIndex],
-            category,
+            algorithmSet: algorithmSet,
         };
 
         // Store the case, then go back
@@ -163,25 +163,25 @@ const AddScreen: FC<Props> = props => {
                 value={description}
                 onChangeText={setDescription}
             />
-            <Text style={styles.formLabel}>Category:</Text>
+            <Text style={styles.formLabel}>Algorithm Set:</Text>
             {caseStore.isLoaded ? (
-                <View style={[styles.categoryPicker, styles.formField]}>
+                <View style={[styles.algorithmSetPicker, styles.formField]}>
                     <PickerWithAddOption
-                        selectedValue={category}
-                        onValueChange={setCategory}
-                        options={caseStore.categories}
-                        addPromptText="Add category"
-                        addOptionText="Tap to add new category"
+                        selectedValue={algorithmSet}
+                        onValueChange={setAlgorithmSet}
+                        options={caseStore.algorithmSets}
+                        addPromptText="Add Algorithm Set"
+                        addOptionText="Tap to add new set..."
                     />
                 </View>
             ) : (
                 // You might be asking yourself, "What the hell is that?"
                 // "Why do I need to have "Loading" text for a picker? Can't I just have a "Loading" option or something?"
                 // Well, apparently, whenever you change options for a picker, it automatically changes selection to the first one.
-                // However, I want to have an already selected category (the one of the possibly-currently-edited case), and categories
+                // However, I want to have an already selected algorithm set (the one of the possibly-currently-edited case), and algorithm sets
                 // load asynchronously, so that forces me to cause the selection change (which I can't tell apart from any other selection
                 // change and thus can't block).
-                // Unless, I don't change the categories at all, and just render the picker after they've been loaded.
+                // Unless, I don't change the algorithm sets at all, and just render the picker after they've been loaded.
                 // Thus, this stupidity.
                 <View style={styles.pickerStandin}>
                     <Text>Loading...</Text>

@@ -6,7 +6,7 @@ export interface Case {
     description: string;
     algorithm: string;
     imageOptions: CubeOptions;
-    category?: string;
+    algorithmSet?: string;
 }
 
 export const TOUCHABLE_BACKGROUND =
