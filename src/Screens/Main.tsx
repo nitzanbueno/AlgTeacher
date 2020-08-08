@@ -5,12 +5,10 @@ import TouchableCubeImage from "../CommonComponents/TouchableCubeImage";
 import {CaseStoreContext} from "../CaseStore";
 import {MenuTrigger, Menu, MenuOptions, MenuOption, withMenuContext, MenuContext} from "react-native-popup-menu";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import {TouchableNativeFeedback, ScrollView} from "react-native-gesture-handler";
+import {TouchableNativeFeedback} from "react-native-gesture-handler";
 import MenuIcon from "../CommonComponents/MenuIcon";
 import {observer} from "mobx-react";
-import FirstUsageModal from "../CommonComponents/FirstUsageModal";
 import AsyncStorage from "@react-native-community/async-storage";
-import Button from "../CommonComponents/Button";
 import {H1, P} from "../CommonComponents/TextFormattingElements";
 import HelpModal from "../CommonComponents/HelpModal";
 
