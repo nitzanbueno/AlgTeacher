@@ -1,13 +1,17 @@
 import React, {FC, useEffect, useContext} from "react";
-import {Text, View, FlatList, StyleSheet, Alert} from "react-native";
+import {Text, View, FlatList, StyleSheet, Alert, Image} from "react-native";
 import {Case} from "../Models";
 import TouchableCubeImage from "../CommonComponents/TouchableCubeImage";
 import {CaseStoreContext} from "../CaseStore";
 import {MenuTrigger, Menu, MenuOptions, MenuOption, withMenuContext, MenuContext} from "react-native-popup-menu";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import {TouchableNativeFeedback} from "react-native-gesture-handler";
+import {TouchableNativeFeedback, ScrollView} from "react-native-gesture-handler";
 import MenuIcon from "../CommonComponents/MenuIcon";
 import {observer} from "mobx-react";
+import FirstUsageModal from "../CommonComponents/FirstUsageModal";
+import AsyncStorage from "@react-native-community/async-storage";
+import Button from "../CommonComponents/Button";
+import {H1, P} from "../CommonComponents/TextFormattingElements";
 
 const CASE_COLUMNS = 2;
 
@@ -44,7 +48,24 @@ const styles = StyleSheet.create({
     },
     helpText: {
         fontSize: 20,
-        textAlign: "center"
+        textAlign: "center",
+    },
+    helpModal: {
+        backgroundColor: "white",
+        height: "85%",
+        borderRadius: 10,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    helpModalTextContainer: {
+        width: "100%",
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingBottom: 20,
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        backgroundColor: "#eee",
     },
 });
 
@@ -59,7 +80,7 @@ type CaseImagePropsWithContext = {
 /**
  * This component uses the react-native-popup-menu library to wrap a TouchableImage component with a context menu.
  */
-const CaseImage = withMenuContext<CaseImagePropsWithContext>((props) => {
+const CaseImage = withMenuContext<CaseImagePropsWithContext>(props => {
     return (
         <Menu name={"case_" + props.case.id}>
             <TouchableCubeImage
@@ -193,6 +214,58 @@ const MainScreen: FC<Props> = props => {
                     ?
                 </Text>
             )}
+            <FirstUsageModal openKey={"mainScreenHelpModal"} animationIn="zoomIn" animationOut="fadeOut" animationInTiming={250}>
+                {close => (
+                    <View style={styles.helpModal}>
+                        <ScrollView style={styles.helpModalTextContainer}>
+                            <H1>Welcome to AlgTeacher!</H1>
+                            <P>You can start by adding a new algorithm using the "+" button:</P>
+                            <Image
+                                source={require("./HelpImages/AddButton.png")}
+                                style={{width: "100%", height: 100}}
+                                resizeMode="contain"
+                            />
+                            <P>Or importing an algorithm set:</P>
+                            <Image
+                                source={require("./HelpImages/ImportAlgorithmSet.png")}
+                                style={{width: "100%", height: 100}}
+                                resizeMode="contain"
+                            />
+                            <H1>Test</H1>
+                            <P>
+                                After adding some algorithms, tap on one to test yourself.</P>
+                                <Image
+                                source={require("./HelpImages/Algorithms.png")}
+                                style={{width: "100%", height: 300}}
+                                resizeMode="contain"
+                            />
+                            <P>
+                                It'll open the following screen:
+                            </P>
+                            <Image
+                                source={require("./HelpImages/TestScreen.png")}
+                                style={{width: "100%", height: 460}}
+                                resizeMode="contain"
+                            />
+                            <P>The app will automatically generate a scramble that is solved by the algorithm.</P>
+                            <P>If you forgot the algorithm, you can see the solution.</P>
+                            <H1>Time Attack</H1>
+                            <P>Also check out Time Attack mode:</P>
+                            <Image
+                                source={require("./HelpImages/TimeAttack.png")}
+                                style={{width: "100%", height: 100}}
+                                resizeMode="contain"
+                            />
+                        </ScrollView>
+                        <Button
+                            style={{width: "80%", backgroundColor: "transparent", marginBottom: 10, marginTop: 10}}
+                            textStyle={{color: "#00897b", fontWeight: "bold", fontSize: 20}}
+                            onPress={close}
+                            title="CLOSE"
+                        />
+                    </View>
+                )}
+            </FirstUsageModal>
         </View>
     );
 };
