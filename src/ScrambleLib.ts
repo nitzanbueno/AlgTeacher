@@ -200,7 +200,25 @@ function NormalizeAlgorithm(algorithm: string) {
         .replace(/S/g, "F' B z")
         .replace(/E'/g, "U' D y")
         .replace(/E2/g, 'U2 D2 y2')
-        .replace(/E/g, "U D' y'");
+        .replace(/E/g, "U D' y'")
+        .replace(/Rw'/g, "L' x'")
+        .replace(/Rw2/g, "L2 x2")
+        .replace(/Rw/g, "L x")
+        .replace(/Lw'/g, "R' x")
+        .replace(/Lw2/g, "R2 x2")
+        .replace(/Lw/g, "R x'")
+        .replace(/Uw'/g, "D' y'")
+        .replace(/Uw2/g, "D2 y2")
+        .replace(/Uw/g, "D y")
+        .replace(/Dw'/g, "U' y")
+        .replace(/Dw2/g, "U2 y2")
+        .replace(/Dw/g, "U y'")
+        .replace(/Fw'/g, "B' z'")
+        .replace(/Fw2/g, "B2 z2")
+        .replace(/Fw/g, "B z")
+        .replace(/Bw'/g, "F' z")
+        .replace(/Bw2/g, "F2 z2")
+        .replace(/Bw/g, "F z'");
 
     let turns = algorithm.split(/\s+/);
 
