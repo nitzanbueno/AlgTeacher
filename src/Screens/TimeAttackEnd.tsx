@@ -78,7 +78,7 @@ const TimeAttackEndScreen: FC<Props> = props => {
         }
 
         checkHighScore();
-    }, [cases, timeAttackScore]);
+    }, [cases, timeAttackScore.totalTime, timeAttackScore.solveCount]);
 
     function ScoreText(props: {scoreObject: {totalTime: number, solveCount: number}, title?: string, style?: StyleProp<TextStyle>}) {
         const {scoreObject, style, title} = props;

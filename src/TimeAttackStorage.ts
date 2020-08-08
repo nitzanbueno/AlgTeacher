@@ -5,7 +5,10 @@ import AsyncStorage from '@react-native-community/async-storage';
 const HIGHSCORE_KEY = '@high_score/';
 
 function hashCases(cases: Case[]) {
-    return HashCode(JSON.stringify(cases.sort((a, b) => a.id - b.id).map(c => c.algorithm)));
+    const sets = [...new Set(cases.map(c => c.algorithmSet))].sort();
+
+    // If the number of algorithms changes, I want to reset the high score
+    return HashCode(JSON.stringify([sets, cases.length]));
 }
 
 export type HighScoreType = {totalTime: number; solveCount: number};
