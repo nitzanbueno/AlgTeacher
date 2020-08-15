@@ -750,6 +750,305 @@
         ]
     },
     {
+        "name": "CMLL",
+        "cases": [
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "Antisune 1",
+                "algorithm": "U R U2 R' U' R U' R'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "Antisune 2",
+                "algorithm": "U2 R2 D R' U R D' R' U R' U' R U' R'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "Antisune 3",
+                "algorithm": "U2 F' r U r' U2 r' F2 r",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "Antisune 4",
+                "algorithm": "U2 R U2 R' U2 R' F R F'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "Antisune 5",
+                "algorithm": "U2 L' U R U' L U R'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "Antisune 6",
+                "algorithm": "R U R' F' R U2 R' U' R U' R' F R U' R'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "H 1",
+                "algorithm": "R U2 R' U' R U R' U' R U' R'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "H 2",
+                "algorithm": "U' R U R' U R U L' U R' U' L",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "H 3",
+                "algorithm": "U R U2 R2 F R F' U2 R' F R F'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "H 4",
+                "algorithm": "F R U R' U' R U R' U' R U R' U' F'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "L 1",
+                "algorithm": "U' R U2 R' U' R U R' U' R U R' U' R U' R'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "L 2",
+                "algorithm": "R' U2 R' D' R U2 R' D R2",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "L 3",
+                "algorithm": "U R U2 R D R' U2 R D' R2",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "L 4",
+                "algorithm": "U F R' F' R U R U' R'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "L 5",
+                "algorithm": "U F R U' R' U' R U R' F'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "L 6",
+                "algorithm": "U R U2 R2 F R F' R U2 R'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "O 1",
+                "algorithm": "U R U R' F' R U R' U' R' F R2 U' R'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "O 2",
+                "algorithm": "F R U' R' U' R U R' F' R U R' U' R' F R F'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "Pi 1",
+                "algorithm": "F R U R' U' R U R' U' F'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "Pi 2",
+                "algorithm": "U F R' F' R U2 R U' R' U R U2 R'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "Pi 3",
+                "algorithm": "U' R' F R U F U' R U R' U' F'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "Pi 4",
+                "algorithm": "R U2 R' U' R U R' U2 R' F R F'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "Pi 5",
+                "algorithm": "U' r U' r2 D' r U r' D r2 U r'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "Pi 6",
+                "algorithm": "U' R' U' R' F R F' R U' R' U2 R",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "Sune 1",
+                "algorithm": "R U R' U R U2 R'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "Sune 2",
+                "algorithm": "L' U2 L U2 L F' L' F",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "Sune 3",
+                "algorithm": "F R' F' R U2 R U2 R'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "Sune 4",
+                "algorithm": "U' R U R' U R U' R D R' U' R D' R2",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "Sune 5",
+                "algorithm": "R U' L' U R' U' L",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "Sune 6",
+                "algorithm": "U2 R U R' U R' F R F' R U2 R'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "T 1",
+                "algorithm": "R U2 R' U' R U' R2 U2 R U R' U R",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "T 2",
+                "algorithm": "R' U r U2 R2 F R F' r",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "T 3",
+                "algorithm": "U L' U' L U L F' L' F",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "T 4",
+                "algorithm": "r' D' r U r' D r U' r U r'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "T 5",
+                "algorithm": "U' R U R' U' R' F R F'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "T 6",
+                "algorithm": "U2 r2 D' r U r' D r2 U' r' U' r",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "U 1",
+                "algorithm": "R' U' R U' R' U2 R2 U R' U R U2 R'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "U 2",
+                "algorithm": "U' F R2 D R' U R D' R2 U' F'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "U 3",
+                "algorithm": "U2 R2 D R' U2 R D' R' U2 R'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "U 4",
+                "algorithm": "U2 R' F2 R U2 R U2 R' F2 R U2 R'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "U 5",
+                "algorithm": "R2 D' R U2 R' D R U2 R",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            },
+            {
+                "id": -1,
+                "algorithmSet": "CMLL",
+                "description": "U 6",
+                "algorithm": "U' F R U R' U' F'",
+                "imageOptions": {"view": "plan", "mask": "cmll"}
+            }
+        ]
+    },
+    {
         "name": "Oriented LS",
         "cases": [
             {

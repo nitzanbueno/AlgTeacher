@@ -8,7 +8,8 @@ export const CUBE_IMAGE_OPTIONS: CubeOptions[] = [
     {view: "plan"},
     {view: "plan", mask: Masking.OLL},
     {view: "plan", mask: Masking.COLL},
+    {view: "plan", mask: Masking.CMLL},
     {view: "plan", mask: Masking.WV},
     {mask: Masking.F2L},
-    {mask: Masking.WV}
+    {mask: Masking.WV},
 ];
