@@ -85,9 +85,7 @@ const MainScreen: FC<Props> = props => {
     );
 
     function deleteSelectedCases() {
-        for (const id of selectedCaseIds) {
-            caseStore.DeleteCase(id);
-        }
+        caseStore.DeleteCases(selectedCaseIds);
     }
 
     function openDeleteConfirmationForSelectedCases() {
