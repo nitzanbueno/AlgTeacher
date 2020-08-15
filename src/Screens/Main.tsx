@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useContext } from "react";
+import React, { FC, useEffect, useContext, useState, useMemo } from "react";
 import { Text, View, FlatList, StyleSheet, Alert, Image } from "react-native";
 import { Case } from "../Models";
 import TouchableCubeImage from "../CommonComponents/TouchableCubeImage";
@@ -7,10 +7,12 @@ import { MenuTrigger, Menu, MenuOptions, MenuOption, withMenuContext, MenuContex
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { TouchableNativeFeedback } from "react-native-gesture-handler";
 import MenuIcon from "../CommonComponents/MenuIcon";
-import { observer } from "mobx-react";
+import { observer, useLocalStore } from "mobx-react";
 import AsyncStorage from "@react-native-community/async-storage";
 import { H1, P } from "../CommonComponents/TextFormattingElements";
 import HelpModal from "../CommonComponents/HelpModal";
+import _ from "lodash";
+import { useUniqueArrayState } from "../CustomHooks";
 
 const CASE_COLUMNS = 2;
 
@@ -51,37 +53,6 @@ const styles = StyleSheet.create({
     },
 });
 
-type CaseImagePropsWithContext = {
-    case: Case;
-    onPress: () => void;
-    onEdit: () => void;
-    onDelete: () => void;
-    ctx: MenuContext;
-};
-
-/**
- * This component uses the react-native-popup-menu library to wrap a TouchableImage component with a context menu.
- */
-const CaseImage = withMenuContext<CaseImagePropsWithContext>(props => {
-    return (
-        <Menu name={"case_" + props.case.id}>
-            <TouchableCubeImage
-                onPress={props.onPress}
-                onLongPress={() => props.ctx.menuActions.openMenu("case_" + props.case.id)}
-                algorithm={props.case.algorithm}
-                {...props.case.imageOptions}
-            />
-            <MenuTrigger />
-            <MenuOptions>
-                <MenuOption onSelect={props.onEdit} text="Edit" />
-                <MenuOption onSelect={props.onDelete}>
-                    <Text style={{ color: "red" }}>Delete</Text>
-                </MenuOption>
-            </MenuOptions>
-        </Menu>
-    );
-});
-
 interface Props {
     navigation: any;
     route: any;
@@ -89,6 +60,9 @@ interface Props {
 
 const MainScreen: FC<Props> = props => {
     const caseStore = useContext(CaseStoreContext);
+    const [selectedCaseIds, selectedCaseFunctions] = useUniqueArrayState<number>([]);
+
+    const isSelectMode = selectedCaseIds.length != 0;
 
     function startTimeAttack() {
         props.navigation.navigate("TimeAttackOpening");
@@ -123,14 +97,27 @@ const MainScreen: FC<Props> = props => {
         props.navigation.navigate("Test", { caseId: chosenCase.id });
     }
 
+    function toggleSelectCase({ id }: Case) {
+        if (selectedCaseIds.includes(id)) selectedCaseFunctions.remove(id);
+        else selectedCaseFunctions.add(id);
+    }
+
+    function onPressCase(case_: Case) {
+        if (isSelectMode) toggleSelectCase(case_);
+        else openTestScreen(case_);
+    }
+
     function renderCase({ item }: { item: Case }) {
         return (
-            <CaseImage
-                onPress={() => openTestScreen(item)}
-                case={item}
-                onEdit={() => openEditScreen(item)}
-                onDelete={() => openDeleteConfirmation(item)}
-            />
+            <>
+                <Text>{selectedCaseIds.includes(item.id) && "Selected"}</Text>
+                <TouchableCubeImage
+                    onPress={() => onPressCase(item)}
+                    onLongPress={() => toggleSelectCase(item)}
+                    algorithm={item.algorithm}
+                    {...item.imageOptions}
+                />
+            </>
         );
     }
 
@@ -152,8 +139,9 @@ const MainScreen: FC<Props> = props => {
         ]);
     }
 
-    useEffect(() => {
-        props.navigation.setOptions({
+    const DEFAULT_MODE_OPTIONS = useMemo(
+        () => ({
+            title: "AlgTeacher",
             headerRight: () => (
                 <View style={styles.iconContainer}>
                     <TouchableNativeFeedback onPress={startTimeAttack}>
@@ -170,8 +158,17 @@ const MainScreen: FC<Props> = props => {
                     </MenuIcon>
                 </View>
             ),
-        });
-    }, []);
+        }),
+        [],
+    );
+
+    useEffect(() => {
+        if (isSelectMode) {
+            props.navigation.setOptions({ title: "Select Mode" });
+        } else {
+            props.navigation.setOptions(DEFAULT_MODE_OPTIONS);
+        }
+    }, [isSelectMode]);
 
     return (
         <View style={styles.container}>
