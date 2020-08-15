@@ -68,21 +68,29 @@ const MainScreen: FC<Props> = props => {
 
     const isSelectMode = selectedCaseIds.length != 0;
 
-    function startTimeAttack() {
-        props.navigation.navigate("TimeAttackOpening");
-    }
-
-    function startTimeAttackForSelected() {
-        // TODO: Implement
-        // props.navigation.navigate("TimeAttackOpening");
-    }
-
     useEffect(
         function resetSelectedCases() {
             selectedCaseFunctions.set([]);
         },
         [JSON.stringify(caseStore.cases)],
     );
+
+    function startTimeAttack() {
+        props.navigation.navigate("TimeAttackOpening");
+    }
+
+    function openAddScreen() {
+        props.navigation.navigate("Add", { caseId: -1 });
+    }
+
+    function openTestScreen(chosenCase: Case) {
+        props.navigation.navigate("Test", { caseId: chosenCase.id });
+    }
+
+    function startTimeAttackForSelected() {
+        // TODO: Implement
+        // props.navigation.navigate("TimeAttackOpening");
+    }
 
     function deleteSelectedCases() {
         caseStore.DeleteCases(selectedCaseIds);
@@ -104,10 +112,6 @@ const MainScreen: FC<Props> = props => {
         );
     }
 
-    function openAddScreen() {
-        props.navigation.navigate("Add", { caseId: -1 });
-    }
-
     function openEditScreen() {
         if (selectedCaseIds.length != 1) return;
 
@@ -118,10 +122,6 @@ const MainScreen: FC<Props> = props => {
 
         // We opened a new screen, so detach from selection
         selectedCaseFunctions.set([]);
-    }
-
-    function openTestScreen(chosenCase: Case) {
-        props.navigation.navigate("Test", { caseId: chosenCase.id });
     }
 
     function toggleSelectCase({ id }: Case) {
