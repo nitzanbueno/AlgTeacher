@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
     selectedCase: {
-        backgroundColor: "aqua",
+        backgroundColor: "#c7dafb",
     },
 });
 
@@ -172,14 +172,14 @@ const MainScreen: FC<Props> = props => {
                 title: "Select",
                 headerRight: () => (
                     <View style={styles.iconContainer}>
-                        <TouchableNativeFeedback onPress={startTimeAttackForSelected}>
-                            <Icon style={styles.icon} name="stopwatch" size={20} />
-                        </TouchableNativeFeedback>
                         {selectedCaseIds.length == 1 && (
                             <TouchableNativeFeedback onPress={openEditScreen}>
                                 <FAIcon style={styles.icon} name="pencil" size={20} />
                             </TouchableNativeFeedback>
                         )}
+                        <TouchableNativeFeedback onPress={startTimeAttackForSelected}>
+                            <Icon style={styles.icon} name="stopwatch" size={20} />
+                        </TouchableNativeFeedback>
                         <TouchableNativeFeedback onPress={openDeleteConfirmationForSelectedCases}>
                             <Icon style={styles.icon} name="trash-alt" size={20} />
                         </TouchableNativeFeedback>
