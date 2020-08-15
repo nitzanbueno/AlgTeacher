@@ -210,7 +210,6 @@ const MainScreen: FC<Props> = props => {
     useFocusEffect(
         React.useCallback(() => {
             const eventListener = BackHandler.addEventListener("hardwareBackPress", () => {
-                console.log("Backed!", isSelectMode);
                 if (!isSelectMode) return false;
 
                 selectedCaseFunctions.set([]);
