@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useContext, useState, useMemo } from "react";
-import { Text, View, FlatList, StyleSheet, Alert, Image } from "react-native";
+import { Text, View, FlatList, StyleSheet, Alert, Image, TouchableWithoutFeedback } from "react-native";
 import { Case } from "../Models";
 import TouchableCubeImage from "../CommonComponents/TouchableCubeImage";
 import { CaseStoreContext } from "../CaseStore";
@@ -13,6 +13,7 @@ import { H1, P } from "../CommonComponents/TextFormattingElements";
 import HelpModal from "../CommonComponents/HelpModal";
 import _ from "lodash";
 import { useUniqueArrayState } from "../CustomHooks";
+import { CubeImage } from "../CommonComponents/CubeImage";
 
 const CASE_COLUMNS = 2;
 
@@ -108,16 +109,19 @@ const MainScreen: FC<Props> = props => {
     }
 
     function renderCase({ item }: { item: Case }) {
-        return (
-            <>
-                <Text>{selectedCaseIds.includes(item.id) && "Selected"}</Text>
-                <TouchableCubeImage
-                    onPress={() => onPressCase(item)}
-                    onLongPress={() => toggleSelectCase(item)}
-                    algorithm={item.algorithm}
-                    {...item.imageOptions}
-                />
-            </>
+        return selectedCaseIds.includes(item.id) ? (
+            <TouchableWithoutFeedback onPress={() => onPressCase(item)}>
+                <View style={{ backgroundColor: selectedCaseIds.includes(item.id) ? "aqua" : "transparent" }}>
+                    <CubeImage width={150} height={150} case={item.algorithm} {...item.imageOptions}></CubeImage>
+                </View>
+            </TouchableWithoutFeedback>
+        ) : (
+            <TouchableCubeImage
+                onPress={() => onPressCase(item)}
+                onLongPress={() => toggleSelectCase(item)}
+                algorithm={item.algorithm}
+                {...item.imageOptions}
+            />
         );
     }
 
