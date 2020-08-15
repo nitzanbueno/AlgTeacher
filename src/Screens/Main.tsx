@@ -1,19 +1,19 @@
-import React, { FC, useEffect, useContext, useState, useMemo } from "react";
-import { Text, View, FlatList, StyleSheet, Alert, Image, TouchableWithoutFeedback } from "react-native";
+import React, { FC, useEffect, useContext, useMemo } from "react";
+import { Text, View, FlatList, StyleSheet, Alert, Image, BackHandler } from "react-native";
 import { Case } from "../Models";
 import TouchableCubeImage from "../CommonComponents/TouchableCubeImage";
 import { CaseStoreContext } from "../CaseStore";
-import { MenuTrigger, Menu, MenuOptions, MenuOption, withMenuContext, MenuContext } from "react-native-popup-menu";
+import { MenuOptions, MenuOption } from "react-native-popup-menu";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import FAIcon from "react-native-vector-icons/FontAwesome";
 import { TouchableNativeFeedback } from "react-native-gesture-handler";
 import MenuIcon from "../CommonComponents/MenuIcon";
-import { observer, useLocalStore } from "mobx-react";
-import AsyncStorage from "@react-native-community/async-storage";
+import { observer } from "mobx-react";
 import { H1, P } from "../CommonComponents/TextFormattingElements";
 import HelpModal from "../CommonComponents/HelpModal";
 import _ from "lodash";
 import { useUniqueArrayState } from "../CustomHooks";
-import { CubeImage } from "../CommonComponents/CubeImage";
+import { useFocusEffect } from "@react-navigation/native";
 
 const CASE_COLUMNS = 2;
 
@@ -72,29 +72,54 @@ const MainScreen: FC<Props> = props => {
         props.navigation.navigate("TimeAttackOpening");
     }
 
-    function deleteCase(chosenCase: Case) {
-        caseStore.DeleteCase(chosenCase.id);
+    function startTimeAttackForSelected() {
+        // TODO: Implement
+        // props.navigation.navigate("TimeAttackOpening");
     }
 
-    function openDeleteConfirmation(chosenCase: Case) {
-        Alert.alert("Delete Case", "Are you sure you want to delete this case?", [
-            {
-                text: "Cancel",
-                style: "cancel",
-            },
-            { text: "Delete", onPress: () => deleteCase(chosenCase) },
-        ]);
+    useEffect(
+        function resetSelectedCases() {
+            selectedCaseFunctions.set([]);
+        },
+        [JSON.stringify(caseStore.cases)],
+    );
+
+    function deleteSelectedCases() {
+        for (const id of selectedCaseIds) {
+            caseStore.DeleteCase(id);
+        }
+    }
+
+    function openDeleteConfirmationForSelectedCases() {
+        const singular = selectedCaseIds.length == 1;
+
+        Alert.alert(
+            singular ? "Delete Case" : "Delete Cases",
+            `Are you sure you want to delete ${singular ? "this case" : "these cases"}?`,
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel",
+                },
+                { text: "Delete", onPress: deleteSelectedCases },
+            ],
+        );
     }
 
     function openAddScreen() {
         props.navigation.navigate("Add", { caseId: -1 });
     }
 
-    function openEditScreen(chosenCase: Case) {
+    function openEditScreen() {
+        if (selectedCaseIds.length != 1) return;
+
         props.navigation.navigate("Add", {
-            caseId: chosenCase.id,
+            caseId: selectedCaseIds[0],
             title: "Edit",
         });
+
+        // We opened a new screen, so detach from selection
+        selectedCaseFunctions.set([]);
     }
 
     function openTestScreen(chosenCase: Case) {
@@ -141,36 +166,62 @@ const MainScreen: FC<Props> = props => {
         ]);
     }
 
-    const DEFAULT_MODE_OPTIONS = useMemo(
-        () => ({
-            title: "AlgTeacher",
-            headerRight: () => (
-                <View style={styles.iconContainer}>
-                    <TouchableNativeFeedback onPress={startTimeAttack}>
-                        <Icon style={styles.icon} name="stopwatch" size={20} />
-                    </TouchableNativeFeedback>
-                    <TouchableNativeFeedback onPress={openAddScreen}>
-                        <Icon style={styles.icon} name="plus" size={20} />
-                    </TouchableNativeFeedback>
-                    <MenuIcon>
-                        <MenuOptions>
-                            <MenuOption onSelect={openAlgorithmSetScreen} text="Import algorithm set..." />
-                            <MenuOption onSelect={openClearConfirmation} text="Delete all cases..." />
-                        </MenuOptions>
-                    </MenuIcon>
-                </View>
-            ),
-        }),
-        [],
-    );
-
     useEffect(() => {
         if (isSelectMode) {
-            props.navigation.setOptions({ title: "Select Mode" });
+            props.navigation.setOptions({
+                title: "Select",
+                headerRight: () => (
+                    <View style={styles.iconContainer}>
+                        <TouchableNativeFeedback onPress={startTimeAttackForSelected}>
+                            <Icon style={styles.icon} name="stopwatch" size={20} />
+                        </TouchableNativeFeedback>
+                        {selectedCaseIds.length == 1 && (
+                            <TouchableNativeFeedback onPress={openEditScreen}>
+                                <FAIcon style={styles.icon} name="pencil" size={20} />
+                            </TouchableNativeFeedback>
+                        )}
+                        <TouchableNativeFeedback onPress={openDeleteConfirmationForSelectedCases}>
+                            <Icon style={styles.icon} name="trash-alt" size={20} />
+                        </TouchableNativeFeedback>
+                    </View>
+                ),
+            });
         } else {
-            props.navigation.setOptions(DEFAULT_MODE_OPTIONS);
+            props.navigation.setOptions({
+                title: "AlgTeacher",
+                headerRight: () => (
+                    <View style={styles.iconContainer}>
+                        <TouchableNativeFeedback onPress={startTimeAttack}>
+                            <Icon style={styles.icon} name="stopwatch" size={20} />
+                        </TouchableNativeFeedback>
+                        <TouchableNativeFeedback onPress={openAddScreen}>
+                            <Icon style={styles.icon} name="plus" size={20} />
+                        </TouchableNativeFeedback>
+                        <MenuIcon>
+                            <MenuOptions>
+                                <MenuOption onSelect={openAlgorithmSetScreen} text="Import algorithm set..." />
+                                <MenuOption onSelect={openClearConfirmation} text="Delete all cases..." />
+                            </MenuOptions>
+                        </MenuIcon>
+                    </View>
+                ),
+            });
         }
-    }, [isSelectMode]);
+    }, [selectedCaseIds.length]);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            const eventListener = BackHandler.addEventListener("hardwareBackPress", () => {
+                console.log("Backed!", isSelectMode);
+                if (!isSelectMode) return false;
+
+                selectedCaseFunctions.set([]);
+                return true;
+            });
+
+            return () => eventListener.remove();
+        }, [isSelectMode, selectedCaseFunctions.set]),
+    );
 
     return (
         <View style={styles.container}>

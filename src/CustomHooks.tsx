@@ -20,6 +20,7 @@ export function useUniqueArrayState<T>(defaultState: T[]): [
         remove: (item: T) => void;
         removeAt: (index: number) => void;
         add: (item: T) => void;
+        set: (newState: T[]) => void;
     },
 ] {
     const [arr, setArr] = useState(defaultState);
@@ -46,6 +47,7 @@ export function useUniqueArrayState<T>(defaultState: T[]): [
             add(item) {
                 setArr((prevArr) => (prevArr.includes(item) ? prevArr : prevArr.concat(item)));
             },
+            set: setArr
         },
     ];
 }
