@@ -52,6 +52,9 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textAlign: "center",
     },
+    selectedCase: {
+        backgroundColor: "aqua",
+    },
 });
 
 interface Props {
@@ -109,14 +112,9 @@ const MainScreen: FC<Props> = props => {
     }
 
     function renderCase({ item }: { item: Case }) {
-        return selectedCaseIds.includes(item.id) ? (
-            <TouchableWithoutFeedback onPress={() => onPressCase(item)}>
-                <View style={{ backgroundColor: selectedCaseIds.includes(item.id) ? "aqua" : "transparent" }}>
-                    <CubeImage width={150} height={150} case={item.algorithm} {...item.imageOptions}></CubeImage>
-                </View>
-            </TouchableWithoutFeedback>
-        ) : (
+        return (
             <TouchableCubeImage
+                style={selectedCaseIds.includes(item.id) ? styles.selectedCase : undefined}
                 onPress={() => onPressCase(item)}
                 onLongPress={() => toggleSelectCase(item)}
                 algorithm={item.algorithm}
