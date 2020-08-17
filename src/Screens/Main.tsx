@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     icon: {
         marginRight: 10,
         marginLeft: 10,
-        height: "100%",
+        width: 18,
         textAlignVertical: "center",
     },
     helpText: {
@@ -173,6 +173,15 @@ const MainScreen: FC<Props> = props => {
                         {selectedCaseIds.length == 1 && (
                             <TouchableNativeFeedback onPress={openEditScreen}>
                                 <FAIcon style={styles.icon} name="pencil" size={20} />
+                            </TouchableNativeFeedback>
+                        )}
+                        {selectedCaseIds.length == caseStore.cases.length ? (
+                            <TouchableNativeFeedback onPress={() => selectedCaseFunctions.set([])}>
+                                <FAIcon style={styles.icon} name="check-square-o" size={20} />
+                            </TouchableNativeFeedback>
+                        ) : (
+                            <TouchableNativeFeedback onPress={() => selectedCaseFunctions.set(caseStore.cases.map((c) => c.id))}>
+                                <FAIcon style={styles.icon} name="square-o" size={20} />
                             </TouchableNativeFeedback>
                         )}
                         <TouchableNativeFeedback onPress={startTimeAttackForSelected}>
