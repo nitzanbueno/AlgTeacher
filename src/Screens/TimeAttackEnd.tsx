@@ -1,7 +1,6 @@
 import React, { FC, useState, useEffect } from "react";
 import { Text, View, StyleSheet, StyleProp, TextStyle } from "react-native";
 import { GetTimeText } from "../Utils";
-import { Case } from "../Models";
 import TimeAttackStorage, { HighScoreType } from "../TimeAttackStorage";
 
 const styles = StyleSheet.create({
@@ -53,32 +52,32 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-    route: { params: { cases: Case[]; totalTime: number; solveCount: number } };
+    route: { params: { highScoreKey: string; totalTime: number; solveCount: number; totalCount: number } };
 }
 
 const TimeAttackEndScreen: FC<Props> = props => {
     const [highScore, setHighScore] = useState<HighScoreType | null>(null);
 
-    const { cases } = props.route.params;
+    const { highScoreKey, totalCount } = props.route.params;
     const timeAttackScore = { totalTime: props.route.params.totalTime, solveCount: props.route.params.solveCount };
 
     useEffect(() => {
         async function checkHighScore() {
-            const fetchedHighScore = await TimeAttackStorage.FetchHighScore(cases);
+            const fetchedHighScore = await TimeAttackStorage.FetchHighScore(highScoreKey);
 
             if (
                 fetchedHighScore == null ||
                 fetchedHighScore.solveCount < timeAttackScore.solveCount ||
                 (fetchedHighScore.solveCount == timeAttackScore.solveCount && fetchedHighScore.totalTime > timeAttackScore.totalTime)
             ) {
-                await TimeAttackStorage.SaveHighScore(cases, timeAttackScore);
+                await TimeAttackStorage.SaveHighScore(highScoreKey, timeAttackScore);
             } else {
                 setHighScore(fetchedHighScore);
             }
         }
 
         checkHighScore();
-    }, [cases, timeAttackScore.totalTime, timeAttackScore.solveCount]);
+    }, [highScoreKey, timeAttackScore.totalTime, timeAttackScore.solveCount]);
 
     function ScoreText(props: { scoreObject: { totalTime: number; solveCount: number }; title?: string; style?: StyleProp<TextStyle> }) {
         const { scoreObject, style, title } = props;
@@ -89,7 +88,7 @@ const TimeAttackEndScreen: FC<Props> = props => {
                     <View style={styles.row}>
                         <Text style={[styles.descriptionText, styles.scoreLabel, style]}>Solves:</Text>
                         <Text style={[styles.descriptionText, styles.scoreField, style]}>
-                            {scoreObject.solveCount}/{cases.length}
+                            {scoreObject.solveCount}/{totalCount}
                         </Text>
                     </View>
                     <View style={styles.row}>
@@ -112,7 +111,7 @@ const TimeAttackEndScreen: FC<Props> = props => {
             <ScoreText title="Your score is:" style={!highScore && styles.highScoreText} scoreObject={timeAttackScore} />
             <View style={styles.highScoreView}>
                 {highScore && (
-                    <ScoreText title="Your high score for this algorithm set is:" style={styles.highScoreText} scoreObject={highScore} />
+                    <ScoreText title={`Your high score for ${totalCount === 1 ? "this case" : "these cases"} is:`} style={styles.highScoreText} scoreObject={highScore} />
                 )}
             </View>
         </View>

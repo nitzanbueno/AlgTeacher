@@ -75,21 +75,23 @@ const MainScreen: FC<Props> = props => {
         [JSON.stringify(caseStore.cases)],
     );
 
+    function navigate(name: string, params?: Object) {
+        props.navigation.navigate(name, params);
+
+        // We opened a new screen, so detach from selection
+        selectedCaseFunctions.set([]);
+    }
+
     function startTimeAttack() {
-        props.navigation.navigate("TimeAttackOpening");
+        navigate("TimeAttackOpening", {cases: caseStore.GetCasesByIds(selectedCaseIds)});
     }
 
     function openAddScreen() {
-        props.navigation.navigate("Add", { caseId: -1 });
+        navigate("Add", { caseId: -1 });
     }
 
     function openTestScreen(chosenCase: Case) {
-        props.navigation.navigate("Test", { caseId: chosenCase.id });
-    }
-
-    function startTimeAttackForSelected() {
-        // TODO: Implement
-        // props.navigation.navigate("TimeAttackOpening");
+        navigate("Test", { caseId: chosenCase.id });
     }
 
     function deleteSelectedCases() {
@@ -115,13 +117,10 @@ const MainScreen: FC<Props> = props => {
     function openEditScreen() {
         if (selectedCaseIds.length != 1) return;
 
-        props.navigation.navigate("Add", {
+        navigate("Add", {
             caseId: selectedCaseIds[0],
             title: "Edit",
         });
-
-        // We opened a new screen, so detach from selection
-        selectedCaseFunctions.set([]);
     }
 
     function toggleSelectCase({ id }: Case) {
@@ -147,7 +146,7 @@ const MainScreen: FC<Props> = props => {
     }
 
     function openAlgorithmSetScreen() {
-        props.navigation.navigate("ImportAlgorithmSet");
+        navigate("ImportAlgorithmSet");
     }
 
     function clearCases() {
@@ -184,7 +183,7 @@ const MainScreen: FC<Props> = props => {
                                 <FAIcon style={styles.icon} name="square-o" size={20} />
                             </TouchableNativeFeedback>
                         )}
-                        <TouchableNativeFeedback onPress={startTimeAttackForSelected}>
+                        <TouchableNativeFeedback onPress={startTimeAttack}>
                             <Icon style={styles.icon} name="stopwatch" size={20} />
                         </TouchableNativeFeedback>
                         <TouchableNativeFeedback onPress={openDeleteConfirmationForSelectedCases}>

@@ -93,7 +93,7 @@ function BottomScreenButton(props: { style: Object; onPress: () => void; text: s
 }
 
 interface Props {
-    route: { params: { algorithmSets: string[]; shouldRandomlyMirror: boolean; shouldRandomlyAUF: boolean } };
+    route: { params: { cases: Case[]; highScoreKey: string; shouldRandomlyMirror: boolean; shouldRandomlyAUF: boolean } };
     navigation: any;
 }
 
@@ -110,9 +110,10 @@ const TimeAttackPlayScreen: FC<Props> = props => {
 
     function goToEndScreen() {
         props.navigation.replace("TimeAttackEnd", {
-            totalTime: totalTime,
-            cases: cases,
-            solveCount: solveCount,
+            totalTime,
+            highScoreKey: props.route.params.highScoreKey,
+            solveCount,
+            totalCount: cases.length
         });
     }
 
@@ -158,13 +159,9 @@ const TimeAttackPlayScreen: FC<Props> = props => {
 
     useEffect(
         function initializeCases() {
-            const { algorithmSets, shouldRandomlyAUF, shouldRandomlyMirror } = props.route.params;
+            const { shouldRandomlyAUF, shouldRandomlyMirror } = props.route.params;
             // Detach the cases from mobx, so that when we randomly mirror and AUF, the actual cases don't get edited
-            let testedCases = ShuffleArray(caseStore.cases.map(x => Object.assign({}, x)));
-
-            if (algorithmSets.length > 0) {
-                testedCases = testedCases.filter(c => c.algorithmSet && algorithmSets.includes(c.algorithmSet));
-            }
+            let testedCases = ShuffleArray(props.route.params.cases.map(x => ({ ...x })));
 
             if (shouldRandomlyMirror) {
                 for (const testedCase of testedCases) {
@@ -184,7 +181,7 @@ const TimeAttackPlayScreen: FC<Props> = props => {
             setCases(testedCases);
             setCurrentCaseIndex(0);
         },
-        [caseStore.cases],
+        [props.route.params.cases],
     );
 
     function startTimer() {

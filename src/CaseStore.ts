@@ -86,6 +86,10 @@ export class CaseStore {
         return this.cases.find(c => c.id == id);
     }
 
+    GetCasesByIds(ids: number[]): Case[] {
+        return this.cases.filter(c => ids.includes(c.id));
+    }
+
     async ExtraClearAllCases() {
         await AsyncStorage.removeItem(CASES_KEY);
     }
