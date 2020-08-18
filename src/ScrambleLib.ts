@@ -169,8 +169,7 @@ function SanitizeAlgorithm(algorithm: string): string {
             .replace(/Y/g, "y")
             .replace(/Z/g, "z")
             .replace(/[^RULDFBMSEwxyz'2 ]/g, " ")
-            // TODO: Test if this works!
-            // .replace(/2'/g, "2")
+            .replace(/2'/g, "2")
             .replace(/([RULDFBMSEwxyz'2 ])(?!['2w])/g, "$1 ")
             .replace(/ +/g, " ")
             .trim()
