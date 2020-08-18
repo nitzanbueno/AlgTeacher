@@ -40,6 +40,7 @@ public class ScrambleLibModule extends ReactContextBaseJavaModule {
             caseState = solved.applyAlgorithm(caseToScramble);
         } catch (InvalidScrambleException e) {
             done.invoke(false, "");
+            return;
         }
 
         // We want to generate a scramble for a case, and more importantly, we want it to suck.
@@ -53,7 +54,11 @@ public class ScrambleLibModule extends ReactContextBaseJavaModule {
             axisRestriction = null;
         }
 
-        // Call the callback with our result
-        done.invoke(true, p.solveIn(caseState, 1000, "U", axisRestriction));
+        try {
+            // Call the callback with our result
+            done.invoke(true, p.solveIn(caseState, 1000, "U", axisRestriction));
+        } catch (Exception e) {
+            done.invoke(false, "");
+        }
     }
 }
