@@ -307,14 +307,18 @@ export function MirrorAlgorithm(algorithm: string) {
     return mirroredMoves.join(" ");
 }
 
-export function GenerateScramble(algorithm: string, done: (success: boolean, scramble: string) => void): void {
+export function GenerateScrambleAsync(algorithm: string): Promise<string> {
     const normalizedAlgorithm = NormalizeAlgorithm(algorithm);
 
     if (normalizedAlgorithm === "") {
         console.log("Empty alg");
-        done(true, "");
-        return;
+        return Promise.resolve("");
     }
 
-    ScrambleLib.generateScramble(normalizedAlgorithm, done);
+    return new Promise((resolve, reject) => {
+        ScrambleLib.generateScramble(normalizedAlgorithm, (success, scramble) => {
+            if (success) resolve(scramble);
+            else reject();
+        });
+    });
 }

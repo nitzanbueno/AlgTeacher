@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, ViewStyle } from "react-native";
 import { TouchableNativeFeedback } from "react-native-gesture-handler";
 import { TOUCHABLE_BACKGROUND } from "../Models";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { GenerateScramble } from "../ScrambleLib";
+import { GenerateScrambleAsync } from "../ScrambleLib";
 import { CaseStoreContext } from "../CaseStore";
 import { observer } from "mobx-react";
 import { CubeImage } from "../CommonComponents/CubeImage";
@@ -127,13 +127,9 @@ const TestScreen: FC<Props> = props => {
 
     useEffect(() => {
         if (algorithm !== undefined) {
-            GenerateScramble(algorithm, (success, newScramble) => {
-                if (success) {
-                    setScramble(newScramble);
-                } else {
-                    setScramble("Error");
-                }
-            });
+            GenerateScrambleAsync(algorithm)
+                .then(newScramble => setScramble(newScramble))
+                .catch(() => setScramble("Error"));
         }
     }, [algorithm]);
 

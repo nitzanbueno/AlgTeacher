@@ -2,7 +2,7 @@ import React, { useState, FC, useEffect, useContext } from "react";
 import { Text, View, StyleSheet, TouchableWithoutFeedback, TouchableNativeFeedback } from "react-native";
 import { TOUCHABLE_BACKGROUND, Case } from "../Models";
 import { CaseStoreContext } from "../CaseStore";
-import { GenerateScramble, MirrorAlgorithm } from "../ScrambleLib";
+import { GenerateScrambleAsync, MirrorAlgorithm } from "../ScrambleLib";
 import { GetTimeText, ShuffleArray, RandomChoice } from "../Utils";
 import Timer from "../CommonComponents/Timer";
 import { observer } from "mobx-react";
@@ -148,9 +148,9 @@ const TimeAttackPlayScreen: FC<Props> = props => {
             setButtonToDisplay(TimeAttackButtonOption.START_TIMER);
 
             if (newCase) {
-                GenerateScramble(newCase.algorithm, (success, scramble) => {
-                    setScramble(success ? scramble : "Error");
-                });
+                GenerateScrambleAsync(newCase.algorithm)
+                    .then(newScramble => setScramble(newScramble))
+                    .catch(() => setScramble("Error"));
             }
         },
         [currentCaseIndex, cases],
