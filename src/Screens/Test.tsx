@@ -40,6 +40,8 @@ const styles = StyleSheet.create({
     textContainer: {
         display: "flex",
         flexDirection: "column",
+        alignItems: "center",
+        width: "100%",
     },
     algorithmSetText: {
         marginTop: 30,
@@ -52,8 +54,7 @@ const styles = StyleSheet.create({
     scrambleText: {
         fontSize: 20,
         textAlign: "center",
-        maxWidth: "90%",
-        minWidth: "40%",
+        width: "90%",
     },
     iconContainer: {
         flexDirection: "row",
