@@ -9,6 +9,7 @@ import { CaseStoreContext } from "../CaseStore";
 import PickerWithAddOption from "../CommonComponents/PickerWithAddOption";
 import { observer } from "mobx-react";
 import { CubeOptions } from "sr-visualizer";
+import { GenerateScrambleAsync } from "../ScrambleLib";
 
 const styles = StyleSheet.create({
     formField: {
@@ -60,6 +61,11 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         marginRight: 10,
     },
+    errorText: {
+        marginLeft: 10,
+        marginTop: 5,
+        color: "red",
+    },
 });
 
 const selectedImageSize = {
@@ -80,6 +86,7 @@ const AddScreen: FC<Props> = props => {
     const caseStore = useContext(CaseStoreContext);
     const [description, setDescription] = useState("");
     const [algorithm, setAlgorithm] = useState("");
+    const [isAlgorithmInvalid, setIsAlgorithmInvalid] = useState(true);
     const [algorithmSet, setAlgorithmSet] = useState("");
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
     const [didLoad, setDidLoad] = useState(false);
@@ -122,6 +129,19 @@ const AddScreen: FC<Props> = props => {
         }
     }, [props.route.params.title]);
 
+    useEffect(() => {
+        async function testIfAlgorithmIsValid() {
+            try {
+                await GenerateScrambleAsync(algorithm);
+                setIsAlgorithmInvalid(false);
+            } catch {
+                setIsAlgorithmInvalid(true);
+            }
+        }
+
+        testIfAlgorithmIsValid();
+    }, [algorithm]);
+
     function renderCaseImageOption({ item, index }: { item: CubeOptions; index: number }) {
         if (!didLoad) return <SelectionStandin />;
 
@@ -133,6 +153,8 @@ const AddScreen: FC<Props> = props => {
     }
 
     function saveCase() {
+        if (isAlgorithmInvalid) return;
+
         let caseToSave: Case = {
             id: props.route.params.caseId,
             algorithm,
@@ -196,8 +218,9 @@ const AddScreen: FC<Props> = props => {
                 keyExtractor={(item, index) => index.toString()}
             />
             <View style={styles.saveButton}>
-                <Button title="Save" onPress={saveCase} />
+                <Button disabled={isAlgorithmInvalid} title="Save" onPress={saveCase} />
             </View>
+            {isAlgorithmInvalid && <Text style={styles.errorText}>The algorithm is invalid.</Text>}
         </ScrollView>
     );
 };
