@@ -1,5 +1,5 @@
-import React, {useEffect, FC, useState} from "react";
-import {Text, View, StyleSheet, TextInput, TouchableWithoutFeedback} from "react-native";
+import React, { useEffect, FC, useState } from "react";
+import { Text, View, StyleSheet, TextInput, TouchableWithoutFeedback } from "react-native";
 import Modal from "react-native-modal";
 import Button from "./Button";
 

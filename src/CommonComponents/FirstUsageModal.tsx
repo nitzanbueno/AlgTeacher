@@ -1,5 +1,5 @@
-import React, {FC, useState, useEffect, ReactNode} from "react";
-import Modal, {ModalProps} from "react-native-modal";
+import React, { FC, useState, useEffect, ReactNode } from "react";
+import Modal, { ModalProps } from "react-native-modal";
 import AsyncStorage from "@react-native-community/async-storage";
 
 interface FirstUsageModalProps extends Partial<ModalProps> {
@@ -16,7 +16,7 @@ interface FirstUsageModalProps extends Partial<ModalProps> {
  * The state of the first open is stored in async storaged using the given key.
  */
 const FirstUsageModal: FC<Omit<FirstUsageModalProps, "isVisible">> = props => {
-    const {openKey, children, ...modalProps} = props;
+    const { openKey, children, ...modalProps } = props;
 
     const [isVisible, setIsVisible] = useState(false);
 

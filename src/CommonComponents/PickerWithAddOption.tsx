@@ -1,6 +1,6 @@
-import React, {FC, useState, ReactText} from "react";
-import {ViewStyle} from "react-native";
-import {Picker} from "@react-native-community/picker";
+import React, { FC, useState, ReactText } from "react";
+import { ViewStyle } from "react-native";
+import { Picker } from "@react-native-community/picker";
 import TextPrompt from "./TextPrompt";
 
 const ADD_OPTION_KEY: string = "add";

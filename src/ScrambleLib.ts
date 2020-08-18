@@ -307,10 +307,7 @@ export function MirrorAlgorithm(algorithm: string) {
     return mirroredMoves.join(" ");
 }
 
-export function GenerateScramble(
-    algorithm: string,
-    done: (success: boolean, scramble: string) => void,
-): void {
+export function GenerateScramble(algorithm: string, done: (success: boolean, scramble: string) => void): void {
     const normalizedAlgorithm = NormalizeAlgorithm(algorithm);
 
     if (normalizedAlgorithm === "") {

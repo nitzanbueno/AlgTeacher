@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-community/async-storage";
-import {Case} from "./Models";
-import {observable, autorun, computed, action, decorate} from "mobx";
+import { Case } from "./Models";
+import { observable, autorun, computed, action, decorate } from "mobx";
 import { createContext } from "react";
 
 const CASES_KEY = "@cases";
@@ -14,8 +14,8 @@ export class CaseStore {
         this._getAllCases().then(loadedCases => {
             this.cases = loadedCases;
             this.isLoaded = true;
-            
-            // This could cause race conditions if two actions are performed in quick succession - 
+
+            // This could cause race conditions if two actions are performed in quick succession -
             // the second one might finish before the first one, thus erasing data.
             // This isn't a major concern for this part of the code, though.
             autorun(() => {
@@ -99,7 +99,7 @@ export class CaseStore {
      * All algorithm sets within stored cases, except undefined and empty strings.
      */
     get algorithmSets(): string[] {
-        let loadedSets = this.cases.map(case_ => case_.algorithmSet).filter(case_ => case_ != '' && case_ != undefined);
+        let loadedSets = this.cases.map(case_ => case_.algorithmSet).filter(case_ => case_ != "" && case_ != undefined);
         loadedSets = [...new Set(loadedSets)];
 
         return loadedSets as string[];
@@ -113,7 +113,7 @@ decorate(CaseStore, {
     StoreCaseList: action,
     DeleteCase: action,
     ClearAllCases: action,
-})
+});
 
 export const globalCaseStore = new CaseStore();
 export const CaseStoreContext = createContext(globalCaseStore);

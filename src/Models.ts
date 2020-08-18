@@ -9,7 +9,4 @@ export interface Case {
     algorithmSet?: string;
 }
 
-export const TOUCHABLE_BACKGROUND =
-    Platform.OS === "android"
-        ? TouchableNativeFeedback.SelectableBackground()
-        : undefined;
+export const TOUCHABLE_BACKGROUND = Platform.OS === "android" ? TouchableNativeFeedback.SelectableBackground() : undefined;

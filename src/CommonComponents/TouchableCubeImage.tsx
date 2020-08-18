@@ -1,13 +1,13 @@
-import React, {FunctionComponent} from "react";
-import {TouchableNativeFeedback, GestureResponderEvent, Text, View} from "react-native";
-import {TOUCHABLE_BACKGROUND} from "../Models";
+import React, { FunctionComponent } from "react";
+import { TouchableNativeFeedback, GestureResponderEvent, Text, View } from "react-native";
+import { TOUCHABLE_BACKGROUND } from "../Models";
 import { CubeImage } from "./CubeImage";
 import { CubeOptions } from "sr-visualizer";
 
 type Props = CubeOptions & {
     onPress?: (event: GestureResponderEvent) => void;
     onLongPress?: (event: GestureResponderEvent) => void;
-}
+};
 
 const TouchableCubeImage: FunctionComponent<Props> = props => {
     return (

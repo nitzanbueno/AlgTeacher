@@ -1,8 +1,8 @@
-import React, {FunctionComponent} from "react";
-import {StyleSheet} from "react-native";
-import {Menu, MenuTrigger, withMenuContext, MenuContext} from "react-native-popup-menu";
+import React, { FunctionComponent } from "react";
+import { StyleSheet } from "react-native";
+import { Menu, MenuTrigger, withMenuContext, MenuContext } from "react-native-popup-menu";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import {TouchableNativeFeedback} from "react-native-gesture-handler";
+import { TouchableNativeFeedback } from "react-native-gesture-handler";
 
 const styles = StyleSheet.create({
     icon: {
@@ -13,13 +13,13 @@ const styles = StyleSheet.create({
     },
 });
 
-const MenuIcon: FunctionComponent<{ctx: MenuContext}> = props => {
+const MenuIcon: FunctionComponent<{ ctx: MenuContext }> = props => {
     return (
         <>
             <TouchableNativeFeedback onPress={() => props.ctx.menuActions.openMenu("headerContext")}>
                 <Icon style={styles.icon} name="ellipsis-v" size={20} />
             </TouchableNativeFeedback>
-            <Menu name={"headerContext"} style={{marginTop: 57}}>
+            <Menu name={"headerContext"} style={{ marginTop: 57 }}>
                 <MenuTrigger />
                 {props.children}
             </Menu>

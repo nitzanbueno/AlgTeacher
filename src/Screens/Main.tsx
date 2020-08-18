@@ -1,15 +1,15 @@
-import React, {FC, useEffect, useContext} from "react";
-import {Text, View, FlatList, StyleSheet, Alert, Image} from "react-native";
-import {Case} from "../Models";
+import React, { FC, useEffect, useContext } from "react";
+import { Text, View, FlatList, StyleSheet, Alert, Image } from "react-native";
+import { Case } from "../Models";
 import TouchableCubeImage from "../CommonComponents/TouchableCubeImage";
-import {CaseStoreContext} from "../CaseStore";
-import {MenuTrigger, Menu, MenuOptions, MenuOption, withMenuContext, MenuContext} from "react-native-popup-menu";
+import { CaseStoreContext } from "../CaseStore";
+import { MenuTrigger, Menu, MenuOptions, MenuOption, withMenuContext, MenuContext } from "react-native-popup-menu";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import {TouchableNativeFeedback} from "react-native-gesture-handler";
+import { TouchableNativeFeedback } from "react-native-gesture-handler";
 import MenuIcon from "../CommonComponents/MenuIcon";
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
 import AsyncStorage from "@react-native-community/async-storage";
-import {H1, P} from "../CommonComponents/TextFormattingElements";
+import { H1, P } from "../CommonComponents/TextFormattingElements";
 import HelpModal from "../CommonComponents/HelpModal";
 
 const CASE_COLUMNS = 2;
@@ -75,7 +75,7 @@ const CaseImage = withMenuContext<CaseImagePropsWithContext>(props => {
             <MenuOptions>
                 <MenuOption onSelect={props.onEdit} text="Edit" />
                 <MenuOption onSelect={props.onDelete}>
-                    <Text style={{color: "red"}}>Delete</Text>
+                    <Text style={{ color: "red" }}>Delete</Text>
                 </MenuOption>
             </MenuOptions>
         </Menu>
@@ -104,12 +104,12 @@ const MainScreen: FC<Props> = props => {
                 text: "Cancel",
                 style: "cancel",
             },
-            {text: "Delete", onPress: () => deleteCase(chosenCase)},
+            { text: "Delete", onPress: () => deleteCase(chosenCase) },
         ]);
     }
 
     function openAddScreen() {
-        props.navigation.navigate("Add", {caseId: -1});
+        props.navigation.navigate("Add", { caseId: -1 });
     }
 
     function openEditScreen(chosenCase: Case) {
@@ -120,10 +120,10 @@ const MainScreen: FC<Props> = props => {
     }
 
     function openTestScreen(chosenCase: Case) {
-        props.navigation.navigate("Test", {caseId: chosenCase.id});
+        props.navigation.navigate("Test", { caseId: chosenCase.id });
     }
 
-    function renderCase({item}: {item: Case}) {
+    function renderCase({ item }: { item: Case }) {
         return (
             <CaseImage
                 onPress={() => openTestScreen(item)}
@@ -148,7 +148,7 @@ const MainScreen: FC<Props> = props => {
                 text: "Cancel",
                 style: "cancel",
             },
-            {text: "Delete", onPress: () => clearCases()},
+            { text: "Delete", onPress: () => clearCases() },
         ]);
     }
 
@@ -186,11 +186,11 @@ const MainScreen: FC<Props> = props => {
             ) : (
                 <Text style={styles.helpText}>
                     {"You don't have any cases.\nHow about "}
-                    <Text style={{color: "blue", textDecorationLine: "underline"}} onPress={openAddScreen}>
+                    <Text style={{ color: "blue", textDecorationLine: "underline" }} onPress={openAddScreen}>
                         adding one
                     </Text>
                     {" or maybe "}
-                    <Text style={{color: "blue", textDecorationLine: "underline"}} onPress={openAlgorithmSetScreen}>
+                    <Text style={{ color: "blue", textDecorationLine: "underline" }} onPress={openAlgorithmSetScreen}>
                         importing an algorithm set
                     </Text>
                     ?
@@ -199,19 +199,23 @@ const MainScreen: FC<Props> = props => {
             <HelpModal openKey={"mainScreenHelpModal"}>
                 <H1>Welcome to AlgTeacher!</H1>
                 <P>You can start by adding a new algorithm using the "+" button:</P>
-                <Image source={require("./HelpImages/AddButton.png")} style={{width: "100%", height: 100}} resizeMode="contain" />
+                <Image source={require("./HelpImages/AddButton.png")} style={{ width: "100%", height: 100 }} resizeMode="contain" />
                 <P>Or importing an algorithm set:</P>
-                <Image source={require("./HelpImages/ImportAlgorithmSet.png")} style={{width: "100%", height: 100}} resizeMode="contain" />
+                <Image
+                    source={require("./HelpImages/ImportAlgorithmSet.png")}
+                    style={{ width: "100%", height: 100 }}
+                    resizeMode="contain"
+                />
                 <H1>Test</H1>
                 <P>After adding some algorithms, tap on one to test yourself.</P>
-                <Image source={require("./HelpImages/Algorithms.png")} style={{width: "100%", height: 300}} resizeMode="contain" />
+                <Image source={require("./HelpImages/Algorithms.png")} style={{ width: "100%", height: 300 }} resizeMode="contain" />
                 <P>It'll open the following screen:</P>
-                <Image source={require("./HelpImages/TestScreen.png")} style={{width: "100%", height: 460}} resizeMode="contain" />
+                <Image source={require("./HelpImages/TestScreen.png")} style={{ width: "100%", height: 460 }} resizeMode="contain" />
                 <P>The app will automatically generate a scramble that is solved by the algorithm.</P>
                 <P>If you forgot the algorithm, you can see the solution.</P>
                 <H1>Time Attack</H1>
                 <P>Also check out Time Attack mode:</P>
-                <Image source={require("./HelpImages/TimeAttack.png")} style={{width: "100%", height: 100}} resizeMode="contain" />
+                <Image source={require("./HelpImages/TimeAttack.png")} style={{ width: "100%", height: 100 }} resizeMode="contain" />
             </HelpModal>
         </View>
     );

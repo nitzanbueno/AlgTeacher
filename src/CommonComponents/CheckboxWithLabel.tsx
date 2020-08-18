@@ -1,5 +1,5 @@
-import React, {FC} from "react";
-import {StyleSheet, View, Text, TouchableWithoutFeedback} from "react-native";
+import React, { FC } from "react";
+import { StyleSheet, View, Text, TouchableWithoutFeedback } from "react-native";
 import CheckBox from "@react-native-community/checkbox";
 
 const styles = StyleSheet.create({

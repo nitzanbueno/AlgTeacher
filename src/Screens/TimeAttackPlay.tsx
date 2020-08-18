@@ -1,11 +1,11 @@
-import React, {useState, FC, useEffect, useContext} from "react";
-import {Text, View, StyleSheet, TouchableWithoutFeedback, TouchableNativeFeedback} from "react-native";
-import {TOUCHABLE_BACKGROUND, Case} from "../Models";
-import {CaseStoreContext} from "../CaseStore";
-import {GenerateScramble, MirrorAlgorithm} from "../ScrambleLib";
-import {GetTimeText, ShuffleArray, RandomChoice} from "../Utils";
+import React, { useState, FC, useEffect, useContext } from "react";
+import { Text, View, StyleSheet, TouchableWithoutFeedback, TouchableNativeFeedback } from "react-native";
+import { TOUCHABLE_BACKGROUND, Case } from "../Models";
+import { CaseStoreContext } from "../CaseStore";
+import { GenerateScramble, MirrorAlgorithm } from "../ScrambleLib";
+import { GetTimeText, ShuffleArray, RandomChoice } from "../Utils";
 import Timer from "../CommonComponents/Timer";
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
 
 const UNDEFINED_SCRAMBLE_TEXT: string = "Loading...";
 
@@ -82,7 +82,7 @@ enum TimeAttackButtonOption {
     NEXT_CASE,
 }
 
-function BottomScreenButton(props: {style: Object, onPress: () => void, text: string}) {
+function BottomScreenButton(props: { style: Object; onPress: () => void; text: string }) {
     return (
         <View style={[styles.anchoredButton, props.style]}>
             <TouchableNativeFeedback onPress={props.onPress} background={TOUCHABLE_BACKGROUND}>
@@ -93,7 +93,7 @@ function BottomScreenButton(props: {style: Object, onPress: () => void, text: st
 }
 
 interface Props {
-    route: {params: {algorithmSets: string[], shouldRandomlyMirror: boolean, shouldRandomlyAUF: boolean}};
+    route: { params: { algorithmSets: string[]; shouldRandomlyMirror: boolean; shouldRandomlyAUF: boolean } };
     navigation: any;
 }
 
@@ -158,7 +158,7 @@ const TimeAttackPlayScreen: FC<Props> = props => {
 
     useEffect(
         function initializeCases() {
-            const {algorithmSets, shouldRandomlyAUF, shouldRandomlyMirror} = props.route.params;
+            const { algorithmSets, shouldRandomlyAUF, shouldRandomlyMirror } = props.route.params;
             // Detach the cases from mobx, so that when we randomly mirror and AUF, the actual cases don't get edited
             let testedCases = ShuffleArray(caseStore.cases.map(x => Object.assign({}, x)));
 
@@ -223,11 +223,12 @@ const TimeAttackPlayScreen: FC<Props> = props => {
                                 onPress={() => {
                                     setShouldDisplaySolution(true);
                                     setButtonToDisplay(TimeAttackButtonOption.NEXT_CASE);
-                                }}>
+                                }}
+                            >
                                 <Text style={styles.buttonText}>Show solution</Text>
                             </TouchableWithoutFeedback>
                         </View>
-                        <View style={{height: 20}}>
+                        <View style={{ height: 20 }}>
                             {timerStartTimestamp ? (
                                 <Timer style={styles.timerText} startTimestamp={timerStartTimestamp.getTime()} extraTime={totalTime} />
                             ) : (

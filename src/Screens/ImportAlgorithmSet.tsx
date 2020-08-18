@@ -1,6 +1,6 @@
-import React, {FC, useContext} from "react";
-import {View, Text, StyleSheet, Alert} from "react-native";
-import {CaseStoreContext} from "../CaseStore";
+import React, { FC, useContext } from "react";
+import { View, Text, StyleSheet, Alert } from "react-native";
+import { CaseStoreContext } from "../CaseStore";
 import ALGORITHM_SETS from "../AlgorithmSets.json";
 import { Case } from "../Models";
 import { observer } from "mobx-react";
@@ -33,11 +33,11 @@ interface AlgorithmSet {
     cases: Case[];
 }
 
-const ImportAlgorithmSetScreen: FC<{navigation: any}> = props => {
+const ImportAlgorithmSetScreen: FC<{ navigation: any }> = props => {
     const caseStore = useContext(CaseStoreContext);
 
     function importAlgorithmSet(algorithmSet: AlgorithmSet) {
-        const {cases} = algorithmSet;
+        const { cases } = algorithmSet;
 
         if (!cases || cases.length == 0) return;
 
@@ -52,7 +52,7 @@ const ImportAlgorithmSetScreen: FC<{navigation: any}> = props => {
                 text: "Cancel",
                 style: "cancel",
             },
-            {text: "Import", onPress: () => importAlgorithmSet(algorithmSet)},
+            { text: "Import", onPress: () => importAlgorithmSet(algorithmSet) },
         ]);
     }
 

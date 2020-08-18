@@ -1,5 +1,5 @@
-import React, {FC} from "react";
-import {StyleSheet, TouchableWithoutFeedback, View, Text, ViewStyle, TextStyle} from "react-native";
+import React, { FC } from "react";
+import { StyleSheet, TouchableWithoutFeedback, View, Text, ViewStyle, TextStyle } from "react-native";
 
 const styles = StyleSheet.create({
     button: {

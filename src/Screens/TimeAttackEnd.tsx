@@ -1,8 +1,8 @@
-import React, {FC, useState, useEffect} from "react";
-import {Text, View, StyleSheet, StyleProp, TextStyle} from "react-native";
-import {GetTimeText} from "../Utils";
-import {Case} from "../Models";
-import TimeAttackStorage, {HighScoreType} from "../TimeAttackStorage";
+import React, { FC, useState, useEffect } from "react";
+import { Text, View, StyleSheet, StyleProp, TextStyle } from "react-native";
+import { GetTimeText } from "../Utils";
+import { Case } from "../Models";
+import TimeAttackStorage, { HighScoreType } from "../TimeAttackStorage";
 
 const styles = StyleSheet.create({
     container: {
@@ -53,14 +53,14 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-    route: {params: {cases: Case[], totalTime: number, solveCount: number}};
+    route: { params: { cases: Case[]; totalTime: number; solveCount: number } };
 }
 
 const TimeAttackEndScreen: FC<Props> = props => {
     const [highScore, setHighScore] = useState<HighScoreType | null>(null);
 
-    const {cases} = props.route.params;
-    const timeAttackScore = {totalTime: props.route.params.totalTime, solveCount: props.route.params.solveCount};
+    const { cases } = props.route.params;
+    const timeAttackScore = { totalTime: props.route.params.totalTime, solveCount: props.route.params.solveCount };
 
     useEffect(() => {
         async function checkHighScore() {
@@ -80,8 +80,8 @@ const TimeAttackEndScreen: FC<Props> = props => {
         checkHighScore();
     }, [cases, timeAttackScore.totalTime, timeAttackScore.solveCount]);
 
-    function ScoreText(props: {scoreObject: {totalTime: number, solveCount: number}, title?: string, style?: StyleProp<TextStyle>}) {
-        const {scoreObject, style, title} = props;
+    function ScoreText(props: { scoreObject: { totalTime: number; solveCount: number }; title?: string; style?: StyleProp<TextStyle> }) {
+        const { scoreObject, style, title } = props;
         return (
             <>
                 {title && <Text style={[styles.descriptionText, style]} children={title} />}

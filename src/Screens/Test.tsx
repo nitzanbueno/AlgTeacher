@@ -1,12 +1,12 @@
-import React, {useState, useEffect, FC, useContext} from "react";
-import {Text, View, StyleSheet, ViewStyle} from "react-native";
-import {TouchableNativeFeedback} from "react-native-gesture-handler";
-import {TOUCHABLE_BACKGROUND} from "../Models";
+import React, { useState, useEffect, FC, useContext } from "react";
+import { Text, View, StyleSheet, ViewStyle } from "react-native";
+import { TouchableNativeFeedback } from "react-native-gesture-handler";
+import { TOUCHABLE_BACKGROUND } from "../Models";
 import Icon from "react-native-vector-icons/FontAwesome";
-import {GenerateScramble} from "../ScrambleLib";
-import {CaseStoreContext} from "../CaseStore";
-import {observer} from "mobx-react";
-import {CubeImage} from "../CommonComponents/CubeImage";
+import { GenerateScramble } from "../ScrambleLib";
+import { CaseStoreContext } from "../CaseStore";
+import { observer } from "mobx-react";
+import { CubeImage } from "../CommonComponents/CubeImage";
 
 const styles = StyleSheet.create({
     container: {
@@ -68,8 +68,8 @@ const styles = StyleSheet.create({
         textAlignVertical: "center",
     },
     caseImageContainer: {
-        margin: 10
-    }
+        margin: 10,
+    },
 });
 
 const caseImageSize = {
@@ -77,7 +77,7 @@ const caseImageSize = {
     height: 250,
 };
 
-const Button: FC<{style: ViewStyle, onPress: () => void}> = props => {
+const Button: FC<{ style: ViewStyle; onPress: () => void }> = props => {
     return (
         <TouchableNativeFeedback onPress={props.onPress} background={TOUCHABLE_BACKGROUND}>
             <View style={[styles.buttonView, props.style]}>
@@ -88,7 +88,7 @@ const Button: FC<{style: ViewStyle, onPress: () => void}> = props => {
 };
 
 interface Props {
-    route: {params: {caseId: number}};
+    route: { params: { caseId: number } };
     navigation: any;
 }
 
@@ -98,9 +98,9 @@ const TestScreen: FC<Props> = props => {
 
     const caseStore = useContext(CaseStoreContext);
 
-    const {caseId} = props.route.params;
+    const { caseId } = props.route.params;
     const propCase = caseStore.GetCaseById(caseId);
-    const {algorithmSet, description, imageOptions, algorithm} = propCase || {};
+    const { algorithmSet, description, imageOptions, algorithm } = propCase || {};
 
     function showSolution() {
         setShouldDisplaySolution(true);
@@ -154,7 +154,7 @@ const TestScreen: FC<Props> = props => {
             {!!algorithmSet && <Text style={styles.algorithmSetText}>{algorithmSet}</Text>}
             {!!description && <Text style={styles.descriptionText}>Description: {description}</Text>}
             <View style={styles.caseImageContainer}>
-            <CubeImage {...caseImageSize} case={algorithm || ""} {...imageOptions} />
+                <CubeImage {...caseImageSize} case={algorithm || ""} {...imageOptions} />
             </View>
 
             <Text style={styles.scrambleText}>Scramble:</Text>

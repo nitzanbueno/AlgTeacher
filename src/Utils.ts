@@ -72,10 +72,10 @@ export function useAsyncLoad<T>(asyncLoad: () => Promise<T>, dependencies?: Arra
     const [result, setResult] = useState<T | null>(null);
 
     useEffect(() => {
-        asyncLoad().then((loadedResult) => {
+        asyncLoad().then(loadedResult => {
             setDidLoad(true);
             setResult(loadedResult);
-        })
+        });
     }, dependencies || []);
 
     return [result, didLoad];

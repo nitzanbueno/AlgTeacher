@@ -1,14 +1,14 @@
-import React, {FC, useState, useEffect, useContext} from "react";
+import React, { FC, useState, useEffect, useContext } from "react";
 import _ from "lodash";
-import {Text, FlatList, StyleSheet, Button, View} from "react-native";
+import { Text, FlatList, StyleSheet, Button, View } from "react-native";
 import TouchableCubeImage from "../CommonComponents/TouchableCubeImage";
-import {CUBE_IMAGE_OPTIONS} from "../ImageOptionGenerator";
-import {TextInput, ScrollView} from "react-native-gesture-handler";
-import {Case} from "../Models";
-import {CaseStoreContext} from "../CaseStore";
+import { CUBE_IMAGE_OPTIONS } from "../ImageOptionGenerator";
+import { TextInput, ScrollView } from "react-native-gesture-handler";
+import { Case } from "../Models";
+import { CaseStoreContext } from "../CaseStore";
 import PickerWithAddOption from "../CommonComponents/PickerWithAddOption";
-import {observer} from "mobx-react";
-import {CubeOptions} from "sr-visualizer";
+import { observer } from "mobx-react";
+import { CubeOptions } from "sr-visualizer";
 
 const styles = StyleSheet.create({
     formField: {
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     },
     imageList: {
         margin: 10,
-        paddingBottom: 5 // For the scrollbar
+        paddingBottom: 5, // For the scrollbar
     },
     saveButton: {
         marginLeft: 10,
@@ -87,7 +87,7 @@ const AddScreen: FC<Props> = props => {
 
     useEffect(
         function updateFormStateFromProps() {
-            const {caseId} = props.route.params;
+            const { caseId } = props.route.params;
             setDidLoad(true);
 
             if (caseId < 0) return;
@@ -122,7 +122,7 @@ const AddScreen: FC<Props> = props => {
         }
     }, [props.route.params.title]);
 
-    function renderCaseImageOption({item, index}: {item: CubeOptions, index: number}) {
+    function renderCaseImageOption({ item, index }: { item: CubeOptions; index: number }) {
         if (!didLoad) return <SelectionStandin />;
 
         return (
