@@ -71,13 +71,8 @@ export class CaseStore {
         }
     }
 
-    DeleteCase(id: number) {
-        let caseIndex = this.cases.findIndex(c => c.id == id);
-        if (caseIndex >= 0) {
-            this.cases.splice(caseIndex, 1);
-        } else {
-            throw Error("Case ID not found.");
-        }
+    DeleteCases(ids: number[]) {
+        this.cases = this.cases.filter(c => !ids.includes(c.id));
     }
 
     /**
@@ -89,6 +84,10 @@ export class CaseStore {
 
     GetCaseById(id: number): Case | undefined {
         return this.cases.find(c => c.id == id);
+    }
+
+    GetCasesByIds(ids: number[]): Case[] {
+        return this.cases.filter(c => ids.includes(c.id));
     }
 
     async ExtraClearAllCases() {
@@ -111,7 +110,7 @@ decorate(CaseStore, {
     algorithmSets: computed,
     StoreCase: action,
     StoreCaseList: action,
-    DeleteCase: action,
+    DeleteCases: action,
     ClearAllCases: action,
 });
 

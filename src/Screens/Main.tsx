@@ -1,16 +1,19 @@
-import React, { FC, useEffect, useContext } from "react";
-import { Text, View, FlatList, StyleSheet, Alert, Image } from "react-native";
+import React, { FC, useEffect, useContext, useMemo } from "react";
+import { Text, View, FlatList, StyleSheet, Alert, Image, BackHandler } from "react-native";
 import { Case } from "../Models";
 import TouchableCubeImage from "../CommonComponents/TouchableCubeImage";
 import { CaseStoreContext } from "../CaseStore";
-import { MenuTrigger, Menu, MenuOptions, MenuOption, withMenuContext, MenuContext } from "react-native-popup-menu";
+import { MenuOptions, MenuOption } from "react-native-popup-menu";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import FAIcon from "react-native-vector-icons/FontAwesome";
 import { TouchableNativeFeedback } from "react-native-gesture-handler";
 import MenuIcon from "../CommonComponents/MenuIcon";
 import { observer } from "mobx-react";
-import AsyncStorage from "@react-native-community/async-storage";
 import { H1, P } from "../CommonComponents/TextFormattingElements";
 import HelpModal from "../CommonComponents/HelpModal";
+import _ from "lodash";
+import { useUniqueArrayState } from "../CustomHooks";
+import { useFocusEffect } from "@react-navigation/native";
 
 const CASE_COLUMNS = 2;
 
@@ -42,44 +45,19 @@ const styles = StyleSheet.create({
     icon: {
         marginRight: 10,
         marginLeft: 10,
-        height: "100%",
+        width: 18,
         textAlignVertical: "center",
+    },
+    selectIcon: {
+        marginTop: 4,
     },
     helpText: {
         fontSize: 20,
         textAlign: "center",
     },
-});
-
-type CaseImagePropsWithContext = {
-    case: Case;
-    onPress: () => void;
-    onEdit: () => void;
-    onDelete: () => void;
-    ctx: MenuContext;
-};
-
-/**
- * This component uses the react-native-popup-menu library to wrap a TouchableImage component with a context menu.
- */
-const CaseImage = withMenuContext<CaseImagePropsWithContext>(props => {
-    return (
-        <Menu name={"case_" + props.case.id}>
-            <TouchableCubeImage
-                onPress={props.onPress}
-                onLongPress={() => props.ctx.menuActions.openMenu("case_" + props.case.id)}
-                algorithm={props.case.algorithm}
-                {...props.case.imageOptions}
-            />
-            <MenuTrigger />
-            <MenuOptions>
-                <MenuOption onSelect={props.onEdit} text="Edit" />
-                <MenuOption onSelect={props.onDelete}>
-                    <Text style={{ color: "red" }}>Delete</Text>
-                </MenuOption>
-            </MenuOptions>
-        </Menu>
-    );
+    selectedCase: {
+        backgroundColor: "#c7dafb",
+    },
 });
 
 interface Props {
@@ -89,53 +67,89 @@ interface Props {
 
 const MainScreen: FC<Props> = props => {
     const caseStore = useContext(CaseStoreContext);
+    const [selectedCaseIds, selectedCaseFunctions] = useUniqueArrayState<number>([]);
+
+    const isSelectMode = selectedCaseIds.length != 0;
+
+    useEffect(
+        function resetSelectedCases() {
+            selectedCaseFunctions.set([]);
+        },
+        [JSON.stringify(caseStore.cases)],
+    );
+
+    function navigate(name: string, params?: Object) {
+        props.navigation.navigate(name, params);
+
+        // We opened a new screen, so detach from selection
+        selectedCaseFunctions.set([]);
+    }
 
     function startTimeAttack() {
-        props.navigation.navigate("TimeAttackOpening");
-    }
-
-    function deleteCase(chosenCase: Case) {
-        caseStore.DeleteCase(chosenCase.id);
-    }
-
-    function openDeleteConfirmation(chosenCase: Case) {
-        Alert.alert("Delete Case", "Are you sure you want to delete this case?", [
-            {
-                text: "Cancel",
-                style: "cancel",
-            },
-            { text: "Delete", onPress: () => deleteCase(chosenCase) },
-        ]);
+        navigate("TimeAttackOpening", {cases: caseStore.GetCasesByIds(selectedCaseIds)});
     }
 
     function openAddScreen() {
-        props.navigation.navigate("Add", { caseId: -1 });
+        navigate("Add", { caseId: -1 });
     }
 
-    function openEditScreen(chosenCase: Case) {
-        props.navigation.navigate("Add", {
-            caseId: chosenCase.id,
+    function openTestScreen(chosenCase: Case) {
+        navigate("Test", { caseId: chosenCase.id });
+    }
+
+    function deleteSelectedCases() {
+        caseStore.DeleteCases(selectedCaseIds);
+    }
+
+    function openDeleteConfirmationForSelectedCases() {
+        const singular = selectedCaseIds.length == 1;
+
+        Alert.alert(
+            singular ? "Delete Case" : "Delete Cases",
+            `Are you sure you want to delete ${singular ? "this case" : "these cases"}?`,
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel",
+                },
+                { text: "Delete", onPress: deleteSelectedCases },
+            ],
+        );
+    }
+
+    function openEditScreen() {
+        if (selectedCaseIds.length != 1) return;
+
+        navigate("Add", {
+            caseId: selectedCaseIds[0],
             title: "Edit",
         });
     }
 
-    function openTestScreen(chosenCase: Case) {
-        props.navigation.navigate("Test", { caseId: chosenCase.id });
+    function toggleSelectCase({ id }: Case) {
+        if (selectedCaseIds.includes(id)) selectedCaseFunctions.remove(id);
+        else selectedCaseFunctions.add(id);
+    }
+
+    function onPressCase(case_: Case) {
+        if (isSelectMode) toggleSelectCase(case_);
+        else openTestScreen(case_);
     }
 
     function renderCase({ item }: { item: Case }) {
         return (
-            <CaseImage
-                onPress={() => openTestScreen(item)}
-                case={item}
-                onEdit={() => openEditScreen(item)}
-                onDelete={() => openDeleteConfirmation(item)}
+            <TouchableCubeImage
+                style={selectedCaseIds.includes(item.id) ? styles.selectedCase : undefined}
+                onPress={() => onPressCase(item)}
+                onLongPress={() => toggleSelectCase(item)}
+                algorithm={item.algorithm}
+                {...item.imageOptions}
             />
         );
     }
 
     function openAlgorithmSetScreen() {
-        props.navigation.navigate("ImportAlgorithmSet");
+        navigate("ImportAlgorithmSet");
     }
 
     function clearCases() {
@@ -153,25 +167,69 @@ const MainScreen: FC<Props> = props => {
     }
 
     useEffect(() => {
-        props.navigation.setOptions({
-            headerRight: () => (
-                <View style={styles.iconContainer}>
-                    <TouchableNativeFeedback onPress={startTimeAttack}>
-                        <Icon style={styles.icon} name="stopwatch" size={20} />
-                    </TouchableNativeFeedback>
-                    <TouchableNativeFeedback onPress={openAddScreen}>
-                        <Icon style={styles.icon} name="plus" size={20} />
-                    </TouchableNativeFeedback>
-                    <MenuIcon>
-                        <MenuOptions>
-                            <MenuOption onSelect={openAlgorithmSetScreen} text="Import algorithm set..." />
-                            <MenuOption onSelect={openClearConfirmation} text="Delete all cases..." />
-                        </MenuOptions>
-                    </MenuIcon>
-                </View>
-            ),
-        });
-    }, []);
+        if (isSelectMode) {
+            props.navigation.setOptions({
+                title: "Select",
+                headerRight: () => (
+                    <View style={styles.iconContainer}>
+                        {selectedCaseIds.length == 1 && (
+                            <TouchableNativeFeedback onPress={openEditScreen}>
+                                <FAIcon style={styles.icon} name="pencil" size={20} />
+                            </TouchableNativeFeedback>
+                        )}
+                        {selectedCaseIds.length == caseStore.cases.length ? (
+                            <TouchableNativeFeedback onPress={() => selectedCaseFunctions.set([])}>
+                                <FAIcon style={[styles.icon, styles.selectIcon]} name="check-square-o" size={20} />
+                            </TouchableNativeFeedback>
+                        ) : (
+                            <TouchableNativeFeedback onPress={() => selectedCaseFunctions.set(caseStore.cases.map(c => c.id))}>
+                                <FAIcon style={[styles.icon, styles.selectIcon]} name="square-o" size={20} />
+                            </TouchableNativeFeedback>
+                        )}
+                        <TouchableNativeFeedback onPress={startTimeAttack}>
+                            <Icon style={styles.icon} name="stopwatch" size={20} />
+                        </TouchableNativeFeedback>
+                        <TouchableNativeFeedback onPress={openDeleteConfirmationForSelectedCases}>
+                            <Icon style={styles.icon} name="trash-alt" size={20} />
+                        </TouchableNativeFeedback>
+                    </View>
+                ),
+            });
+        } else {
+            props.navigation.setOptions({
+                title: "AlgTeacher",
+                headerRight: () => (
+                    <View style={styles.iconContainer}>
+                        <TouchableNativeFeedback onPress={startTimeAttack}>
+                            <Icon style={styles.icon} name="stopwatch" size={20} />
+                        </TouchableNativeFeedback>
+                        <TouchableNativeFeedback onPress={openAddScreen}>
+                            <Icon style={styles.icon} name="plus" size={20} />
+                        </TouchableNativeFeedback>
+                        <MenuIcon>
+                            <MenuOptions>
+                                <MenuOption onSelect={openAlgorithmSetScreen} text="Import algorithm set..." />
+                                <MenuOption onSelect={openClearConfirmation} text="Delete all cases..." />
+                            </MenuOptions>
+                        </MenuIcon>
+                    </View>
+                ),
+            });
+        }
+    }, [selectedCaseIds.length]);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            const eventListener = BackHandler.addEventListener("hardwareBackPress", () => {
+                if (!isSelectMode) return false;
+
+                selectedCaseFunctions.set([]);
+                return true;
+            });
+
+            return () => eventListener.remove();
+        }, [isSelectMode, selectedCaseFunctions.set]),
+    );
 
     return (
         <View style={styles.container}>

@@ -7,6 +7,7 @@ import { observer } from "mobx-react";
 import CheckboxWithLabel from "../CommonComponents/CheckboxWithLabel";
 import HelpModal from "../CommonComponents/HelpModal";
 import { H1, P } from "../CommonComponents/TextFormattingElements";
+import { HashCode } from "../Utils";
 
 const styles = StyleSheet.create({
     container: {
@@ -25,8 +26,22 @@ const styles = StyleSheet.create({
     },
 });
 
+const HIGHSCORE_PREFIX = "@high_score/";
+
+function getHighScoreKeyByAlgorithmSets(cases: Case[]) {
+    const sets = [...new Set(cases.map(c => c.algorithmSet))].sort();
+
+    // If the number of algorithms changes, I want to reset the high score
+    return HIGHSCORE_PREFIX + HashCode(JSON.stringify([sets, cases.length]));
+}
+
+function getHighScoreKeyByAlgorithms(cases: Case[]) {
+    // Hash the algorithms themselves (after sorting)
+    return HIGHSCORE_PREFIX + HashCode(JSON.stringify(cases.map(c => c.algorithm).sort()));
+}
+
 interface Props {
-    route: { params: { case: Case } };
+    route: { params: { cases: Case[] } };
     navigation: any;
 }
 
@@ -56,9 +71,31 @@ const TimeAttackOpeningScreen: FC<Props> = props => {
     const [shouldRandomlyAUF, setShouldRandomlyAUF] = useState(false);
     const { getSelectedOptions: getSelectedSets, checkboxPickerState } = useCheckboxPickerState(caseStore.algorithmSets);
 
-    function confirmAlgorithmSetSelection() {
+    const selectedCases = props.route.params.cases;
+    const areCasesSelected = selectedCases.length > 0;
+
+    function getChosenCases(): Case[] {
+        if (areCasesSelected) return selectedCases;
+
+        const selectedSets = getSelectedSets();
+
+        if (selectedSets.length === 0) return caseStore.cases;
+
+        return caseStore.cases.filter(c => c.algorithmSet && selectedSets.includes(c.algorithmSet));
+    }
+
+    function startTimeAttack() {
+        const chosenCaseList = getChosenCases();
+
+        // If the cases were given as a selection, I want the high score to be remembered by algorithm.
+        // (If an algorithm changes, the high score will be lost. I don't remember by
+        // case ID, because cases can be deleted, and this may cause unexpected behavior.)
+        // If the cases weren't given and the user chose sets, I want to remember the high score by the sets.
+        const highScoreKey = areCasesSelected ? getHighScoreKeyByAlgorithms(chosenCaseList) : getHighScoreKeyByAlgorithmSets(chosenCaseList);
+
         props.navigation.replace("TimeAttackPlay", {
-            algorithmSets: getSelectedSets(),
+            cases: chosenCaseList,
+            highScoreKey,
             shouldRandomlyMirror,
             shouldRandomlyAUF,
         });
@@ -77,7 +114,7 @@ const TimeAttackOpeningScreen: FC<Props> = props => {
 
     return (
         <ScrollView style={styles.container}>
-            {caseStore.algorithmSets.length > 0 ? (
+            {(caseStore.algorithmSets.length > 0 || areCasesSelected) ? (
                 <>
                     <View style={styles.paragraph}>
                         <Text style={styles.header}>Choose options:</Text>
@@ -92,11 +129,13 @@ const TimeAttackOpeningScreen: FC<Props> = props => {
                             labelText="Add random U moves at start"
                         />
                     </View>
-                    <View style={styles.paragraph}>
-                        <Text style={styles.header}>Select algorithm sets:</Text>
-                        <CheckboxPicker {...checkboxPickerState} />
-                    </View>
-                    <Button title="Start!" onPress={confirmAlgorithmSetSelection} />
+                    {!areCasesSelected && (
+                        <View style={styles.paragraph}>
+                            <Text style={styles.header}>Select algorithm sets:</Text>
+                            <CheckboxPicker {...checkboxPickerState} />
+                        </View>
+                    )}
+                    <Button title="Start!" onPress={startTimeAttack} />
                 </>
             ) : (
                 <Text style={styles.header}>

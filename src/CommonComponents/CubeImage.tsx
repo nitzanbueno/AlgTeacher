@@ -4,7 +4,7 @@ import { InvertAlgorithm } from "../ScrambleLib";
 
 type CubeImageProps = CubeOptions & { case?: string };
 
-export const CubeImage: FC<CubeImageProps> = props => {
+export const CubeImage: FC<CubeImageProps> = React.memo(props => {
     let invertedAlgorithm = {};
 
     if (props.case && !props.algorithm) {
@@ -12,4 +12,4 @@ export const CubeImage: FC<CubeImageProps> = props => {
     }
 
     return <CubeSvg extraOptions={{ ...props, ...invertedAlgorithm }} />;
-};
+});
