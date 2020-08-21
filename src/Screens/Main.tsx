@@ -48,6 +48,9 @@ const styles = StyleSheet.create({
         width: 18,
         textAlignVertical: "center",
     },
+    selectIcon: {
+        marginTop: 4,
+    },
     helpText: {
         fontSize: 20,
         textAlign: "center",
@@ -176,11 +179,11 @@ const MainScreen: FC<Props> = props => {
                         )}
                         {selectedCaseIds.length == caseStore.cases.length ? (
                             <TouchableNativeFeedback onPress={() => selectedCaseFunctions.set([])}>
-                                <FAIcon style={styles.icon} name="check-square-o" size={20} />
+                                <FAIcon style={[styles.icon, styles.selectIcon]} name="check-square-o" size={20} />
                             </TouchableNativeFeedback>
                         ) : (
-                            <TouchableNativeFeedback onPress={() => selectedCaseFunctions.set(caseStore.cases.map((c) => c.id))}>
-                                <FAIcon style={styles.icon} name="square-o" size={20} />
+                            <TouchableNativeFeedback onPress={() => selectedCaseFunctions.set(caseStore.cases.map(c => c.id))}>
+                                <FAIcon style={[styles.icon, styles.selectIcon]} name="square-o" size={20} />
                             </TouchableNativeFeedback>
                         )}
                         <TouchableNativeFeedback onPress={startTimeAttack}>
