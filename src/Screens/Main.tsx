@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useContext, useMemo } from "react";
+import React, { FC, useEffect, useContext, useMemo, useState } from "react";
 import { Text, View, FlatList, StyleSheet, Alert, Image, BackHandler } from "react-native";
 import { Case } from "../Models";
 import TouchableCubeImage from "../CommonComponents/TouchableCubeImage";
@@ -14,6 +14,7 @@ import HelpModal from "../CommonComponents/HelpModal";
 import _ from "lodash";
 import { useUniqueArrayState } from "../CustomHooks";
 import { useFocusEffect } from "@react-navigation/native";
+import { SettingStoreContext } from "../Stores/SettingStore";
 
 const CASE_COLUMNS = 2;
 
@@ -58,6 +59,14 @@ const styles = StyleSheet.create({
     selectedCase: {
         backgroundColor: "#c7dafb",
     },
+    caseContainer: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+    },
+    caseLabel: {
+        marginTop: -10,
+    },
 });
 
 interface Props {
@@ -67,6 +76,7 @@ interface Props {
 
 const MainScreen: FC<Props> = props => {
     const caseStore = useContext(CaseStoreContext);
+    const settingStore = useContext(SettingStoreContext);
     const [selectedCaseIds, selectedCaseFunctions] = useUniqueArrayState<number>([]);
 
     const isSelectMode = selectedCaseIds.length != 0;
@@ -86,7 +96,7 @@ const MainScreen: FC<Props> = props => {
     }
 
     function startTimeAttack() {
-        navigate("TimeAttackOpening", {cases: caseStore.GetCasesByIds(selectedCaseIds)});
+        navigate("TimeAttackOpening", { cases: caseStore.GetCasesByIds(selectedCaseIds) });
     }
 
     function openAddScreen() {
@@ -139,12 +149,14 @@ const MainScreen: FC<Props> = props => {
     function renderCase({ item }: { item: Case }) {
         return (
             <TouchableCubeImage
-                style={selectedCaseIds.includes(item.id) ? styles.selectedCase : undefined}
                 onPress={() => onPressCase(item)}
+                style={[styles.caseContainer, selectedCaseIds.includes(item.id) ? styles.selectedCase : undefined]}
                 onLongPress={() => toggleSelectCase(item)}
                 algorithm={item.algorithm}
                 {...item.imageOptions}
-            />
+            >
+                {settingStore.shouldDisplayLabels && <Text style={styles.caseLabel}>{item.description}</Text>}
+            </TouchableCubeImage>
         );
     }
 
@@ -152,9 +164,11 @@ const MainScreen: FC<Props> = props => {
         navigate("ImportAlgorithmSet");
     }
 
+    function toggleShouldDisplayLabels() {
+        settingStore.shouldDisplayLabels = !settingStore.shouldDisplayLabels;
     }
 
-    useEffect(() => {
+    useEffect(function setHeader() {
         if (isSelectMode) {
             props.navigation.setOptions({
                 title: "Select",
@@ -197,13 +211,17 @@ const MainScreen: FC<Props> = props => {
                         <MenuIcon>
                             <MenuOptions>
                                 <MenuOption onSelect={openAlgorithmSetScreen} text="Import algorithm set..." />
+                                <MenuOption
+                                    onSelect={toggleShouldDisplayLabels}
+                                    text={settingStore.shouldDisplayLabels ? "Hide labels" : "Show labels"}
+                                />
                             </MenuOptions>
                         </MenuIcon>
                     </View>
                 ),
             });
         }
-    }, [selectedCaseIds.length]);
+    }, [selectedCaseIds.length, settingStore.shouldDisplayLabels]);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -218,6 +236,8 @@ const MainScreen: FC<Props> = props => {
         }, [isSelectMode, selectedCaseFunctions.set]),
     );
 
+    const isLoading = !caseStore.isLoaded || !settingStore.isLoaded;
+
     return (
         <View style={styles.container}>
             {caseStore.cases.length > 0 ? (
@@ -228,6 +248,8 @@ const MainScreen: FC<Props> = props => {
                     keyExtractor={item => item.id.toString()}
                     numColumns={CASE_COLUMNS}
                 />
+            ) : isLoading ? (
+                <Text style={styles.helpText}>Loading...</Text>
             ) : (
                 <Text style={styles.helpText}>
                     {"You don't have any cases.\nHow about "}

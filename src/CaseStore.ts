@@ -2,8 +2,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import { Case } from "./Models";
 import { observable, autorun, computed, action, decorate } from "mobx";
 import { createContext } from "react";
-
-const CASES_KEY = "@cases";
+import { CASES_KEY } from "./Consts";
 
 export class CaseStore {
     cases: Case[] = [];
