@@ -152,18 +152,6 @@ const MainScreen: FC<Props> = props => {
         navigate("ImportAlgorithmSet");
     }
 
-    function clearCases() {
-        caseStore.ClearAllCases();
-    }
-
-    function openClearConfirmation() {
-        Alert.alert("Clear All Cases", "Are you sure you want to delete ALL cases?", [
-            {
-                text: "Cancel",
-                style: "cancel",
-            },
-            { text: "Delete", onPress: () => clearCases() },
-        ]);
     }
 
     useEffect(() => {
@@ -209,7 +197,6 @@ const MainScreen: FC<Props> = props => {
                         <MenuIcon>
                             <MenuOptions>
                                 <MenuOption onSelect={openAlgorithmSetScreen} text="Import algorithm set..." />
-                                <MenuOption onSelect={openClearConfirmation} text="Delete all cases..." />
                             </MenuOptions>
                         </MenuIcon>
                     </View>
