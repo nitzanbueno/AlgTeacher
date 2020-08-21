@@ -276,13 +276,16 @@ const MainScreen: FC<Props> = props => {
                 <H1>Test</H1>
                 <P>After adding some algorithms, tap on one to test yourself.</P>
                 <Image source={require("./HelpImages/Algorithms.png")} style={{ width: "100%", height: 300 }} resizeMode="contain" />
-                <P>It'll open the following screen:</P>
+                <P>The following screen will open.</P>
                 <Image source={require("./HelpImages/TestScreen.png")} style={{ width: "100%", height: 460 }} resizeMode="contain" />
                 <P>The app will automatically generate a scramble that is solved by the algorithm.</P>
                 <P>If you forgot the algorithm, you can see the solution.</P>
                 <H1>Time Attack</H1>
-                <P>Also check out Time Attack mode:</P>
+                <P>Also check out Time Attack mode.</P>
                 <Image source={require("./HelpImages/TimeAttack.png")} style={{ width: "100%", height: 100 }} resizeMode="contain" />
+                <H1>Selection</H1>
+                <P>You can select cases to edit/delete them, or open a Time Attack with the chosen cases.</P>
+                <Image source={require("./HelpImages/Select.png")} style={{ width: "100%", height: 300 }} resizeMode="contain" />
             </HelpModal>
         </View>
     );

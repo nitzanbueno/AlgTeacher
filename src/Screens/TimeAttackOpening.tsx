@@ -49,9 +49,11 @@ const HelpScreen: FC<{}> = props => (
     <HelpModal openKey="timeAttackHelpModal">
         <H1>Welcome to Time Attack mode!</H1>
         <P>Time Attack mode trains your recognition and execution time for algorithm sets.</P>
-        <P>To get started, select algorithm sets from the list:</P>
+        <P>To get started, select algorithm sets from the list.</P>
         <Image source={require("./HelpImages/TimeAttackAlgorithmSets.png")} style={{ width: "100%", height: 120 }} resizeMode="contain" />
-        <P>You can also choose to randomly mirror or AUF your algorithms:</P>
+        <P>You can also select cases from the main screen and press the Time Attack button.</P>
+        <Image source={require("./HelpImages/TimeAttackFromSelection.png")} style={{ width: "100%", height: 400 }} resizeMode="contain" />
+        <P>Then choose if you want to randomly mirror or AUF your algorithms.</P>
         <Image source={require("./HelpImages/TimeAttackOptions.png")} style={{ width: "100%", height: 81 }} resizeMode="contain" />
         <P>Then tap "Start":</P>
         <Image source={require("./HelpImages/TimeAttackStart.png")} style={{ width: "100%", height: 160 }} resizeMode="contain" />
