@@ -17,6 +17,7 @@ import { useFocusEffect, RouteProp } from "@react-navigation/native";
 import { SettingStoreContext } from "../Stores/SettingStore";
 import { RootStackParamList } from "../RootStackParamList";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 
 const CASE_COLUMNS = 2;
 
@@ -177,60 +178,63 @@ const MainScreen: FC<Props> = props => {
         settingStore.shouldDisplayLabels = !settingStore.shouldDisplayLabels;
     }
 
-    useEffect(function setHeader() {
-        if (isSelectMode) {
-            props.navigation.setOptions({
-                title: "Select",
-                headerRight: () => (
-                    <View style={styles.iconContainer}>
-                        {selectedCaseIds.length == 1 && (
-                            <TouchableNativeFeedback onPress={openEditScreen}>
-                                <FAIcon style={styles.icon} name="pencil" size={20} />
+    useEffect(
+        function setHeader() {
+            if (isSelectMode) {
+                props.navigation.setOptions({
+                    title: "Select",
+                    headerRight: () => (
+                        <View style={styles.iconContainer}>
+                            {selectedCaseIds.length == 1 && (
+                                <TouchableNativeFeedback onPress={openEditScreen}>
+                                    <FAIcon style={styles.icon} name="pencil" size={20} />
+                                </TouchableNativeFeedback>
+                            )}
+                            {selectedCaseIds.length == caseStore.cases.length ? (
+                                <TouchableNativeFeedback onPress={() => selectedCaseFunctions.set([])}>
+                                    <FAIcon style={[styles.icon, styles.selectIcon]} name="check-square-o" size={20} />
+                                </TouchableNativeFeedback>
+                            ) : (
+                                <TouchableNativeFeedback onPress={() => selectedCaseFunctions.set(caseStore.cases.map(c => c.id))}>
+                                    <FAIcon style={[styles.icon, styles.selectIcon]} name="square-o" size={20} />
+                                </TouchableNativeFeedback>
+                            )}
+                            <TouchableNativeFeedback onPress={startTimeAttack}>
+                                <Icon style={styles.icon} name="stopwatch" size={20} />
                             </TouchableNativeFeedback>
-                        )}
-                        {selectedCaseIds.length == caseStore.cases.length ? (
-                            <TouchableNativeFeedback onPress={() => selectedCaseFunctions.set([])}>
-                                <FAIcon style={[styles.icon, styles.selectIcon]} name="check-square-o" size={20} />
+                            <TouchableNativeFeedback onPress={openDeleteConfirmationForSelectedCases}>
+                                <Icon style={styles.icon} name="trash-alt" size={20} />
                             </TouchableNativeFeedback>
-                        ) : (
-                            <TouchableNativeFeedback onPress={() => selectedCaseFunctions.set(caseStore.cases.map(c => c.id))}>
-                                <FAIcon style={[styles.icon, styles.selectIcon]} name="square-o" size={20} />
+                        </View>
+                    ),
+                });
+            } else {
+                props.navigation.setOptions({
+                    title: "AlgTeacher",
+                    headerRight: () => (
+                        <View style={styles.iconContainer}>
+                            <TouchableNativeFeedback onPress={startTimeAttack}>
+                                <Icon style={styles.icon} name="stopwatch" size={20} />
                             </TouchableNativeFeedback>
-                        )}
-                        <TouchableNativeFeedback onPress={startTimeAttack}>
-                            <Icon style={styles.icon} name="stopwatch" size={20} />
-                        </TouchableNativeFeedback>
-                        <TouchableNativeFeedback onPress={openDeleteConfirmationForSelectedCases}>
-                            <Icon style={styles.icon} name="trash-alt" size={20} />
-                        </TouchableNativeFeedback>
-                    </View>
-                ),
-            });
-        } else {
-            props.navigation.setOptions({
-                title: "AlgTeacher",
-                headerRight: () => (
-                    <View style={styles.iconContainer}>
-                        <TouchableNativeFeedback onPress={startTimeAttack}>
-                            <Icon style={styles.icon} name="stopwatch" size={20} />
-                        </TouchableNativeFeedback>
-                        <TouchableNativeFeedback onPress={openAddScreen}>
-                            <Icon style={styles.icon} name="plus" size={20} />
-                        </TouchableNativeFeedback>
-                        <MenuIcon>
-                            <MenuOptions>
-                                <MenuOption onSelect={openAlgorithmSetScreen} text="Import algorithm set..." />
-                                <MenuOption
-                                    onSelect={toggleShouldDisplayLabels}
-                                    text={settingStore.shouldDisplayLabels ? "Hide labels" : "Show labels"}
-                                />
-                            </MenuOptions>
-                        </MenuIcon>
-                    </View>
-                ),
-            });
-        }
-    }, [selectedCaseIds.length, settingStore.shouldDisplayLabels]);
+                            <TouchableNativeFeedback onPress={openAddScreen}>
+                                <Icon style={styles.icon} name="plus" size={20} />
+                            </TouchableNativeFeedback>
+                            <MenuIcon>
+                                <MenuOptions>
+                                    <MenuOption onSelect={openAlgorithmSetScreen} text="Import algorithm set..." />
+                                    <MenuOption
+                                        onSelect={toggleShouldDisplayLabels}
+                                        text={settingStore.shouldDisplayLabels ? "Hide labels" : "Show labels"}
+                                    />
+                                </MenuOptions>
+                            </MenuIcon>
+                        </View>
+                    ),
+                });
+            }
+        },
+        [selectedCaseIds.length, settingStore.shouldDisplayLabels],
+    );
 
     useFocusEffect(
         React.useCallback(() => {
@@ -300,4 +304,14 @@ const MainScreen: FC<Props> = props => {
     );
 };
 
-export default observer(MainScreen);
+const Drawer = createDrawerNavigator();
+
+const MainScreenWithDrawer: FC<Props> = props => {
+    return (
+        <Drawer.Navigator>
+            <Drawer.Screen component={observer(MainScreen)} name="Main" />
+        </Drawer.Navigator>
+    );
+};
+
+export default MainScreenWithDrawer;
