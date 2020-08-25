@@ -37,7 +37,8 @@ export class SettingStore {
 }
 
 decorate(SettingStore, {
-    shouldDisplayLabels: observable
+    shouldDisplayLabels: observable,
+    isLoaded: observable
 });
 
 export const SettingStoreContext = createContext(new SettingStore());

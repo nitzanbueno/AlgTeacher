@@ -106,6 +106,7 @@ export class CaseStore {
 
 decorate(CaseStore, {
     cases: observable,
+    isLoaded: observable,
     algorithmSets: computed,
     StoreCase: action,
     StoreCaseList: action,
