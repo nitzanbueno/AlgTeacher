@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useContext, useMemo, useState } from "react";
 import { Text, View, FlatList, StyleSheet, Alert, Image, BackHandler } from "react-native";
-import { Case } from "../Models";
+import { Case, TOUCHABLE_BACKGROUND } from "../Models";
 import TouchableCubeImage from "../CommonComponents/TouchableCubeImage";
 import { CaseStoreContext } from "../CaseStore";
 import { MenuOptions, MenuOption } from "react-native-popup-menu";
@@ -13,11 +13,17 @@ import { H1, P } from "../CommonComponents/TextFormattingElements";
 import HelpModal from "../CommonComponents/HelpModal";
 import _ from "lodash";
 import { useUniqueArrayState } from "../CustomHooks";
-import { useFocusEffect, RouteProp } from "@react-navigation/native";
+import { useFocusEffect, RouteProp, CompositeNavigationProp } from "@react-navigation/native";
 import { SettingStoreContext } from "../Stores/SettingStore";
 import { RootStackParamList } from "../RootStackParamList";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import {
+    createDrawerNavigator,
+    DrawerNavigationProp,
+    DrawerContentScrollView,
+    DrawerContentComponentProps,
+} from "@react-navigation/drawer";
+import { Switch, Drawer } from "react-native-paper";
 
 const CASE_COLUMNS = 2;
 
@@ -70,14 +76,21 @@ const styles = StyleSheet.create({
     caseLabel: {
         marginTop: -10,
     },
+    preference: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+    },
 });
 
 interface Props {
-    navigation: StackNavigationProp<RootStackParamList, "Main">;
+    navigation: CompositeNavigationProp<StackNavigationProp<RootStackParamList, "Main">, DrawerNavigationProp<RootStackParamList, "Main">>;
     route: RouteProp<RootStackParamList, "Main">;
 }
 
-const MainScreen: FC<Props> = props => {
+const MainScreen: FC<Props> = observer(props => {
     const caseStore = useContext(CaseStoreContext);
     const settingStore = useContext(SettingStoreContext);
     const [selectedCaseIds, selectedCaseFunctions] = useUniqueArrayState<number>([]);
@@ -181,7 +194,7 @@ const MainScreen: FC<Props> = props => {
     useEffect(
         function setHeader() {
             if (isSelectMode) {
-                props.navigation.setOptions({
+                props.navigation.dangerouslyGetParent()?.setOptions({
                     title: "Select",
                     headerRight: () => (
                         <View style={styles.iconContainer}>
@@ -209,8 +222,13 @@ const MainScreen: FC<Props> = props => {
                     ),
                 });
             } else {
-                props.navigation.setOptions({
+                props.navigation.dangerouslyGetParent()?.setOptions({
                     title: "AlgTeacher",
+                    headerLeft: () => (
+                        <TouchableNativeFeedback onPress={() => props.navigation.openDrawer()}>
+                            <FAIcon style={[styles.icon, styles.selectIcon]} name="bars" size={20} />
+                        </TouchableNativeFeedback>
+                    ),
                     headerRight: () => (
                         <View style={styles.iconContainer}>
                             <TouchableNativeFeedback onPress={startTimeAttack}>
@@ -222,10 +240,6 @@ const MainScreen: FC<Props> = props => {
                             <MenuIcon>
                                 <MenuOptions>
                                     <MenuOption onSelect={openAlgorithmSetScreen} text="Import algorithm set..." />
-                                    <MenuOption
-                                        onSelect={toggleShouldDisplayLabels}
-                                        text={settingStore.shouldDisplayLabels ? "Hide labels" : "Show labels"}
-                                    />
                                 </MenuOptions>
                             </MenuIcon>
                         </View>
@@ -302,16 +316,38 @@ const MainScreen: FC<Props> = props => {
             </HelpModal>
         </View>
     );
-};
+});
 
-const Drawer = createDrawerNavigator();
+const DrawerNavigator = createDrawerNavigator();
 
-const MainScreenWithDrawer: FC<Props> = props => {
+// This is not the best way to implement this component!
+// It can't interact with the state of MainScreen in any way.
+// However, right now I don't need to, so I'm ignoring this problem for now.
+const MainScreenDrawerContent: FC<DrawerContentComponentProps> = observer(props => {
+    const settingStore = useContext(SettingStoreContext);
+
+    function toggleShouldDisplayLabels() {
+        settingStore.shouldDisplayLabels = !settingStore.shouldDisplayLabels;
+    }
+
     return (
-        <Drawer.Navigator>
-            <Drawer.Screen component={observer(MainScreen)} name="Main" />
-        </Drawer.Navigator>
+        <DrawerContentScrollView {...props}>
+            <Drawer.Section focusable={true}>
+                <TouchableNativeFeedback background={TOUCHABLE_BACKGROUND} onPress={toggleShouldDisplayLabels}>
+                    <View style={styles.preference}>
+                        <Text>Display Labels</Text>
+                        <Switch focusable={true} value={settingStore.shouldDisplayLabels} />
+                    </View>
+                </TouchableNativeFeedback>
+            </Drawer.Section>
+        </DrawerContentScrollView>
     );
-};
+});
+
+const MainScreenWithDrawer: FC = () => (
+    <DrawerNavigator.Navigator drawerContent={props => <MainScreenDrawerContent {...props} />}>
+        <DrawerNavigator.Screen component={MainScreen} name="Main" />
+    </DrawerNavigator.Navigator>
+);
 
 export default MainScreenWithDrawer;
