@@ -7,6 +7,9 @@ import { GenerateScrambleAsync } from "../ScrambleLib";
 import { CaseStoreContext } from "../CaseStore";
 import { observer } from "mobx-react";
 import { CubeImage } from "../CommonComponents/CubeImage";
+import { RootStackParamList } from "../RootStackParamList";
+import { RouteProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 const styles = StyleSheet.create({
     container: {
@@ -89,8 +92,8 @@ const Button: FC<{ style: ViewStyle; onPress: () => void }> = props => {
 };
 
 interface Props {
-    route: { params: { caseId: number } };
-    navigation: any;
+    route: RouteProp<RootStackParamList, "Test">;
+    navigation: StackNavigationProp<RootStackParamList, "Test">;
 }
 
 const TestScreen: FC<Props> = props => {

@@ -4,6 +4,8 @@ import { CaseStoreContext } from "../CaseStore";
 import ALGORITHM_SETS from "../AlgorithmSets.json";
 import { Case } from "../Models";
 import { observer } from "mobx-react";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../RootStackParamList";
 
 const styles = StyleSheet.create({
     container: {
@@ -33,7 +35,7 @@ interface AlgorithmSet {
     cases: Case[];
 }
 
-const ImportAlgorithmSetScreen: FC<{ navigation: any }> = props => {
+const ImportAlgorithmSetScreen: FC<{ navigation: StackNavigationProp<RootStackParamList, "ImportAlgorithmSet"> }> = props => {
     const caseStore = useContext(CaseStoreContext);
 
     function importAlgorithmSet(algorithmSet: AlgorithmSet) {

@@ -10,6 +10,9 @@ import PickerWithAddOption from "../CommonComponents/PickerWithAddOption";
 import { observer } from "mobx-react";
 import { CubeOptions } from "sr-visualizer";
 import { GenerateScrambleAsync } from "../ScrambleLib";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RouteProp } from "@react-navigation/native";
+import { RootStackParamList } from "../RootStackParamList";
 
 const styles = StyleSheet.create({
     formField: {
@@ -74,8 +77,8 @@ const selectedImageSize = {
 };
 
 interface Props {
-    navigation: any;
-    route: any;
+    navigation: StackNavigationProp<RootStackParamList, "Add">;
+    route: RouteProp<RootStackParamList, "Add">;
 }
 
 function SelectionStandin(props: any) {

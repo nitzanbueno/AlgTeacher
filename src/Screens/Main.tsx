@@ -13,8 +13,10 @@ import { H1, P } from "../CommonComponents/TextFormattingElements";
 import HelpModal from "../CommonComponents/HelpModal";
 import _ from "lodash";
 import { useUniqueArrayState } from "../CustomHooks";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, RouteProp } from "@react-navigation/native";
 import { SettingStoreContext } from "../Stores/SettingStore";
+import { RootStackParamList } from "../RootStackParamList";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 const CASE_COLUMNS = 2;
 
@@ -70,8 +72,8 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-    navigation: any;
-    route: any;
+    navigation: StackNavigationProp<RootStackParamList, "Main">;
+    route: RouteProp<RootStackParamList, "Main">;
 }
 
 const MainScreen: FC<Props> = props => {
@@ -88,8 +90,15 @@ const MainScreen: FC<Props> = props => {
         [JSON.stringify(caseStore.cases)],
     );
 
-    function navigate(name: string, params?: Object) {
-        props.navigation.navigate(name, params);
+    // Scary type definitions!
+    // Basically if the screen I navigate to doesn't take parameters, I don't have to pass the "params" argument.
+    function navigate<Name extends keyof RootStackParamList>(name: RootStackParamList[Name] extends undefined ? Name : never): void;
+    function navigate<Name extends keyof RootStackParamList>(
+        name: RootStackParamList[Name] extends undefined ? never : Name,
+        params: RootStackParamList[Name],
+    ): void;
+    function navigate<Name extends keyof RootStackParamList>(name: Name, params?: any): void {
+        props.navigation.navigate<Name>({ name, params });
 
         // We opened a new screen, so detach from selection
         selectedCaseFunctions.set([]);

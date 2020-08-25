@@ -6,6 +6,9 @@ import { GenerateScrambleAsync, MirrorAlgorithm } from "../ScrambleLib";
 import { GetTimeText, ShuffleArray, RandomChoice } from "../Utils";
 import Timer from "../CommonComponents/Timer";
 import { observer } from "mobx-react";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../RootStackParamList";
+import { RouteProp } from "@react-navigation/native";
 
 const UNDEFINED_SCRAMBLE_TEXT: string = "Loading...";
 
@@ -93,8 +96,8 @@ function BottomScreenButton(props: { style: Object; onPress: () => void; text: s
 }
 
 interface Props {
-    route: { params: { cases: Case[]; highScoreKey: string; shouldRandomlyMirror: boolean; shouldRandomlyAUF: boolean } };
-    navigation: any;
+    navigation: StackNavigationProp<RootStackParamList, "TimeAttackPlay">;
+    route: RouteProp<RootStackParamList, "TimeAttackPlay">;
 }
 
 const TimeAttackPlayScreen: FC<Props> = props => {

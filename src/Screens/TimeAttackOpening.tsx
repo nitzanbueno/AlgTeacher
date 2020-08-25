@@ -8,6 +8,9 @@ import CheckboxWithLabel from "../CommonComponents/CheckboxWithLabel";
 import HelpModal from "../CommonComponents/HelpModal";
 import { H1, P } from "../CommonComponents/TextFormattingElements";
 import { HashCode } from "../Utils";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RouteProp } from "@react-navigation/native";
+import { RootStackParamList } from "../RootStackParamList";
 
 const styles = StyleSheet.create({
     container: {
@@ -41,8 +44,8 @@ function getHighScoreKeyByAlgorithms(cases: Case[]) {
 }
 
 interface Props {
-    route: { params: { cases: Case[] } };
-    navigation: any;
+    navigation: StackNavigationProp<RootStackParamList, "TimeAttackOpening">
+    route: RouteProp<RootStackParamList, "TimeAttackOpening">;
 }
 
 const HelpScreen: FC<{}> = props => (
@@ -106,7 +109,6 @@ const TimeAttackOpeningScreen: FC<Props> = props => {
     function goToAddScreen() {
         props.navigation.replace("Add", {
             caseId: -1,
-            callerScreen: "Main",
         });
     }
 

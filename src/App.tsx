@@ -11,8 +11,9 @@ import TimeAttackPlayScreen from "./Screens/TimeAttackPlay";
 import TimeAttackEndScreen from "./Screens/TimeAttackEnd";
 import ImportAlgorithmSetScreen from "./Screens/ImportAlgorithmSet";
 import { CaseStoreContext, globalCaseStore } from "./CaseStore";
+import { RootStackParamList } from "./RootStackParamList";
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
 
 class AppNavigationStack extends Component {
     render() {

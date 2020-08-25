@@ -2,6 +2,8 @@ import React, { FC, useState, useEffect } from "react";
 import { Text, View, StyleSheet, StyleProp, TextStyle } from "react-native";
 import { GetTimeText } from "../Utils";
 import TimeAttackStorage, { HighScoreType } from "../TimeAttackStorage";
+import { RouteProp } from "@react-navigation/native";
+import { RootStackParamList } from "../RootStackParamList";
 
 const styles = StyleSheet.create({
     container: {
@@ -52,7 +54,7 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-    route: { params: { highScoreKey: string; totalTime: number; solveCount: number; totalCount: number } };
+    route: RouteProp<RootStackParamList, "TimeAttackEnd">;
 }
 
 const TimeAttackEndScreen: FC<Props> = props => {
