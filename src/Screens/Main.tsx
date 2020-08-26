@@ -10,7 +10,7 @@ import { TouchableNativeFeedback } from "react-native-gesture-handler";
 import MenuIcon from "../CommonComponents/MenuIcon";
 import { observer } from "mobx-react";
 import { H1, P } from "../CommonComponents/TextFormattingElements";
-import HelpModal from "../CommonComponents/HelpModal";
+import HelpDialog from "../CommonComponents/HelpDialog";
 import _ from "lodash";
 import { useUniqueArrayState } from "../CustomHooks";
 import { useFocusEffect, RouteProp, CompositeNavigationProp } from "@react-navigation/native";
@@ -290,8 +290,7 @@ const MainScreen: FC<Props> = observer(props => {
                     ?
                 </Text>
             )}
-            <HelpModal openKey={"mainScreenHelpModal"}>
-                <H1>Welcome to AlgTeacher!</H1>
+            <HelpDialog title="Welcome to AlgTeacher!" openKey={"mainScreenHelpModal"}>
                 <P>You can start by adding a new algorithm using the "+" button:</P>
                 <Image source={require("./HelpImages/AddButton.png")} style={{ width: "100%", height: 100 }} resizeMode="contain" />
                 <P>Or importing an algorithm set:</P>
@@ -313,7 +312,7 @@ const MainScreen: FC<Props> = observer(props => {
                 <H1>Selection</H1>
                 <P>You can select cases to edit/delete them, or open a Time Attack with the chosen cases.</P>
                 <Image source={require("./HelpImages/Select.png")} style={{ width: "100%", height: 300 }} resizeMode="contain" />
-            </HelpModal>
+            </HelpDialog>
         </View>
     );
 });

@@ -5,7 +5,7 @@ import { CaseStoreContext } from "../CaseStore";
 import CheckboxPicker, { useCheckboxPickerState } from "../CommonComponents/CheckboxPicker";
 import { observer } from "mobx-react";
 import CheckboxWithLabel from "../CommonComponents/CheckboxWithLabel";
-import HelpModal from "../CommonComponents/HelpModal";
+import HelpDialog from "../CommonComponents/HelpDialog";
 import { H1, P } from "../CommonComponents/TextFormattingElements";
 import { HashCode } from "../Utils";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -49,8 +49,7 @@ interface Props {
 }
 
 const HelpScreen: FC<{}> = props => (
-    <HelpModal openKey="timeAttackHelpModal">
-        <H1>Welcome to Time Attack mode!</H1>
+    <HelpDialog title="Welcome to Time Attack mode!" openKey="timeAttackHelpModal">
         <P>Time Attack mode trains your recognition and execution time for algorithm sets.</P>
         <P>To get started, select algorithm sets from the list.</P>
         <Image source={require("./HelpImages/TimeAttackAlgorithmSets.png")} style={{ width: "100%", height: 120 }} resizeMode="contain" />
@@ -67,7 +66,7 @@ const HelpScreen: FC<{}> = props => (
         <Image source={require("./HelpImages/TimeAttackSolution.png")} style={{ width: "100%", height: 460 }} resizeMode="contain" />
         <P>After you've solved every case in the chosen sets, you will see your score.</P>
         <P>A high score is kept for every algorithm set combination, so you can try to beat it!</P>
-    </HelpModal>
+    </HelpDialog>
 );
 
 const TimeAttackOpeningScreen: FC<Props> = props => {
