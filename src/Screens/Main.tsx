@@ -332,11 +332,11 @@ const MainScreenDrawerContent: FC<DrawerContentComponentProps> = observer(props 
 
     return (
         <DrawerContentScrollView {...props}>
-            <Drawer.Section focusable={true}>
+            <Drawer.Section>
                 <TouchableNativeFeedback background={TOUCHABLE_BACKGROUND} onPress={toggleShouldDisplayLabels}>
                     <View style={styles.preference}>
                         <Text>Display Labels</Text>
-                        <Switch focusable={true} value={settingStore.shouldDisplayLabels} />
+                        <Switch value={settingStore.shouldDisplayLabels} />
                     </View>
                 </TouchableNativeFeedback>
             </Drawer.Section>
