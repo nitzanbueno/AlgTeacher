@@ -1,9 +1,8 @@
 import React, { FC, useState, useEffect, useContext } from "react";
 import _ from "lodash";
-import { Text, FlatList, StyleSheet, Button, View } from "react-native";
+import { Text, FlatList, StyleSheet, Button, View, ScrollView } from "react-native";
 import TouchableCubeImage from "../CommonComponents/TouchableCubeImage";
 import { CUBE_IMAGE_OPTIONS } from "../ImageOptionGenerator";
-import { TextInput, ScrollView } from "react-native-gesture-handler";
 import { Case } from "../Models";
 import { CaseStoreContext } from "../CaseStore";
 import PickerWithAddOption from "../CommonComponents/PickerWithAddOption";
@@ -13,13 +12,15 @@ import { GenerateScrambleAsync } from "../ScrambleLib";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../RootStackParamList";
+import { TextInput, HelperText } from "react-native-paper";
 
 const styles = StyleSheet.create({
     formField: {
         marginLeft: 10,
         marginRight: 10,
-        borderColor: "gray",
-        borderWidth: 1,
+        // borderColor: "gray",
+        // borderWidth: 1,
+        marginTop: 20,
         height: 40,
         fontSize: 17,
     },
@@ -174,17 +175,20 @@ const AddScreen: FC<Props> = props => {
 
     return (
         <ScrollView>
-            <Text style={styles.formLabel}>Algorithm:</Text>
             <TextInput
+                label="Algorithm"
                 placeholder="e.g. F R U R' U' F'"
-                style={[styles.formField, styles.formTextInput]}
+                style={styles.formField}
                 value={algorithm}
+                mode="outlined"
                 onChangeText={setAlgorithm}
             />
-            <Text style={styles.formLabel}>Description:</Text>
+            {isAlgorithmInvalid && <HelperText type="error" style={styles.errorText}>The algorithm is invalid.</HelperText>}
             <TextInput
+                label="Description"
                 placeholder="e.g. T-shape (optional)"
-                style={[styles.formField, styles.formTextInput]}
+                style={styles.formField}
+                mode="outlined"
                 value={description}
                 onChangeText={setDescription}
             />
@@ -223,7 +227,6 @@ const AddScreen: FC<Props> = props => {
             <View style={styles.saveButton}>
                 <Button disabled={isAlgorithmInvalid} title="Save" onPress={saveCase} />
             </View>
-            {isAlgorithmInvalid && <Text style={styles.errorText}>The algorithm is invalid.</Text>}
         </ScrollView>
     );
 };
