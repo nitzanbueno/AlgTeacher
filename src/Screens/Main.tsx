@@ -23,7 +23,7 @@ import {
     DrawerContentScrollView,
     DrawerContentComponentProps,
 } from "@react-navigation/drawer";
-import { Switch, Drawer } from "react-native-paper";
+import { Switch, Drawer, ActivityIndicator } from "react-native-paper";
 
 const CASE_COLUMNS = 2;
 
@@ -276,7 +276,7 @@ const MainScreen: FC<Props> = observer(props => {
                     numColumns={CASE_COLUMNS}
                 />
             ) : isLoading ? (
-                <Text style={styles.helpText}>Loading...</Text>
+                <ActivityIndicator size="large" />
             ) : (
                 <Text style={styles.helpText}>
                     {"You don't have any cases.\nHow about "}
