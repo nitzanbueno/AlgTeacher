@@ -3,11 +3,9 @@ import { Text, View, FlatList, StyleSheet, Alert, Image, BackHandler } from "rea
 import { Case, TOUCHABLE_BACKGROUND } from "../Models";
 import TouchableCubeImage from "../CommonComponents/TouchableCubeImage";
 import { CaseStoreContext } from "../CaseStore";
-import { MenuOptions, MenuOption } from "react-native-popup-menu";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import FAIcon from "react-native-vector-icons/FontAwesome";
 import { TouchableNativeFeedback } from "react-native-gesture-handler";
-import MenuIcon from "../CommonComponents/MenuIcon";
 import { observer } from "mobx-react";
 import { H1, P } from "../CommonComponents/TextFormattingElements";
 import HelpDialog from "../CommonComponents/HelpDialog";
@@ -231,11 +229,6 @@ const MainScreen: FC<Props> = observer(props => {
                             <TouchableNativeFeedback onPress={openAddScreen}>
                                 <Icon style={styles.icon} name="plus" size={20} />
                             </TouchableNativeFeedback>
-                            <MenuIcon>
-                                <MenuOptions>
-                                    <MenuOption onSelect={openAlgorithmSetScreen} text="Import algorithm set..." />
-                                </MenuOptions>
-                            </MenuIcon>
                         </View>
                     ),
                 });
