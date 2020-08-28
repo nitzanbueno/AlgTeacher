@@ -11,13 +11,13 @@ type Props = CubeOptions & {
 };
 
 const TouchableCubeImage: FunctionComponent<Props> = props => {
-    const { onPress, onLongPress, style, ...cubeProps } = props;
+    const { onPress, onLongPress, style, children, ...cubeProps } = props;
 
     return (
         <TouchableNativeFeedback background={TOUCHABLE_BACKGROUND} onPress={props.onPress} onLongPress={props.onLongPress}>
             <View style={style}>
                 <CubeImage width={150} height={150} case={props.algorithm} {...cubeProps} />
-                {props.children}
+                {children}
             </View>
         </TouchableNativeFeedback>
     );
