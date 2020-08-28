@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useContext, useMemo, useState } from "react";
+import React, { FC, useEffect, useContext } from "react";
 import { Text, View, FlatList, StyleSheet, Alert, Image, BackHandler } from "react-native";
 import { Case, TOUCHABLE_BACKGROUND } from "../Models";
 import TouchableCubeImage from "../CommonComponents/TouchableCubeImage";
@@ -61,6 +61,10 @@ const styles = StyleSheet.create({
     selectIcon: {
         marginTop: 4,
     },
+    leftIcon: {
+        width: 30,
+        textAlign: "center",
+    },
     helpText: {
         fontSize: 20,
         textAlign: "center",
@@ -97,37 +101,26 @@ const MainScreen: FC<Props> = observer(props => {
 
     const isSelectMode = selectedCaseIds.length != 0;
 
-    useEffect(
-        function resetSelectedCases() {
-            selectedCaseFunctions.set([]);
-        },
-        [JSON.stringify(caseStore.cases)],
-    );
-
-    // Scary type definitions!
-    // Basically if the screen I navigate to doesn't take parameters, I don't have to pass the "params" argument.
-    function navigate<Name extends keyof RootStackParamList>(name: RootStackParamList[Name] extends undefined ? Name : never): void;
-    function navigate<Name extends keyof RootStackParamList>(
-        name: RootStackParamList[Name] extends undefined ? never : Name,
-        params: RootStackParamList[Name],
-    ): void;
-    function navigate<Name extends keyof RootStackParamList>(name: Name, params?: any): void {
-        props.navigation.navigate<Name>({ name, params });
-
-        // We opened a new screen, so detach from selection
-        selectedCaseFunctions.set([]);
+    function clearSelection() {
+        // Smart-reset the selected IDs:
+        // if the selected IDs are already empty, skip a rerender of the component
+        selectedCaseFunctions.set(prevArr => (prevArr.length == 0 ? prevArr : []));
     }
 
+    useEffect(clearSelection, [JSON.stringify(caseStore.cases)]);
+
+    useEffect(() => props.navigation.addListener("blur", clearSelection), []);
+
     function startTimeAttack() {
-        navigate("TimeAttackOpening", { cases: caseStore.GetCasesByIds(selectedCaseIds) });
+        props.navigation.navigate("TimeAttackOpening", { cases: caseStore.GetCasesByIds(selectedCaseIds) });
     }
 
     function openAddScreen() {
-        navigate("Add", { caseId: -1 });
+        props.navigation.navigate("Add", { caseId: -1 });
     }
 
     function openTestScreen(chosenCase: Case) {
-        navigate("Test", { caseId: chosenCase.id });
+        props.navigation.navigate("Test", { caseId: chosenCase.id });
     }
 
     function deleteSelectedCases() {
@@ -153,7 +146,7 @@ const MainScreen: FC<Props> = observer(props => {
     function openEditScreen() {
         if (selectedCaseIds.length != 1) return;
 
-        navigate("Add", {
+        props.navigation.navigate("Add", {
             caseId: selectedCaseIds[0],
             title: "Edit",
         });
@@ -184,11 +177,7 @@ const MainScreen: FC<Props> = observer(props => {
     }
 
     function openAlgorithmSetScreen() {
-        navigate("ImportAlgorithmSet");
-    }
-
-    function toggleShouldDisplayLabels() {
-        settingStore.shouldDisplayLabels = !settingStore.shouldDisplayLabels;
+        props.navigation.navigate("ImportAlgorithmSet");
     }
 
     useEffect(
@@ -196,6 +185,11 @@ const MainScreen: FC<Props> = observer(props => {
             if (isSelectMode) {
                 props.navigation.dangerouslyGetParent()?.setOptions({
                     title: "Select",
+                    headerLeft: () => (
+                        <TouchableNativeFeedback onPress={clearSelection}>
+                            <Icon style={[styles.icon, styles.leftIcon]} name="arrow-left" size={20} />
+                        </TouchableNativeFeedback>
+                    ),
                     headerRight: () => (
                         <View style={styles.iconContainer}>
                             {selectedCaseIds.length == 1 && (
@@ -204,7 +198,7 @@ const MainScreen: FC<Props> = observer(props => {
                                 </TouchableNativeFeedback>
                             )}
                             {selectedCaseIds.length == caseStore.cases.length ? (
-                                <TouchableNativeFeedback onPress={() => selectedCaseFunctions.set([])}>
+                                <TouchableNativeFeedback onPress={clearSelection}>
                                     <FAIcon style={[styles.icon, styles.selectIcon]} name="check-square-o" size={20} />
                                 </TouchableNativeFeedback>
                             ) : (
@@ -226,7 +220,7 @@ const MainScreen: FC<Props> = observer(props => {
                     title: "AlgTeacher",
                     headerLeft: () => (
                         <TouchableNativeFeedback onPress={() => props.navigation.openDrawer()}>
-                            <FAIcon style={[styles.icon, styles.selectIcon]} name="bars" size={20} />
+                            <FAIcon style={[styles.icon, styles.leftIcon]} name="bars" size={20} />
                         </TouchableNativeFeedback>
                     ),
                     headerRight: () => (
@@ -255,12 +249,12 @@ const MainScreen: FC<Props> = observer(props => {
             const eventListener = BackHandler.addEventListener("hardwareBackPress", () => {
                 if (!isSelectMode) return false;
 
-                selectedCaseFunctions.set([]);
+                clearSelection();
                 return true;
             });
 
             return () => eventListener.remove();
-        }, [isSelectMode, selectedCaseFunctions.set]),
+        }, [isSelectMode, clearSelection]),
     );
 
     const isLoading = !caseStore.isLoaded || !settingStore.isLoaded;
@@ -331,6 +325,10 @@ const MainScreenDrawerContent: FC<DrawerContentComponentProps> = observer(props 
 
     return (
         <DrawerContentScrollView {...props}>
+            <Drawer.Item
+                label="Import Algorithm Set"
+                onPress={() => props.navigation.dangerouslyGetParent()?.navigate("ImportAlgorithmSet")}
+            />
             <Drawer.Section>
                 <TouchableNativeFeedback background={TOUCHABLE_BACKGROUND} onPress={toggleShouldDisplayLabels}>
                     <View style={styles.preference}>

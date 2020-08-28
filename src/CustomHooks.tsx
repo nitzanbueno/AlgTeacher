@@ -20,7 +20,7 @@ export function useUniqueArrayState<T>(defaultState: T[]): [
         remove: (item: T) => void;
         removeAt: (index: number) => void;
         add: (item: T) => void;
-        set: (newState: T[]) => void;
+        set: (newState: React.SetStateAction<T[]>) => void;
     },
 ] {
     const [arr, setArr] = useState(defaultState);
