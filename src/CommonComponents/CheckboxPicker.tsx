@@ -1,7 +1,7 @@
 import React, { FC, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { useMapState } from "../CustomHooks";
-import { List, Checkbox } from "react-native-paper";
+import { List } from "react-native-paper";
 import CheckboxListItem from "./CheckboxListItem";
 
 const styles = StyleSheet.create({
