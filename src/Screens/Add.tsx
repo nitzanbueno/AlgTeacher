@@ -12,15 +12,18 @@ import { GenerateScrambleAsync } from "../ScrambleLib";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../RootStackParamList";
-import { TextInput, HelperText, Button } from "react-native-paper";
+import { TextInput, HelperText, Button, ActivityIndicator } from "react-native-paper";
 
 const styles = StyleSheet.create({
+    container: {
+        paddingTop: 10,
+    },
     formField: {
         marginLeft: 10,
         marginRight: 10,
         // borderColor: "gray",
         // borderWidth: 1,
-        marginTop: 20,
+        marginBottom: 15,
         height: 40,
         fontSize: 17,
     },
@@ -32,18 +35,13 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         backgroundColor: "white",
     },
-    pickerStandin: {
-        height: 40,
-        justifyContent: "center",
-    },
     formTextInput: {
         backgroundColor: "white",
     },
     formLabel: {
-        marginLeft: 10,
-        marginTop: 13,
+        marginLeft: 13,
+        marginBottom: 5,
         fontSize: 17,
-        marginBottom: 3,
     },
     imageSelectionStandin: {
         width: 150,
@@ -174,7 +172,7 @@ const AddScreen: FC<Props> = props => {
     }
 
     return (
-        <ScrollView>
+        <ScrollView style={styles.container}>
             <TextInput
                 label="Algorithm"
                 placeholder="e.g. F R U R' U' F'"
@@ -204,17 +202,7 @@ const AddScreen: FC<Props> = props => {
                     />
                 </View>
             ) : (
-                // You might be asking yourself, "What the hell is that?"
-                // "Why do I need to have "Loading" text for a picker? Can't I just have a "Loading" option or something?"
-                // Well, apparently, whenever you change options for a picker, it automatically changes selection to the first one.
-                // However, I want to have an already selected algorithm set (the one of the possibly-currently-edited case), and algorithm sets
-                // load asynchronously, so that forces me to cause the selection change (which I can't tell apart from any other selection
-                // change and thus can't block).
-                // Unless, I don't change the algorithm sets at all, and just render the picker after they've been loaded.
-                // Thus, this stupidity.
-                <View style={styles.pickerStandin}>
-                    <Text>Loading...</Text>
-                </View>
+                <ActivityIndicator size={55} />
             )}
             <Text style={styles.formLabel}>Select image:</Text>
             <FlatList
