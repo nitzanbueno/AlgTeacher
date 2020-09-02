@@ -1,5 +1,4 @@
 import React, { useEffect, FC, useState } from "react";
-import { StyleSheet, TouchableWithoutFeedback } from "react-native";
 import { Button, Portal, Dialog, TextInput } from "react-native-paper";
 
 interface Props {

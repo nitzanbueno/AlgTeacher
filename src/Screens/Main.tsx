@@ -9,7 +9,7 @@ import { H1, P } from "../CommonComponents/TextFormattingElements";
 import HelpDialog from "../CommonComponents/HelpDialog";
 import _ from "lodash";
 import { useUniqueArrayState } from "../CustomHooks";
-import { useFocusEffect, RouteProp, CompositeNavigationProp, useTheme } from "@react-navigation/native";
+import { useFocusEffect, RouteProp, CompositeNavigationProp } from "@react-navigation/native";
 import { SettingStoreContext } from "../Stores/SettingStore";
 import { RootStackParamList } from "../RootStackParamList";
 import { StackNavigationProp } from "@react-navigation/stack";
