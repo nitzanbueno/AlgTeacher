@@ -4,14 +4,14 @@ import { Case } from "../Models";
 import { CaseStoreContext } from "../CaseStore";
 import CheckboxPicker, { useCheckboxPickerState } from "../CommonComponents/CheckboxPicker";
 import { observer } from "mobx-react";
-import CheckboxWithLabel from "../CommonComponents/CheckboxWithLabel";
+import CheckboxListItem from "../CommonComponents/CheckboxListItem";
 import HelpDialog from "../CommonComponents/HelpDialog";
 import { H1, P } from "../CommonComponents/TextFormattingElements";
 import { HashCode } from "../Utils";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../RootStackParamList";
-import { Button } from "react-native-paper";
+import { Button, List } from "react-native-paper";
 
 const styles = StyleSheet.create({
     container: {
@@ -20,13 +20,12 @@ const styles = StyleSheet.create({
         textAlign: "center",
         paddingLeft: 10,
         paddingRight: 10,
-        paddingTop: 20,
     },
     header: {
         fontSize: 20,
     },
-    paragraph: {
-        marginBottom: 20,
+    startButton: {
+        marginTop: 20,
     },
 });
 
@@ -45,7 +44,7 @@ function getHighScoreKeyByAlgorithms(cases: Case[]) {
 }
 
 interface Props {
-    navigation: StackNavigationProp<RootStackParamList, "TimeAttackOpening">
+    navigation: StackNavigationProp<RootStackParamList, "TimeAttackOpening">;
     route: RouteProp<RootStackParamList, "TimeAttackOpening">;
 }
 
@@ -96,12 +95,14 @@ const TimeAttackOpeningScreen: FC<Props> = props => {
         // (If an algorithm changes, the high score will be lost. I don't remember by
         // case ID, because cases can be deleted, and this may cause unexpected behavior.)
         // If the cases weren't given and the user chose sets, I want to remember the high score by the sets.
-        const highScoreKey = areCasesSelected ? getHighScoreKeyByAlgorithms(chosenCaseList) : getHighScoreKeyByAlgorithmSets(chosenCaseList);
+        const highScoreKey = areCasesSelected
+            ? getHighScoreKeyByAlgorithms(chosenCaseList)
+            : getHighScoreKeyByAlgorithmSets(chosenCaseList);
 
         props.navigation.replace("TimeAttackPlay", {
             cases: chosenCaseList,
             highScoreKey,
-            options: {shouldRandomlyMirror,shouldRandomlyAUF}
+            options: { shouldRandomlyMirror, shouldRandomlyAUF },
         });
     }
 
@@ -117,28 +118,19 @@ const TimeAttackOpeningScreen: FC<Props> = props => {
 
     return (
         <ScrollView style={styles.container}>
-            {(caseStore.algorithmSets.length > 0 || areCasesSelected) ? (
+            {caseStore.algorithmSets.length > 0 || areCasesSelected ? (
                 <>
-                    <View style={styles.paragraph}>
-                        <Text style={styles.header}>Choose options:</Text>
-                        <CheckboxWithLabel
-                            value={shouldRandomlyMirror}
-                            onValueChange={setShouldRandomlyMirror}
-                            labelText="Randomly mirror"
-                        />
-                        <CheckboxWithLabel
+                    <List.Section>
+                        <List.Subheader style={styles.header}>Choose options:</List.Subheader>
+                        <CheckboxListItem value={shouldRandomlyMirror} onValueChange={setShouldRandomlyMirror} title="Randomly mirror" />
+                        <CheckboxListItem
                             value={shouldRandomlyAUF}
                             onValueChange={setShouldRandomlyAUF}
-                            labelText="Add random U moves at start"
+                            title="Add random U moves at start"
                         />
-                    </View>
-                    {!areCasesSelected && (
-                        <View style={styles.paragraph}>
-                            <Text style={styles.header}>Select algorithm sets:</Text>
-                            <CheckboxPicker {...checkboxPickerState} />
-                        </View>
-                    )}
-                    <Button mode="contained" children="Start!" onPress={startTimeAttack} />
+                    </List.Section>
+                    {!areCasesSelected && <CheckboxPicker title="Select algorithm sets:" {...checkboxPickerState} />}
+                    <Button style={styles.startButton} mode="contained" children="Start!" onPress={startTimeAttack} />
                 </>
             ) : (
                 <Text style={styles.header}>
