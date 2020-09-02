@@ -65,6 +65,7 @@ const ImportAlgorithmSetScreen: FC<{ navigation: StackNavigationProp<RootStackPa
                 <List.Subheader>Choose a set to import:</List.Subheader>
                 {ALGORITHM_SETS.map(algorithmSet => (
                     <List.Item
+                        key={algorithmSet.name}
                         titleStyle={{marginLeft: -10}}
                         left={(props) => <List.Icon {...props} icon="circle-medium" color="#000" />}
                         title={algorithmSet.name}
