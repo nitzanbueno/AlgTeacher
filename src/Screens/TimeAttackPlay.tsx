@@ -182,7 +182,7 @@ const TimeAttackPlayScreen: FC<Props> = props => {
     function BottomButton() {
         switch (buttonToDisplay) {
             case TimeAttackButtonOption.STOP_TIMER:
-                return <BottomScreenButton text="Stop" onPress={stopTimer} color={theme.colors.stopButton} />;
+                return <BottomScreenButton text="Stop" onTouchStart={stopTimer} color={theme.colors.stopButton} />;
             case TimeAttackButtonOption.START_TIMER:
                 return <BottomScreenButton text="Start" onPress={startTimer} color={theme.colors.startButton} />;
             case TimeAttackButtonOption.NEXT_CASE:
