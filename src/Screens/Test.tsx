@@ -2,7 +2,6 @@ import React, { useState, useEffect, FC, useContext } from "react";
 import { Text, View, StyleSheet, ViewStyle } from "react-native";
 import { TouchableNativeFeedback } from "react-native-gesture-handler";
 import { TOUCHABLE_BACKGROUND } from "../Models";
-import Icon from "react-native-vector-icons/FontAwesome";
 import { GenerateScrambleAsync } from "../ScrambleLib";
 import { CaseStoreContext } from "../CaseStore";
 import { observer } from "mobx-react";

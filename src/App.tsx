@@ -11,7 +11,7 @@ import TimeAttackEndScreen from "./Screens/TimeAttackEnd";
 import ImportAlgorithmSetScreen from "./Screens/ImportAlgorithmSet";
 import { CaseStoreContext, globalCaseStore } from "./CaseStore";
 import { RootStackParamList } from "./RootStackParamList";
-import { Provider as PaperProvider, Appbar } from "react-native-paper";
+import { Provider as PaperProvider } from "react-native-paper";
 import Theme from "./Theme";
 import AppbarHeader from "./Screens/AppbarHeader";
 
