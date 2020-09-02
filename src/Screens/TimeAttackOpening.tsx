@@ -101,8 +101,7 @@ const TimeAttackOpeningScreen: FC<Props> = props => {
         props.navigation.replace("TimeAttackPlay", {
             cases: chosenCaseList,
             highScoreKey,
-            shouldRandomlyMirror,
-            shouldRandomlyAUF,
+            options: {shouldRandomlyMirror,shouldRandomlyAUF}
         });
     }
 

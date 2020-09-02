@@ -100,8 +100,8 @@ const TimeAttackPlayScreen: FC<Props> = props => {
 
     function goToEndScreen() {
         props.navigation.replace("TimeAttackEnd", {
+            ...props.route.params,
             totalTime,
-            highScoreKey: props.route.params.highScoreKey,
             solveCount,
             totalCount: cases.length,
         });
@@ -149,7 +149,7 @@ const TimeAttackPlayScreen: FC<Props> = props => {
 
     useEffect(
         function initializeCases() {
-            const { shouldRandomlyAUF, shouldRandomlyMirror } = props.route.params;
+            const { shouldRandomlyAUF, shouldRandomlyMirror } = props.route.params.options;
             // Detach the cases from mobx, so that when we randomly mirror and AUF, the actual cases don't get edited
             let testedCases = ShuffleArray(props.route.params.cases.map(x => ({ ...x })));
 

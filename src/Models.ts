@@ -9,4 +9,9 @@ export interface Case {
     algorithmSet?: string;
 }
 
+export interface TimeAttackOptions {
+    shouldRandomlyMirror: boolean;
+    shouldRandomlyAUF: boolean;
+}
+
 export const TOUCHABLE_BACKGROUND = Platform.OS === "android" ? TouchableNativeFeedback.SelectableBackground() : undefined;
