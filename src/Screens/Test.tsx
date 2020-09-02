@@ -9,7 +9,7 @@ import { CubeImage } from "../CommonComponents/CubeImage";
 import { RootStackParamList } from "../RootStackParamList";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { Appbar } from "react-native-paper";
+import { Appbar, Button, Caption, Title } from "react-native-paper";
 
 const styles = StyleSheet.create({
     container: {
@@ -17,28 +17,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         alignItems: "center",
         // justifyContent: "center",
-    },
-    buttonContainer: {
-        marginTop: 10,
-        height: 50,
-        width: 350,
-        flexDirection: "row",
-        justifyContent: "space-around",
-    },
-    buttonView: {
-        width: 150,
-        borderRadius: 5,
-        color: "white",
-        textAlign: "center",
-    },
-    okButton: {
-        backgroundColor: "dodgerblue",
-    },
-    buttonText: {
-        height: "100%",
-        textAlignVertical: "center",
-        textAlign: "center",
-        color: "white",
     },
     textContainer: {
         display: "flex",
@@ -59,36 +37,17 @@ const styles = StyleSheet.create({
         textAlign: "center",
         width: "90%",
     },
-    iconContainer: {
-        flexDirection: "row",
-        height: "100%",
-        alignItems: "center",
-        marginRight: 5,
-    },
-    icon: {
-        marginRight: 10,
-        marginLeft: 10,
-        height: "100%",
-        textAlignVertical: "center",
-    },
     caseImageContainer: {
         margin: 10,
+    },
+    solutionContainer: {
+        marginTop: 10,
     },
 });
 
 const caseImageSize = {
     width: 250,
     height: 250,
-};
-
-const Button: FC<{ style: ViewStyle; onPress: () => void }> = props => {
-    return (
-        <TouchableNativeFeedback onPress={props.onPress} background={TOUCHABLE_BACKGROUND}>
-            <View style={[styles.buttonView, props.style]}>
-                <Text style={styles.buttonText}>{props.children}</Text>
-            </View>
-        </TouchableNativeFeedback>
-    );
 };
 
 interface Props {
@@ -151,17 +110,17 @@ const TestScreen: FC<Props> = props => {
                 <CubeImage {...caseImageSize} case={algorithm || ""} {...imageOptions} />
             </View>
 
-            <Text style={styles.scrambleText}>Scramble:</Text>
-            <Text style={styles.scrambleText}>{scramble === undefined ? "Loading..." : scramble}</Text>
+            <Title children={"Scramble:"} />
+            <Caption style={styles.scrambleText}>{scramble === undefined ? "Loading..." : scramble}</Caption>
 
-            <View style={styles.buttonContainer}>
+            <View style={styles.solutionContainer}>
                 {shouldDisplaySolution ? (
                     <View style={styles.textContainer}>
-                        <Text style={styles.scrambleText} children={"Solution:"} />
-                        <Text style={styles.scrambleText}>{algorithm}</Text>
+                        <Title children={"Solution:"} />
+                        <Caption style={styles.scrambleText} children={algorithm} />
                     </View>
                 ) : (
-                    <Button style={styles.okButton} onPress={showSolution} children="Show Solution" />
+                    <Button mode="contained" onPress={showSolution} children="Show Solution" />
                 )}
             </View>
         </View>

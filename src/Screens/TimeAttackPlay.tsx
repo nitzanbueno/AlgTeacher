@@ -9,6 +9,7 @@ import { observer } from "mobx-react";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../RootStackParamList";
 import { RouteProp } from "@react-navigation/native";
+import { Button, useTheme } from "react-native-paper";
 
 const UNDEFINED_SCRAMBLE_TEXT: string = "Loading...";
 
@@ -20,36 +21,17 @@ const styles = StyleSheet.create({
         textAlign: "center",
         // justifyContent: "center",
     },
-    buttonView: {
-        marginTop: 0,
-        width: 150,
-        borderRadius: 5,
-        textAlign: "center",
-        height: 50,
-    },
     anchoredButton: {
         width: "100%",
         flex: 1,
-    },
-    startButton: {
-        backgroundColor: "#26C281",
-        color: "black",
-    },
-    showSolutionButton: {
-        backgroundColor: "grey",
     },
     buttonText: {
         height: "100%",
         textAlignVertical: "center",
         textAlign: "center",
-        color: "white",
     },
     bigButtonText: {
         fontSize: 55,
-    },
-    descriptionText: {
-        marginTop: 30,
-        fontSize: 30,
     },
     header: {
         fontSize: 40,
@@ -74,9 +56,6 @@ const styles = StyleSheet.create({
         marginTop: 40,
         fontSize: 50,
     },
-    stopButton: {
-        backgroundColor: "#22A7F0",
-    },
 });
 
 enum TimeAttackButtonOption {
@@ -85,13 +64,20 @@ enum TimeAttackButtonOption {
     NEXT_CASE,
 }
 
-function BottomScreenButton(props: { style: Object; onPress: () => void; text: string }) {
+function BottomScreenButton(props: { color?: string; onPress?: () => void; onTouchStart?: () => void; text: string }) {
     return (
-        <View style={[styles.anchoredButton, props.style]}>
-            <TouchableNativeFeedback onPress={props.onPress} background={TOUCHABLE_BACKGROUND}>
-                <Text style={[props.style, styles.buttonText, styles.bigButtonText]}>{props.text}</Text>
-            </TouchableNativeFeedback>
-        </View>
+        <Button
+            uppercase={false}
+            contentStyle={styles.buttonText}
+            onTouchStart={props.onTouchStart}
+            onPress={props.onPress}
+            labelStyle={styles.bigButtonText}
+            style={styles.anchoredButton}
+            mode="contained"
+            color={props.color}
+        >
+            {props.text}
+        </Button>
     );
 }
 
@@ -110,13 +96,14 @@ const TimeAttackPlayScreen: FC<Props> = props => {
     const [timerStartTimestamp, setTimerStartTimestamp] = useState<Date | null>(null);
     const [totalTime, setTotalTime] = useState(0);
     const [solveCount, setSolveCount] = useState(0);
+    const theme = useTheme();
 
     function goToEndScreen() {
         props.navigation.replace("TimeAttackEnd", {
             totalTime,
             highScoreKey: props.route.params.highScoreKey,
             solveCount,
-            totalCount: cases.length
+            totalCount: cases.length,
         });
     }
 
@@ -195,11 +182,11 @@ const TimeAttackPlayScreen: FC<Props> = props => {
     function BottomButton() {
         switch (buttonToDisplay) {
             case TimeAttackButtonOption.STOP_TIMER:
-                return <BottomScreenButton text="Stop" onPress={stopTimer} style={styles.stopButton} />;
+                return <BottomScreenButton text="Stop" onPress={stopTimer} color={theme.colors.stopButton} />;
             case TimeAttackButtonOption.START_TIMER:
-                return <BottomScreenButton text="Start" onPress={startTimer} style={styles.startButton} />;
+                return <BottomScreenButton text="Start" onPress={startTimer} color={theme.colors.startButton} />;
             case TimeAttackButtonOption.NEXT_CASE:
-                return <BottomScreenButton text="Next Case" onPress={skipCase} style={styles.stopButton} />;
+                return <BottomScreenButton text="Next Case" onPress={skipCase} color={theme.colors.stopButton} />;
         }
     }
 
@@ -218,16 +205,15 @@ const TimeAttackPlayScreen: FC<Props> = props => {
                     ]
                 ) : (
                     <>
-                        <View style={[styles.buttonView, styles.showSolutionButton]}>
-                            <TouchableWithoutFeedback
-                                onPress={() => {
-                                    setShouldDisplaySolution(true);
-                                    setButtonToDisplay(TimeAttackButtonOption.NEXT_CASE);
-                                }}
-                            >
-                                <Text style={styles.buttonText}>Show solution</Text>
-                            </TouchableWithoutFeedback>
-                        </View>
+                        <Button
+                            mode="contained"
+                            color={theme.colors.solutionButton}
+                            onPress={() => {
+                                setShouldDisplaySolution(true);
+                                setButtonToDisplay(TimeAttackButtonOption.NEXT_CASE);
+                            }}
+                            children="Show solution"
+                        />
                         <View style={{ height: 20 }}>
                             {timerStartTimestamp ? (
                                 <Timer style={styles.timerText} startTimestamp={timerStartTimestamp.getTime()} extraTime={totalTime} />

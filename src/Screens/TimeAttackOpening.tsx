@@ -1,5 +1,5 @@
 import React, { FC, useContext, useState } from "react";
-import { Text, StyleSheet, ScrollView, CheckBox, Button, View, Image } from "react-native";
+import { Text, StyleSheet, ScrollView, View, Image } from "react-native";
 import { Case } from "../Models";
 import { CaseStoreContext } from "../CaseStore";
 import CheckboxPicker, { useCheckboxPickerState } from "../CommonComponents/CheckboxPicker";
@@ -11,6 +11,7 @@ import { HashCode } from "../Utils";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../RootStackParamList";
+import { Button } from "react-native-paper";
 
 const styles = StyleSheet.create({
     container: {
@@ -138,7 +139,7 @@ const TimeAttackOpeningScreen: FC<Props> = props => {
                             <CheckboxPicker {...checkboxPickerState} />
                         </View>
                     )}
-                    <Button title="Start!" onPress={startTimeAttack} />
+                    <Button mode="contained" children="Start!" onPress={startTimeAttack} />
                 </>
             ) : (
                 <Text style={styles.header}>

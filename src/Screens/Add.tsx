@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect, useContext } from "react";
 import _ from "lodash";
-import { Text, FlatList, StyleSheet, Button, View, ScrollView } from "react-native";
+import { Text, FlatList, StyleSheet, View, ScrollView } from "react-native";
 import TouchableCubeImage from "../CommonComponents/TouchableCubeImage";
 import { CUBE_IMAGE_OPTIONS } from "../ImageOptionGenerator";
 import { Case } from "../Models";
@@ -12,7 +12,7 @@ import { GenerateScrambleAsync } from "../ScrambleLib";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../RootStackParamList";
-import { TextInput, HelperText } from "react-native-paper";
+import { TextInput, HelperText, Button } from "react-native-paper";
 
 const styles = StyleSheet.create({
     formField: {
@@ -225,7 +225,7 @@ const AddScreen: FC<Props> = props => {
                 keyExtractor={(item, index) => index.toString()}
             />
             <View style={styles.saveButton}>
-                <Button disabled={isAlgorithmInvalid} title="Save" onPress={saveCase} />
+                <Button mode="contained" disabled={isAlgorithmInvalid} children="Save" onPress={saveCase} />
             </View>
         </ScrollView>
     );
