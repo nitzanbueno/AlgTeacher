@@ -5,23 +5,23 @@ import TouchableCubeImage from "../CommonComponents/TouchableCubeImage";
 import { CaseStoreContext } from "../CaseStore";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import FAIcon from "react-native-vector-icons/FontAwesome";
-import { TouchableNativeFeedback } from "react-native-gesture-handler";
+import { TouchableNativeFeedback, TouchableOpacity } from "react-native-gesture-handler";
 import { observer } from "mobx-react";
 import { H1, P } from "../CommonComponents/TextFormattingElements";
 import HelpDialog from "../CommonComponents/HelpDialog";
 import _ from "lodash";
 import { useUniqueArrayState } from "../CustomHooks";
-import { useFocusEffect, RouteProp, CompositeNavigationProp } from "@react-navigation/native";
+import { useFocusEffect, RouteProp, CompositeNavigationProp, useTheme } from "@react-navigation/native";
 import { SettingStoreContext } from "../Stores/SettingStore";
 import { RootStackParamList } from "../RootStackParamList";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { StackNavigationProp, StackHeaderProps } from "@react-navigation/stack";
 import {
     createDrawerNavigator,
     DrawerNavigationProp,
     DrawerContentScrollView,
     DrawerContentComponentProps,
 } from "@react-navigation/drawer";
-import { Switch, Drawer, ActivityIndicator } from "react-native-paper";
+import { Switch, Drawer, ActivityIndicator, Appbar } from "react-native-paper";
 
 const CASE_COLUMNS = 2;
 
@@ -183,54 +183,41 @@ const MainScreen: FC<Props> = observer(props => {
             if (isSelectMode) {
                 props.navigation.dangerouslyGetParent()?.setOptions({
                     title: "Select",
-                    headerLeft: () => (
-                        <TouchableNativeFeedback onPress={clearSelection}>
-                            <Icon style={[styles.icon, styles.leftIcon]} name="arrow-left" size={20} />
-                        </TouchableNativeFeedback>
-                    ),
-                    headerRight: () => (
-                        <View style={styles.iconContainer}>
-                            {selectedCaseIds.length == 1 && (
-                                <TouchableNativeFeedback onPress={openEditScreen}>
-                                    <FAIcon style={styles.icon} name="pencil" size={20} />
-                                </TouchableNativeFeedback>
-                            )}
-                            {selectedCaseIds.length == caseStore.cases.length ? (
-                                <TouchableNativeFeedback onPress={clearSelection}>
-                                    <FAIcon style={[styles.icon, styles.selectIcon]} name="check-square-o" size={20} />
-                                </TouchableNativeFeedback>
-                            ) : (
-                                <TouchableNativeFeedback onPress={() => selectedCaseFunctions.set(caseStore.cases.map(c => c.id))}>
-                                    <FAIcon style={[styles.icon, styles.selectIcon]} name="square-o" size={20} />
-                                </TouchableNativeFeedback>
-                            )}
-                            <TouchableNativeFeedback onPress={startTimeAttack}>
-                                <Icon style={styles.icon} name="stopwatch" size={20} />
-                            </TouchableNativeFeedback>
-                            <TouchableNativeFeedback onPress={openDeleteConfirmationForSelectedCases}>
-                                <Icon style={styles.icon} name="trash-alt" size={20} />
-                            </TouchableNativeFeedback>
-                        </View>
-                    ),
+                    headerLeft: () => <Appbar.Action onPress={clearSelection} icon="arrow-left" />,
+                    headerRight: () => [
+                        // For some reason, if I use a fragment, the icons turn out black.
+                        // So I use an array.
+                        selectedCaseIds.length == 1 && <Appbar.Action key="edit" onPress={openEditScreen} icon="pencil" />,
+                        selectedCaseIds.length == caseStore.cases.length ? (
+                            <Appbar.Action key="select-all" onPress={clearSelection} icon="checkbox-marked" />
+                        ) : (
+                            <Appbar.Action
+                                key="select-none"
+                                onPress={() => selectedCaseFunctions.set(caseStore.cases.map(c => c.id))}
+                                icon="checkbox-blank"
+                            />
+                        ),
+                        <Appbar.Action key="time" onPress={startTimeAttack} icon="timer" />,
+                        <Appbar.Action key="delete" onPress={openDeleteConfirmationForSelectedCases} icon="delete" />,
+                    ],
                 });
             } else {
                 props.navigation.dangerouslyGetParent()?.setOptions({
                     title: "AlgTeacher",
                     headerLeft: () => (
-                        <TouchableNativeFeedback onPress={() => props.navigation.openDrawer()}>
-                            <FAIcon style={[styles.icon, styles.leftIcon]} name="bars" size={20} />
-                        </TouchableNativeFeedback>
+                        <Appbar.Action
+                            onPress={() => {
+                                props.navigation.toggleDrawer();
+                            }}
+                            icon="menu"
+                        />
                     ),
-                    headerRight: () => (
-                        <View style={styles.iconContainer}>
-                            <TouchableNativeFeedback onPress={startTimeAttack}>
-                                <Icon style={styles.icon} name="stopwatch" size={20} />
-                            </TouchableNativeFeedback>
-                            <TouchableNativeFeedback onPress={openAddScreen}>
-                                <Icon style={styles.icon} name="plus" size={20} />
-                            </TouchableNativeFeedback>
-                        </View>
-                    ),
+                    headerRight: () => [
+                        // For some reason, if I use a fragment, the icons turn out black.
+                        // So I use an array.
+                        <Appbar.Action onPress={startTimeAttack} icon="timer" key="time" />,
+                        <Appbar.Action onPress={openAddScreen} icon="plus" key="add" />,
+                    ],
                 });
             }
         },

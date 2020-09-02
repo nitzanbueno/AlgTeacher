@@ -11,8 +11,9 @@ import TimeAttackEndScreen from "./Screens/TimeAttackEnd";
 import ImportAlgorithmSetScreen from "./Screens/ImportAlgorithmSet";
 import { CaseStoreContext, globalCaseStore } from "./CaseStore";
 import { RootStackParamList } from "./RootStackParamList";
-import { Provider as PaperProvider } from "react-native-paper";
+import { Provider as PaperProvider, Appbar } from "react-native-paper";
 import Theme from "./Theme";
+import AppbarHeader from "./Screens/AppbarHeader";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -21,7 +22,7 @@ class AppNavigationStack extends Component {
         return (
             <PaperProvider theme={Theme}>
                 <NavigationContainer>
-                    <Stack.Navigator>
+                    <Stack.Navigator screenOptions={{header: AppbarHeader}}>
                         <Stack.Screen name="Main" component={MainScreen} options={{ title: "AlgTeacher" }} />
                         <Stack.Screen name="Test" component={TestScreen} />
                         <Stack.Screen name="Add" component={AddScreen} />

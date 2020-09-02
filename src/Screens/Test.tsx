@@ -10,6 +10,7 @@ import { CubeImage } from "../CommonComponents/CubeImage";
 import { RootStackParamList } from "../RootStackParamList";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { Appbar } from "react-native-paper";
 
 const styles = StyleSheet.create({
     container: {
@@ -119,13 +120,7 @@ const TestScreen: FC<Props> = props => {
 
     useEffect(() => {
         props.navigation.setOptions({
-            headerRight: () => (
-                <View style={styles.iconContainer}>
-                    <TouchableNativeFeedback onPress={openEditScreen}>
-                        <Icon style={styles.icon} name="pencil" size={20} />
-                    </TouchableNativeFeedback>
-                </View>
-            ),
+            headerRight: () => <Appbar.Action icon="pencil" onPress={openEditScreen} />,
         });
     }, []);
 
