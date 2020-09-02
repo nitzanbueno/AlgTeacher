@@ -3,9 +3,7 @@ import { Text, View, FlatList, StyleSheet, Alert, Image, BackHandler } from "rea
 import { Case, TOUCHABLE_BACKGROUND } from "../Models";
 import TouchableCubeImage from "../CommonComponents/TouchableCubeImage";
 import { CaseStoreContext } from "../CaseStore";
-import Icon from "react-native-vector-icons/FontAwesome5";
-import FAIcon from "react-native-vector-icons/FontAwesome";
-import { TouchableNativeFeedback, TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableNativeFeedback } from "react-native-gesture-handler";
 import { observer } from "mobx-react";
 import { H1, P } from "../CommonComponents/TextFormattingElements";
 import HelpDialog from "../CommonComponents/HelpDialog";
@@ -14,14 +12,14 @@ import { useUniqueArrayState } from "../CustomHooks";
 import { useFocusEffect, RouteProp, CompositeNavigationProp, useTheme } from "@react-navigation/native";
 import { SettingStoreContext } from "../Stores/SettingStore";
 import { RootStackParamList } from "../RootStackParamList";
-import { StackNavigationProp, StackHeaderProps } from "@react-navigation/stack";
+import { StackNavigationProp } from "@react-navigation/stack";
 import {
     createDrawerNavigator,
     DrawerNavigationProp,
     DrawerContentScrollView,
     DrawerContentComponentProps,
 } from "@react-navigation/drawer";
-import { Switch, Drawer, ActivityIndicator, Appbar } from "react-native-paper";
+import { Switch, Drawer, ActivityIndicator, Appbar, Caption } from "react-native-paper";
 
 const CASE_COLUMNS = 2;
 
@@ -107,7 +105,12 @@ const MainScreen: FC<Props> = observer(props => {
 
     useEffect(clearSelection, [JSON.stringify(caseStore.cases)]);
 
-    useEffect(() => props.navigation.addListener("blur", clearSelection), []);
+    function onBlur() {
+        clearSelection();
+        props.navigation.closeDrawer();
+    }
+
+    useEffect(() => props.navigation.addListener("blur", onBlur), []);
 
     function startTimeAttack() {
         props.navigation.navigate("TimeAttackOpening", { cases: caseStore.GetCasesByIds(selectedCaseIds) });
@@ -252,7 +255,7 @@ const MainScreen: FC<Props> = observer(props => {
             ) : isLoading ? (
                 <ActivityIndicator size="large" />
             ) : (
-                <Text style={styles.helpText}>
+                <Caption style={styles.helpText}>
                     {"You don't have any cases.\nHow about "}
                     <Text style={{ color: "blue", textDecorationLine: "underline" }} onPress={openAddScreen}>
                         adding one
@@ -262,7 +265,7 @@ const MainScreen: FC<Props> = observer(props => {
                         importing an algorithm set
                     </Text>
                     ?
-                </Text>
+                </Caption>
             )}
             <HelpDialog title="Welcome to AlgTeacher!" openKey={"mainScreenHelpModal"}>
                 <P>You can start by adding a new algorithm using the "+" button:</P>
