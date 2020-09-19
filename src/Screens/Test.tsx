@@ -104,8 +104,8 @@ const TestScreen: FC<Props> = props => {
     return (
         <View style={styles.container}>
             {/* In case algorithm set/description are empty, we can't output the strings (React Native doesn't like it), so we put !! */}
-            {!!algorithmSet && <Text style={styles.algorithmSetText}>{algorithmSet}</Text>}
-            {!!description && <Text style={styles.descriptionText}>Description: {description}</Text>}
+            {!!algorithmSet && <Title style={styles.algorithmSetText}>{algorithmSet}</Title>}
+            {!!description && <Caption style={styles.descriptionText}>{description}</Caption>}
             <View style={styles.caseImageContainer}>
                 <CubeImage {...caseImageSize} case={algorithm || ""} {...imageOptions} />
             </View>
