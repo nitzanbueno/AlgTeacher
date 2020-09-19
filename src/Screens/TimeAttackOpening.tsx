@@ -62,8 +62,10 @@ const HelpScreen: FC<{}> = props => (
         <P>Time Attack mode trains your recognition and execution time for algorithm sets.</P>
         <P>To get started, select algorithm sets from the list.</P>
         <ScaledImage style={styles.image} source={require("./HelpImages/TimeAttackAlgorithmSets.png")} />
-        <P>You can also select cases from the main screen and press the Time Attack button.</P>
+        <P>You can also select cases from the main screen and press the Time Attack button,</P>
         <ScaledImage style={styles.image} source={require("./HelpImages/TimeAttackFromSelection.png")} />
+        <P>or tap on an algorithm to open its test screen and press the Time Attack button there.</P>
+        <ScaledImage style={styles.image} source={require("./HelpImages/TimeAttackFromTest.png")} />
         <P>Then choose if you want to randomly mirror or AUF your algorithms.</P>
         <ScaledImage style={styles.image} source={require("./HelpImages/TimeAttackOptions.png")} />
         <P>Then tap "Start":</P>
