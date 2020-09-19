@@ -20,6 +20,7 @@ import {
     DrawerContentComponentProps,
 } from "@react-navigation/drawer";
 import { Switch, Drawer, ActivityIndicator, Appbar, Caption, Text } from "react-native-paper";
+import { ScaledImage } from "../CommonComponents/ScaledImage";
 
 const CASE_COLUMNS = 2;
 
@@ -86,7 +87,35 @@ const styles = StyleSheet.create({
         color: "blue",
         textDecorationLine: "underline",
     },
+    helpImage: {
+        marginTop: 5,
+        marginBottom: 5,
+    }
 });
+
+const HelpImage = (props: {source: any}) => <ScaledImage style={styles.helpImage} {...props} />
+
+const Help = () => (
+    <HelpDialog title="Welcome to AlgTeacher!" openKey={"mainScreenHelpModal"}>
+        <P>You can start by adding a new algorithm using the "+" button:</P>
+        <HelpImage source={require("./HelpImages/AddButton.png")} />
+        <P>Or importing an algorithm set:</P>
+        <HelpImage source={require("./HelpImages/ImportAlgorithmSet.png")} />
+        <H1>Test</H1>
+        <P>After adding some algorithms, tap on one to test yourself.</P>
+        <HelpImage source={require("./HelpImages/Algorithms.png")} />
+        <P>The following screen will open.</P>
+        <HelpImage source={require("./HelpImages/TestScreen.png")} />
+        <P>The app will automatically generate a scramble that is solved by the algorithm.</P>
+        <P>If you forgot the algorithm, you can see the solution.</P>
+        <H1>Time Attack</H1>
+        <P>Also check out Time Attack mode.</P>
+        <HelpImage source={require("./HelpImages/TimeAttack.png")} />
+        <H1>Selection</H1>
+        <P>You can select cases to edit/delete them, or open a Time Attack with the chosen cases.</P>
+        <HelpImage source={require("./HelpImages/Select.png")} />
+    </HelpDialog>
+);
 
 interface Props {
     navigation: CompositeNavigationProp<StackNavigationProp<RootStackParamList, "Main">, DrawerNavigationProp<RootStackParamList, "Main">>;
@@ -270,29 +299,7 @@ const MainScreen: FC<Props> = observer(props => {
                     ?
                 </Caption>
             )}
-            <HelpDialog title="Welcome to AlgTeacher!" openKey={"mainScreenHelpModal"}>
-                <P>You can start by adding a new algorithm using the "+" button:</P>
-                <Image source={require("./HelpImages/AddButton.png")} style={{ width: "100%", height: 100 }} resizeMode="contain" />
-                <P>Or importing an algorithm set:</P>
-                <Image
-                    source={require("./HelpImages/ImportAlgorithmSet.png")}
-                    style={{ width: "100%", height: 100 }}
-                    resizeMode="contain"
-                />
-                <H1>Test</H1>
-                <P>After adding some algorithms, tap on one to test yourself.</P>
-                <Image source={require("./HelpImages/Algorithms.png")} style={{ width: "100%", height: 300 }} resizeMode="contain" />
-                <P>The following screen will open.</P>
-                <Image source={require("./HelpImages/TestScreen.png")} style={{ width: "100%", height: 460 }} resizeMode="contain" />
-                <P>The app will automatically generate a scramble that is solved by the algorithm.</P>
-                <P>If you forgot the algorithm, you can see the solution.</P>
-                <H1>Time Attack</H1>
-                <P>Also check out Time Attack mode.</P>
-                <Image source={require("./HelpImages/TimeAttack.png")} style={{ width: "100%", height: 100 }} resizeMode="contain" />
-                <H1>Selection</H1>
-                <P>You can select cases to edit/delete them, or open a Time Attack with the chosen cases.</P>
-                <Image source={require("./HelpImages/Select.png")} style={{ width: "100%", height: 300 }} resizeMode="contain" />
-            </HelpDialog>
+            <Help />
         </View>
     );
 });

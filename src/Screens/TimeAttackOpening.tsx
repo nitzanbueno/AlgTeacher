@@ -12,6 +12,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../RootStackParamList";
 import { Button, Caption, List } from "react-native-paper";
+import { ScaledImage } from "../CommonComponents/ScaledImage";
 
 const styles = StyleSheet.create({
     container: {
@@ -31,6 +32,10 @@ const styles = StyleSheet.create({
     startButton: {
         marginTop: 20,
     },
+    image: {
+        marginTop: 5,
+        marginBottom: 5
+    }
 });
 
 const HIGHSCORE_PREFIX = "@high_score/";
@@ -56,18 +61,18 @@ const HelpScreen: FC<{}> = props => (
     <HelpDialog title="Welcome to Time Attack mode!" openKey="timeAttackHelpModal">
         <P>Time Attack mode trains your recognition and execution time for algorithm sets.</P>
         <P>To get started, select algorithm sets from the list.</P>
-        <Image source={require("./HelpImages/TimeAttackAlgorithmSets.png")} style={{ width: "100%", height: 120 }} resizeMode="contain" />
+        <ScaledImage style={styles.image} source={require("./HelpImages/TimeAttackAlgorithmSets.png")} />
         <P>You can also select cases from the main screen and press the Time Attack button.</P>
-        <Image source={require("./HelpImages/TimeAttackFromSelection.png")} style={{ width: "100%", height: 400 }} resizeMode="contain" />
+        <ScaledImage style={styles.image} source={require("./HelpImages/TimeAttackFromSelection.png")} />
         <P>Then choose if you want to randomly mirror or AUF your algorithms.</P>
-        <Image source={require("./HelpImages/TimeAttackOptions.png")} style={{ width: "100%", height: 81 }} resizeMode="contain" />
+        <ScaledImage style={styles.image} source={require("./HelpImages/TimeAttackOptions.png")} />
         <P>Then tap "Start":</P>
-        <Image source={require("./HelpImages/TimeAttackStart.png")} style={{ width: "100%", height: 160 }} resizeMode="contain" />
+        <ScaledImage style={styles.image} source={require("./HelpImages/TimeAttackStart.png")} />
         <P>The app will then generate scrambles that are solved by each algorithm in the chosen sets.</P>
         <P>After scrambling, start the timer, recognize and solve the case, then stop it to get the next case.</P>
-        <Image source={require("./HelpImages/TimeAttackTimer.png")} style={{ width: "100%", height: 460 }} resizeMode="contain" />
+        <ScaledImage style={styles.image} source={require("./HelpImages/TimeAttackTimer.png")} />
         <P>If you forgot the algorithm, you can tap "Show Solution" to see the solution.</P>
-        <Image source={require("./HelpImages/TimeAttackSolution.png")} style={{ width: "100%", height: 460 }} resizeMode="contain" />
+        <ScaledImage style={styles.image} source={require("./HelpImages/TimeAttackSolution.png")} />
         <P>After you've solved every case in the chosen sets, you will see your score.</P>
         <P>A high score is kept for every algorithm set combination, so you can try to beat it!</P>
     </HelpDialog>
