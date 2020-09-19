@@ -1,29 +1,32 @@
-import React, { FC, useEffect, useContext, useMemo, useState } from "react";
-import { Text, View, FlatList, StyleSheet, Alert, Image, BackHandler } from "react-native";
-import { Case } from "../Models";
+import React, { FC, useEffect, useContext } from "react";
+import { View, FlatList, StyleSheet, Alert, Image, BackHandler } from "react-native";
+import { Case, TOUCHABLE_BACKGROUND } from "../Models";
 import TouchableCubeImage from "../CommonComponents/TouchableCubeImage";
 import { CaseStoreContext } from "../CaseStore";
-import { MenuOptions, MenuOption } from "react-native-popup-menu";
-import Icon from "react-native-vector-icons/FontAwesome5";
-import FAIcon from "react-native-vector-icons/FontAwesome";
 import { TouchableNativeFeedback } from "react-native-gesture-handler";
-import MenuIcon from "../CommonComponents/MenuIcon";
 import { observer } from "mobx-react";
 import { H1, P } from "../CommonComponents/TextFormattingElements";
-import HelpModal from "../CommonComponents/HelpModal";
+import HelpDialog from "../CommonComponents/HelpDialog";
 import _ from "lodash";
 import { useUniqueArrayState } from "../CustomHooks";
-import { useFocusEffect, RouteProp } from "@react-navigation/native";
+import { useFocusEffect, RouteProp, CompositeNavigationProp } from "@react-navigation/native";
 import { SettingStoreContext } from "../Stores/SettingStore";
 import { RootStackParamList } from "../RootStackParamList";
 import { StackNavigationProp } from "@react-navigation/stack";
+import {
+    createDrawerNavigator,
+    DrawerNavigationProp,
+    DrawerContentScrollView,
+    DrawerContentComponentProps,
+} from "@react-navigation/drawer";
+import { Switch, Drawer, ActivityIndicator, Appbar, Caption, Text } from "react-native-paper";
+import { ScaledImage } from "../CommonComponents/ScaledImage";
 
 const CASE_COLUMNS = 2;
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
         alignItems: "center",
         justifyContent: "center",
     },
@@ -54,6 +57,10 @@ const styles = StyleSheet.create({
     selectIcon: {
         marginTop: 4,
     },
+    leftIcon: {
+        width: 30,
+        textAlign: "center",
+    },
     helpText: {
         fontSize: 20,
         textAlign: "center",
@@ -69,51 +76,84 @@ const styles = StyleSheet.create({
     caseLabel: {
         marginTop: -10,
     },
+    preference: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+    },
+    link: {
+        color: "blue",
+        textDecorationLine: "underline",
+    },
+    helpImage: {
+        marginTop: 5,
+        marginBottom: 5,
+    }
 });
 
+const HelpImage = (props: {source: any}) => <ScaledImage style={styles.helpImage} {...props} />
+
+const Help = () => (
+    <HelpDialog title="Welcome to AlgTeacher!" openKey={"mainScreenHelpModal"}>
+        <P>You can start by adding a new algorithm using the "+" button:</P>
+        <HelpImage source={require("./HelpImages/AddButton.png")} />
+        <P>Or importing an algorithm set:</P>
+        <HelpImage source={require("./HelpImages/ImportAlgorithmSet.png")} />
+        <H1>Test</H1>
+        <P>After adding some algorithms, tap on one to test yourself.</P>
+        <HelpImage source={require("./HelpImages/Algorithms.png")} />
+        <P>The following screen will open.</P>
+        <HelpImage source={require("./HelpImages/TestScreen.png")} />
+        <P>The app will automatically generate a scramble that is solved by the algorithm.</P>
+        <P>If you forgot the algorithm, you can see the solution.</P>
+        <H1>Time Attack</H1>
+        <P>Also check out Time Attack mode.</P>
+        <HelpImage source={require("./HelpImages/TimeAttack.png")} />
+        <H1>Selection</H1>
+        <P>You can select cases to edit/delete them, or open a Time Attack with the chosen cases.</P>
+        <HelpImage source={require("./HelpImages/Select.png")} />
+    </HelpDialog>
+);
+
 interface Props {
-    navigation: StackNavigationProp<RootStackParamList, "Main">;
+    navigation: CompositeNavigationProp<StackNavigationProp<RootStackParamList, "Main">, DrawerNavigationProp<RootStackParamList, "Main">>;
     route: RouteProp<RootStackParamList, "Main">;
 }
 
-const MainScreen: FC<Props> = props => {
+const MainScreen: FC<Props> = observer(props => {
     const caseStore = useContext(CaseStoreContext);
     const settingStore = useContext(SettingStoreContext);
     const [selectedCaseIds, selectedCaseFunctions] = useUniqueArrayState<number>([]);
 
     const isSelectMode = selectedCaseIds.length != 0;
 
-    useEffect(
-        function resetSelectedCases() {
-            selectedCaseFunctions.set([]);
-        },
-        [JSON.stringify(caseStore.cases)],
-    );
-
-    // Scary type definitions!
-    // Basically if the screen I navigate to doesn't take parameters, I don't have to pass the "params" argument.
-    function navigate<Name extends keyof RootStackParamList>(name: RootStackParamList[Name] extends undefined ? Name : never): void;
-    function navigate<Name extends keyof RootStackParamList>(
-        name: RootStackParamList[Name] extends undefined ? never : Name,
-        params: RootStackParamList[Name],
-    ): void;
-    function navigate<Name extends keyof RootStackParamList>(name: Name, params?: any): void {
-        props.navigation.navigate<Name>({ name, params });
-
-        // We opened a new screen, so detach from selection
-        selectedCaseFunctions.set([]);
+    function clearSelection() {
+        // Smart-reset the selected IDs:
+        // if the selected IDs are already empty, skip a rerender of the component
+        selectedCaseFunctions.set(prevArr => (prevArr.length == 0 ? prevArr : []));
     }
 
+    useEffect(clearSelection, [JSON.stringify(caseStore.cases)]);
+
+    function onBlur() {
+        clearSelection();
+        props.navigation.closeDrawer();
+    }
+
+    useEffect(() => props.navigation.addListener("blur", onBlur), []);
+
     function startTimeAttack() {
-        navigate("TimeAttackOpening", { cases: caseStore.GetCasesByIds(selectedCaseIds) });
+        props.navigation.navigate("TimeAttackOpening", { cases: caseStore.GetCasesByIds(selectedCaseIds) });
     }
 
     function openAddScreen() {
-        navigate("Add", { caseId: -1 });
+        props.navigation.navigate("Add", { caseId: -1 });
     }
 
     function openTestScreen(chosenCase: Case) {
-        navigate("Test", { caseId: chosenCase.id });
+        props.navigation.navigate("Test", { caseId: chosenCase.id });
     }
 
     function deleteSelectedCases() {
@@ -139,7 +179,7 @@ const MainScreen: FC<Props> = props => {
     function openEditScreen() {
         if (selectedCaseIds.length != 1) return;
 
-        navigate("Add", {
+        props.navigation.navigate("Add", {
             caseId: selectedCaseIds[0],
             title: "Edit",
         });
@@ -164,85 +204,72 @@ const MainScreen: FC<Props> = props => {
                 algorithm={item.algorithm}
                 {...item.imageOptions}
             >
-                {settingStore.shouldDisplayLabels && <Text style={styles.caseLabel}>{item.description}</Text>}
+                {settingStore.shouldDisplayLabels && <Caption style={styles.caseLabel}>{item.description}</Caption>}
             </TouchableCubeImage>
         );
     }
 
     function openAlgorithmSetScreen() {
-        navigate("ImportAlgorithmSet");
+        props.navigation.navigate("ImportAlgorithmSet");
     }
 
-    function toggleShouldDisplayLabels() {
-        settingStore.shouldDisplayLabels = !settingStore.shouldDisplayLabels;
-    }
-
-    useEffect(function setHeader() {
-        if (isSelectMode) {
-            props.navigation.setOptions({
-                title: "Select",
-                headerRight: () => (
-                    <View style={styles.iconContainer}>
-                        {selectedCaseIds.length == 1 && (
-                            <TouchableNativeFeedback onPress={openEditScreen}>
-                                <FAIcon style={styles.icon} name="pencil" size={20} />
-                            </TouchableNativeFeedback>
-                        )}
-                        {selectedCaseIds.length == caseStore.cases.length ? (
-                            <TouchableNativeFeedback onPress={() => selectedCaseFunctions.set([])}>
-                                <FAIcon style={[styles.icon, styles.selectIcon]} name="check-square-o" size={20} />
-                            </TouchableNativeFeedback>
+    useEffect(
+        function setHeader() {
+            if (isSelectMode) {
+                props.navigation.dangerouslyGetParent()?.setOptions({
+                    title: "Select",
+                    headerLeft: () => <Appbar.Action onPress={clearSelection} icon="arrow-left" />,
+                    headerRight: () => [
+                        // For some reason, if I use a fragment, the icons turn out black.
+                        // So I use an array.
+                        selectedCaseIds.length == 1 && <Appbar.Action key="edit" onPress={openEditScreen} icon="pencil" />,
+                        selectedCaseIds.length == caseStore.cases.length ? (
+                            <Appbar.Action key="select-all" onPress={clearSelection} icon="checkbox-marked" />
                         ) : (
-                            <TouchableNativeFeedback onPress={() => selectedCaseFunctions.set(caseStore.cases.map(c => c.id))}>
-                                <FAIcon style={[styles.icon, styles.selectIcon]} name="square-o" size={20} />
-                            </TouchableNativeFeedback>
-                        )}
-                        <TouchableNativeFeedback onPress={startTimeAttack}>
-                            <Icon style={styles.icon} name="stopwatch" size={20} />
-                        </TouchableNativeFeedback>
-                        <TouchableNativeFeedback onPress={openDeleteConfirmationForSelectedCases}>
-                            <Icon style={styles.icon} name="trash-alt" size={20} />
-                        </TouchableNativeFeedback>
-                    </View>
-                ),
-            });
-        } else {
-            props.navigation.setOptions({
-                title: "AlgTeacher",
-                headerRight: () => (
-                    <View style={styles.iconContainer}>
-                        <TouchableNativeFeedback onPress={startTimeAttack}>
-                            <Icon style={styles.icon} name="stopwatch" size={20} />
-                        </TouchableNativeFeedback>
-                        <TouchableNativeFeedback onPress={openAddScreen}>
-                            <Icon style={styles.icon} name="plus" size={20} />
-                        </TouchableNativeFeedback>
-                        <MenuIcon>
-                            <MenuOptions>
-                                <MenuOption onSelect={openAlgorithmSetScreen} text="Import algorithm set..." />
-                                <MenuOption
-                                    onSelect={toggleShouldDisplayLabels}
-                                    text={settingStore.shouldDisplayLabels ? "Hide labels" : "Show labels"}
-                                />
-                            </MenuOptions>
-                        </MenuIcon>
-                    </View>
-                ),
-            });
-        }
-    }, [selectedCaseIds.length, settingStore.shouldDisplayLabels]);
+                            <Appbar.Action
+                                key="select-none"
+                                onPress={() => selectedCaseFunctions.set(caseStore.cases.map(c => c.id))}
+                                icon="checkbox-blank"
+                            />
+                        ),
+                        <Appbar.Action key="time" onPress={startTimeAttack} icon="timer" />,
+                        <Appbar.Action key="delete" onPress={openDeleteConfirmationForSelectedCases} icon="delete" />,
+                    ],
+                });
+            } else {
+                props.navigation.dangerouslyGetParent()?.setOptions({
+                    title: "AlgTeacher",
+                    headerLeft: () => (
+                        <Appbar.Action
+                            onPress={() => {
+                                props.navigation.toggleDrawer();
+                            }}
+                            icon="menu"
+                        />
+                    ),
+                    headerRight: () => [
+                        // For some reason, if I use a fragment, the icons turn out black.
+                        // So I use an array.
+                        <Appbar.Action onPress={startTimeAttack} icon="timer" key="time" />,
+                        <Appbar.Action onPress={openAddScreen} icon="plus" key="add" />,
+                    ],
+                });
+            }
+        },
+        [selectedCaseIds.length, settingStore.shouldDisplayLabels],
+    );
 
     useFocusEffect(
         React.useCallback(() => {
             const eventListener = BackHandler.addEventListener("hardwareBackPress", () => {
                 if (!isSelectMode) return false;
 
-                selectedCaseFunctions.set([]);
+                clearSelection();
                 return true;
             });
 
             return () => eventListener.remove();
-        }, [isSelectMode, selectedCaseFunctions.set]),
+        }, [isSelectMode, clearSelection]),
     );
 
     const isLoading = !caseStore.isLoaded || !settingStore.isLoaded;
@@ -258,46 +285,59 @@ const MainScreen: FC<Props> = props => {
                     numColumns={CASE_COLUMNS}
                 />
             ) : isLoading ? (
-                <Text style={styles.helpText}>Loading...</Text>
+                <ActivityIndicator size="large" />
             ) : (
-                <Text style={styles.helpText}>
+                <Caption style={styles.helpText}>
                     {"You don't have any cases.\nHow about "}
-                    <Text style={{ color: "blue", textDecorationLine: "underline" }} onPress={openAddScreen}>
+                    <Text style={styles.link} onPress={openAddScreen}>
                         adding one
                     </Text>
                     {" or maybe "}
-                    <Text style={{ color: "blue", textDecorationLine: "underline" }} onPress={openAlgorithmSetScreen}>
+                    <Text style={styles.link} onPress={openAlgorithmSetScreen}>
                         importing an algorithm set
                     </Text>
                     ?
-                </Text>
+                </Caption>
             )}
-            <HelpModal openKey={"mainScreenHelpModal"}>
-                <H1>Welcome to AlgTeacher!</H1>
-                <P>You can start by adding a new algorithm using the "+" button:</P>
-                <Image source={require("./HelpImages/AddButton.png")} style={{ width: "100%", height: 100 }} resizeMode="contain" />
-                <P>Or importing an algorithm set:</P>
-                <Image
-                    source={require("./HelpImages/ImportAlgorithmSet.png")}
-                    style={{ width: "100%", height: 100 }}
-                    resizeMode="contain"
-                />
-                <H1>Test</H1>
-                <P>After adding some algorithms, tap on one to test yourself.</P>
-                <Image source={require("./HelpImages/Algorithms.png")} style={{ width: "100%", height: 300 }} resizeMode="contain" />
-                <P>The following screen will open.</P>
-                <Image source={require("./HelpImages/TestScreen.png")} style={{ width: "100%", height: 460 }} resizeMode="contain" />
-                <P>The app will automatically generate a scramble that is solved by the algorithm.</P>
-                <P>If you forgot the algorithm, you can see the solution.</P>
-                <H1>Time Attack</H1>
-                <P>Also check out Time Attack mode.</P>
-                <Image source={require("./HelpImages/TimeAttack.png")} style={{ width: "100%", height: 100 }} resizeMode="contain" />
-                <H1>Selection</H1>
-                <P>You can select cases to edit/delete them, or open a Time Attack with the chosen cases.</P>
-                <Image source={require("./HelpImages/Select.png")} style={{ width: "100%", height: 300 }} resizeMode="contain" />
-            </HelpModal>
+            <Help />
         </View>
     );
-};
+});
 
-export default observer(MainScreen);
+const DrawerNavigator = createDrawerNavigator();
+
+// This is not the best way to implement this component!
+// It can't interact with the state of MainScreen in any way.
+// However, right now I don't need to, so I'm ignoring this problem for now.
+const MainScreenDrawerContent: FC<DrawerContentComponentProps> = observer(props => {
+    const settingStore = useContext(SettingStoreContext);
+
+    function toggleShouldDisplayLabels() {
+        settingStore.shouldDisplayLabels = !settingStore.shouldDisplayLabels;
+    }
+
+    return (
+        <DrawerContentScrollView {...props}>
+            <Drawer.Section>
+                <Drawer.Item
+                    label="Import Algorithm Set"
+                    onPress={() => props.navigation.dangerouslyGetParent()?.navigate("ImportAlgorithmSet")}
+                />
+            </Drawer.Section>
+            <TouchableNativeFeedback background={TOUCHABLE_BACKGROUND} onPress={toggleShouldDisplayLabels}>
+                <View style={styles.preference}>
+                    <Text>Display Labels</Text>
+                    <Switch value={settingStore.shouldDisplayLabels} />
+                </View>
+            </TouchableNativeFeedback>
+        </DrawerContentScrollView>
+    );
+});
+
+const MainScreenWithDrawer: FC = () => (
+    <DrawerNavigator.Navigator drawerContent={props => <MainScreenDrawerContent {...props} />}>
+        <DrawerNavigator.Screen component={MainScreen} name="Main" />
+    </DrawerNavigator.Navigator>
+);
+
+export default MainScreenWithDrawer;

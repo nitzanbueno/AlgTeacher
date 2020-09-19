@@ -1,8 +1,6 @@
 import { useState } from "react";
 
-export function useMapState<K, V>(
-    defaultState: Map<K, V> | (() => Map<K, V>),
-): [Map<K, V>, (newMap: Map<K, V>) => void, (key: K, value: V) => void] {
+export function useMapState<K, V>(defaultState: Map<K, V> | (() => Map<K, V>)) {
     const [stateMap, setStateMap] = useState(defaultState);
 
     function setSingleEntry(key: K, value: V) {
@@ -11,18 +9,10 @@ export function useMapState<K, V>(
         setStateMap(newMap);
     }
 
-    return [stateMap, setStateMap, setSingleEntry];
+    return [stateMap, setStateMap, setSingleEntry] as const;
 }
 
-export function useUniqueArrayState<T>(defaultState: T[]): [
-    T[],
-    {
-        remove: (item: T) => void;
-        removeAt: (index: number) => void;
-        add: (item: T) => void;
-        set: (newState: T[]) => void;
-    },
-] {
+export function useUniqueArrayState<T>(defaultState: T[]) {
     const [arr, setArr] = useState(defaultState);
 
     function arrayWithoutIndex(array: T[], index: number) {
@@ -32,22 +22,22 @@ export function useUniqueArrayState<T>(defaultState: T[]): [
     return [
         arr,
         {
-            remove(item) {
-                setArr((prevArr) => {
+            remove(item: T) {
+                setArr(prevArr => {
                     if (!prevArr.includes(item)) return prevArr;
 
-                    const itemIndex = prevArr.findIndex((x) => x == item);
+                    const itemIndex = prevArr.findIndex(x => x == item);
 
                     return arrayWithoutIndex(prevArr, itemIndex);
                 });
             },
-            removeAt(index) {
-                setArr((prevArr) => arrayWithoutIndex(prevArr, index));
+            removeAt(index: number) {
+                setArr(prevArr => arrayWithoutIndex(prevArr, index));
             },
-            add(item) {
-                setArr((prevArr) => (prevArr.includes(item) ? prevArr : prevArr.concat(item)));
+            add(item: T) {
+                setArr(prevArr => (prevArr.includes(item) ? prevArr : prevArr.concat(item)));
             },
-            set: setArr
+            set: setArr,
         },
-    ];
+    ] as const;
 }

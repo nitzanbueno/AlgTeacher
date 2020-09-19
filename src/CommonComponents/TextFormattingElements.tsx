@@ -1,5 +1,6 @@
 import React, { FC } from "react";
-import { Text, StyleSheet, TextStyle } from "react-native";
+import { StyleSheet, TextStyle } from "react-native";
+import { Title, Paragraph, Text } from "react-native-paper";
 
 const styles = StyleSheet.create({
     b: { fontWeight: "bold" },
@@ -16,5 +17,5 @@ function GetStyledTextComponent(style: TextStyle): FC<{ style?: TextStyle }> {
 export const B = GetStyledTextComponent(styles.b);
 export const I = GetStyledTextComponent(styles.i);
 export const U = GetStyledTextComponent(styles.u);
-export const H1 = GetStyledTextComponent(styles.h1);
-export const P = GetStyledTextComponent(styles.p);
+export const H1 = Title;
+export const P = Paragraph;

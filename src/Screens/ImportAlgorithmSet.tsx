@@ -6,6 +6,7 @@ import { Case } from "../Models";
 import { observer } from "mobx-react";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../RootStackParamList";
+import { List } from "react-native-paper";
 
 const styles = StyleSheet.create({
     container: {
@@ -60,16 +61,18 @@ const ImportAlgorithmSetScreen: FC<{ navigation: StackNavigationProp<RootStackPa
 
     return (
         <View style={styles.container}>
-            <Text style={styles.header}>Choose a set to import:</Text>
-
-            {ALGORITHM_SETS.map(algorithmSet => (
-                <Text style={styles.algorithmSetOption} key={algorithmSet.name}>
-                    {"\u2022 " /* Bullet point */}
-                    <Text style={styles.link} onPress={() => promptImportSet(algorithmSet)}>
-                        {algorithmSet.name}
-                    </Text>
-                </Text>
-            ))}
+            <List.Section>
+                <List.Subheader>Choose a set to import:</List.Subheader>
+                {ALGORITHM_SETS.map(algorithmSet => (
+                    <List.Item
+                        key={algorithmSet.name}
+                        titleStyle={{marginLeft: -10}}
+                        left={(props) => <List.Icon {...props} icon="circle-medium" color="#000" />}
+                        title={algorithmSet.name}
+                        onPress={() => promptImportSet(algorithmSet)}
+                    />
+                ))}
+            </List.Section>
         </View>
     );
 };

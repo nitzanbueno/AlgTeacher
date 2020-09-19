@@ -1,4 +1,4 @@
-import { Case } from "./Models";
+import { Case, TimeAttackOptions } from "./Models";
 
 export type RootStackParamList = {
     Main: undefined;
@@ -10,19 +10,20 @@ export type RootStackParamList = {
     Test: {
         caseId: number;
     };
-    TimeAttackEnd: {
-        highScoreKey: string;
-        totalTime: number;
-        solveCount: number;
-        totalCount: number;
-    };
     TimeAttackOpening: {
         cases: Case[];
     };
     TimeAttackPlay: {
         cases: Case[];
+        options: TimeAttackOptions;
         highScoreKey: string;
-        shouldRandomlyMirror: boolean;
-        shouldRandomlyAUF: boolean;
+    };
+    TimeAttackEnd: {
+        highScoreKey: string;
+        totalTime: number;
+        solveCount: number;
+        totalCount: number;
+        cases: Case[];
+        options: TimeAttackOptions;
     };
 };

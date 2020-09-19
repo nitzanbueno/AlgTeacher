@@ -1,20 +1,23 @@
 import React, { FC, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
-import CheckboxWithLabel from "./CheckboxWithLabel";
+import { StyleSheet } from "react-native";
 import { useMapState } from "../CustomHooks";
+import { List } from "react-native-paper";
+import CheckboxListItem from "./CheckboxListItem";
 
 const styles = StyleSheet.create({
-    optionContainer: {
-        marginBottom: 10,
+    header: {
+        fontSize: 20,
+        textAlign: "center"
     },
 });
 
 interface Props {
+    title: string;
     checkboxes: Map<string, boolean>;
     setCheckboxValue: (key: string, value: boolean) => void;
 }
 
-export function useCheckboxPickerState(options: string[]): { checkboxPickerState: Props; getSelectedOptions: () => string[] } {
+export function useCheckboxPickerState(options: string[]) {
     const [checkboxes, setCheckboxes, setCheckboxValue] = useMapState(generateCheckboxes);
 
     function generateCheckboxes() {
@@ -32,21 +35,22 @@ export function useCheckboxPickerState(options: string[]): { checkboxPickerState
             .map(option => option.key);
     }
 
-    return { checkboxPickerState: { checkboxes, setCheckboxValue }, getSelectedOptions };
+    return { checkboxPickerState: { checkboxes, setCheckboxValue }, getSelectedOptions } as const;
 }
 
 const CheckboxPicker: FC<Props> = props => {
     return (
-        <View style={styles.optionContainer}>
+        <List.Section>
+            <List.Subheader style={styles.header}>{props.title}</List.Subheader>
             {Array.from(props.checkboxes.entries(), ([option, value]) => (
-                <CheckboxWithLabel
+                <CheckboxListItem
                     key={option}
                     value={value}
-                    onValueChange={newValue => props.setCheckboxValue(option, newValue)}
-                    labelText={option}
+                    title={option}
+                    onValueChange={(newValue) => props.setCheckboxValue(option, newValue)}
                 />
             ))}
-        </View>
+        </List.Section>
     );
 };
 

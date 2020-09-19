@@ -4,6 +4,8 @@ import { GetTimeText } from "../Utils";
 import TimeAttackStorage, { HighScoreType } from "../TimeAttackStorage";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../RootStackParamList";
+import { Button, ActivityIndicator } from "react-native-paper";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 const styles = StyleSheet.create({
     container: {
@@ -14,7 +16,7 @@ const styles = StyleSheet.create({
         // justifyContent: "center",
     },
     header: {
-        marginTop: 80,
+        marginTop: 20,
         marginBottom: 20,
         textAlign: "center",
     },
@@ -32,6 +34,7 @@ const styles = StyleSheet.create({
         marginTop: 30,
         textAlign: "center",
         alignItems: "center",
+        width: "90%",
     },
     highScoreText: {
         color: "#2343C1",
@@ -51,14 +54,19 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "row",
     },
+    retryButton: {
+        marginTop: 20,
+    },
 });
 
 interface Props {
     route: RouteProp<RootStackParamList, "TimeAttackEnd">;
+    navigation: StackNavigationProp<RootStackParamList, "TimeAttackEnd">;
 }
 
 const TimeAttackEndScreen: FC<Props> = props => {
-    const [highScore, setHighScore] = useState<HighScoreType | null>(null);
+    const [previousHighScore, setPreviousHighScore] = useState<HighScoreType | null | undefined>(undefined);
+    const [didBeatHighScore, setDidBeatHighScore] = useState(false);
 
     const { highScoreKey, totalCount } = props.route.params;
     const timeAttackScore = { totalTime: props.route.params.totalTime, solveCount: props.route.params.solveCount };
@@ -68,14 +76,17 @@ const TimeAttackEndScreen: FC<Props> = props => {
             const fetchedHighScore = await TimeAttackStorage.FetchHighScore(highScoreKey);
 
             if (
-                fetchedHighScore == null ||
+                fetchedHighScore === null ||
                 fetchedHighScore.solveCount < timeAttackScore.solveCount ||
                 (fetchedHighScore.solveCount == timeAttackScore.solveCount && fetchedHighScore.totalTime > timeAttackScore.totalTime)
             ) {
+                setDidBeatHighScore(true);
                 await TimeAttackStorage.SaveHighScore(highScoreKey, timeAttackScore);
             } else {
-                setHighScore(fetchedHighScore);
+                setDidBeatHighScore(false);
             }
+
+            setPreviousHighScore(fetchedHighScore);
         }
 
         checkHighScore();
@@ -102,20 +113,37 @@ const TimeAttackEndScreen: FC<Props> = props => {
         );
     }
 
+    function retry() {
+        const { cases, highScoreKey, options } = props.route.params;
+        props.navigation.replace("TimeAttackPlay", { cases, highScoreKey, options });
+    }
+
     return (
         <View style={styles.container}>
-            {highScore ? (
-                <Text style={[styles.header, styles.done]}>Done!</Text>
+            {previousHighScore === undefined ? (
+                <ActivityIndicator size="large" />
             ) : (
-                <Text style={[styles.header, styles.beatHighScore]}>You beat your high score! Congratulations!</Text>
+                <>
+                    {didBeatHighScore ? (
+                        <Text style={[styles.header, styles.beatHighScore]}>You beat your high score! Congratulations!</Text>
+                    ) : (
+                        <Text style={[styles.header, styles.done]}>Done!</Text>
+                    )}
+                    <ScoreText title="Your score is:" style={didBeatHighScore && styles.highScoreText} scoreObject={timeAttackScore} />
+                    <View style={styles.highScoreView}>
+                        {previousHighScore === null ? (
+                            <Text style={styles.descriptionText}>This is the first time you've done this set!</Text>
+                        ) : (
+                            <ScoreText
+                                title={`Your ${didBeatHighScore ? "previous " : ""}high score for ${totalCount === 1 ? "this case" : "these cases"} is:`}
+                                style={!didBeatHighScore && styles.highScoreText}
+                                scoreObject={previousHighScore}
+                            />
+                        )}
+                    </View>
+                    <Button style={styles.retryButton} mode="contained" children="Retry" onPress={retry}></Button>
+                </>
             )}
-
-            <ScoreText title="Your score is:" style={!highScore && styles.highScoreText} scoreObject={timeAttackScore} />
-            <View style={styles.highScoreView}>
-                {highScore && (
-                    <ScoreText title={`Your high score for ${totalCount === 1 ? "this case" : "these cases"} is:`} style={styles.highScoreText} scoreObject={highScore} />
-                )}
-            </View>
         </View>
     );
 };
