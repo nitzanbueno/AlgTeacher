@@ -9,7 +9,6 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "#fff",
         alignItems: "center",
         textAlign: "center",
         height: "100%",

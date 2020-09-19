@@ -11,7 +11,6 @@ import { List } from "react-native-paper";
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
         // alignItems: 'center',
         // textAlign: 'center',
         // justifyContent: "center",

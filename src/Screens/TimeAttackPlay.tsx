@@ -16,7 +16,6 @@ const UNDEFINED_SCRAMBLE_TEXT: string = "Loading...";
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
         alignItems: "center",
         textAlign: "center",
         // justifyContent: "center",
