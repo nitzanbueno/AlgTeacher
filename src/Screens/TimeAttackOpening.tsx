@@ -6,23 +6,27 @@ import CheckboxPicker, { useCheckboxPickerState } from "../CommonComponents/Chec
 import { observer } from "mobx-react";
 import CheckboxListItem from "../CommonComponents/CheckboxListItem";
 import HelpDialog from "../CommonComponents/HelpDialog";
-import { H1, P } from "../CommonComponents/TextFormattingElements";
+import { P } from "../CommonComponents/TextFormattingElements";
 import { HashCode } from "../Utils";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../RootStackParamList";
-import { Button, List } from "react-native-paper";
+import { Button, Caption, List } from "react-native-paper";
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: "#fff",
         textAlign: "center",
         paddingLeft: 10,
         paddingRight: 10,
     },
     header: {
         fontSize: 20,
+        textAlign: "center",
+    },
+    helpTextContainer: {
+        display: "flex",
+        justifyContent: "center",
+        height: "100%",
     },
     startButton: {
         marginTop: 20,
@@ -117,9 +121,9 @@ const TimeAttackOpeningScreen: FC<Props> = props => {
     }
 
     return (
-        <ScrollView style={styles.container}>
+        <View style={styles.container}>
             {caseStore.algorithmSets.length > 0 || areCasesSelected ? (
-                <>
+                <ScrollView>
                     <List.Section>
                         <List.Subheader style={styles.header}>Choose options:</List.Subheader>
                         <CheckboxListItem value={shouldRandomlyMirror} onValueChange={setShouldRandomlyMirror} title="Randomly mirror" />
@@ -131,22 +135,24 @@ const TimeAttackOpeningScreen: FC<Props> = props => {
                     </List.Section>
                     {!areCasesSelected && <CheckboxPicker title="Select algorithm sets:" {...checkboxPickerState} />}
                     <Button style={styles.startButton} mode="contained" children="Start!" onPress={startTimeAttack} />
-                </>
+                </ScrollView>
             ) : (
-                <Text style={styles.header}>
-                    {"You don't have any algorithm sets.\nHow about "}
-                    <Text style={{ color: "blue", textDecorationLine: "underline" }} onPress={goToAddScreen}>
-                        adding a case with one
-                    </Text>
-                    {" or maybe "}
-                    <Text style={{ color: "blue", textDecorationLine: "underline" }} onPress={goToImportScreen}>
-                        importing one
-                    </Text>
-                    ?
-                </Text>
+                <View style={styles.helpTextContainer}>
+                    <Caption style={styles.header}>
+                        {"You don't have any algorithm sets.\nHow about "}
+                        <Text style={{ color: "blue", textDecorationLine: "underline" }} onPress={goToAddScreen}>
+                            adding a case with one
+                        </Text>
+                        {" or maybe "}
+                        <Text style={{ color: "blue", textDecorationLine: "underline" }} onPress={goToImportScreen}>
+                            importing one
+                        </Text>
+                        ?
+                    </Caption>
+                </View>
             )}
             <HelpScreen />
-        </ScrollView>
+        </View>
     );
 };
 

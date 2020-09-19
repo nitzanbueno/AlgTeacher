@@ -7,6 +7,7 @@ import CheckboxListItem from "./CheckboxListItem";
 const styles = StyleSheet.create({
     header: {
         fontSize: 20,
+        textAlign: "center"
     },
 });
 
