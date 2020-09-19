@@ -16,4 +16,4 @@ export interface TimeAttackOptions {
 
 export const TOUCHABLE_BACKGROUND = Platform.OS === "android" ? TouchableNativeFeedback.SelectableBackground() : undefined;
 
-export const CURRENT_VERSION = "1.2.1b";
+export const CURRENT_VERSION = "1.3.0";
