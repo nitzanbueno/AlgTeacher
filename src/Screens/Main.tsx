@@ -19,14 +19,13 @@ import {
     DrawerContentScrollView,
     DrawerContentComponentProps,
 } from "@react-navigation/drawer";
-import { Switch, Drawer, ActivityIndicator, Appbar, Caption, Text, Subheading, Headline } from "react-native-paper";
+import { Switch, Drawer, ActivityIndicator, Appbar, Caption, Text } from "react-native-paper";
 
 const CASE_COLUMNS = 2;
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
         alignItems: "center",
         justifyContent: "center",
     },
@@ -318,12 +317,12 @@ const MainScreenDrawerContent: FC<DrawerContentComponentProps> = observer(props 
                     onPress={() => props.navigation.dangerouslyGetParent()?.navigate("ImportAlgorithmSet")}
                 />
             </Drawer.Section>
-                <TouchableNativeFeedback background={TOUCHABLE_BACKGROUND} >
-                    <View style={styles.preference}>
-                        <Text>Display Labels</Text>
-                        <Switch value={settingStore.shouldDisplayLabels} />
-                    </View>
-                </TouchableNativeFeedback>
+            <TouchableNativeFeedback background={TOUCHABLE_BACKGROUND} onPress={toggleShouldDisplayLabels}>
+                <View style={styles.preference}>
+                    <Text>Display Labels</Text>
+                    <Switch value={settingStore.shouldDisplayLabels} />
+                </View>
+            </TouchableNativeFeedback>
         </DrawerContentScrollView>
     );
 });
