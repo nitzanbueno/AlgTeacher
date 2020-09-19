@@ -639,7 +639,7 @@
                 "id": -1,
                 "description": "",
                 "algorithmSet": "Winter Variation",
-                "algorithm": "R U' x' U R' D R U' R' D'",
+                "algorithm": "R U' x' U R' D R U' R' D' x",
                 "imageOptions": { "view": "plan", "mask": "wv" }
             },
             {
