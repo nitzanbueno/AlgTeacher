@@ -1,7 +1,5 @@
 import React, { useState, useEffect, FC, useContext } from "react";
-import { Text, View, StyleSheet, ViewStyle } from "react-native";
-import { TouchableNativeFeedback } from "react-native-gesture-handler";
-import { TOUCHABLE_BACKGROUND } from "../Models";
+import { Text, View, StyleSheet } from "react-native";
 import { GenerateScrambleAsync } from "../ScrambleLib";
 import { CaseStoreContext } from "../CaseStore";
 import { observer } from "mobx-react";
@@ -76,9 +74,16 @@ const TestScreen: FC<Props> = props => {
         });
     }
 
+    function startTimeAttack() {
+        if (propCase) props.navigation.navigate("TimeAttackOpening", { cases: [propCase] });
+    }
+
     useEffect(() => {
         props.navigation.setOptions({
-            headerRight: () => <Appbar.Action icon="pencil" onPress={openEditScreen} />,
+            headerRight: () => [
+                <Appbar.Action key="time" onPress={startTimeAttack} icon="timer" />,
+                <Appbar.Action key="edit" icon="pencil" onPress={openEditScreen} />,
+            ],
         });
     }, []);
 
