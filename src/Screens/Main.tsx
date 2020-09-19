@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useContext } from "react";
-import { Text, View, FlatList, StyleSheet, Alert, Image, BackHandler } from "react-native";
+import { View, FlatList, StyleSheet, Alert, Image, BackHandler } from "react-native";
 import { Case, TOUCHABLE_BACKGROUND } from "../Models";
 import TouchableCubeImage from "../CommonComponents/TouchableCubeImage";
 import { CaseStoreContext } from "../CaseStore";
@@ -19,7 +19,7 @@ import {
     DrawerContentScrollView,
     DrawerContentComponentProps,
 } from "@react-navigation/drawer";
-import { Switch, Drawer, ActivityIndicator, Appbar, Caption } from "react-native-paper";
+import { Switch, Drawer, ActivityIndicator, Appbar, Caption, Text, Subheading, Headline } from "react-native-paper";
 
 const CASE_COLUMNS = 2;
 
@@ -82,6 +82,10 @@ const styles = StyleSheet.create({
         alignItems: "center",
         paddingVertical: 12,
         paddingHorizontal: 16,
+    },
+    link: {
+        color: "blue",
+        textDecorationLine: "underline",
     },
 });
 
@@ -172,7 +176,7 @@ const MainScreen: FC<Props> = observer(props => {
                 algorithm={item.algorithm}
                 {...item.imageOptions}
             >
-                {settingStore.shouldDisplayLabels && <Text style={styles.caseLabel}>{item.description}</Text>}
+                {settingStore.shouldDisplayLabels && <Caption style={styles.caseLabel}>{item.description}</Caption>}
             </TouchableCubeImage>
         );
     }
@@ -257,11 +261,11 @@ const MainScreen: FC<Props> = observer(props => {
             ) : (
                 <Caption style={styles.helpText}>
                     {"You don't have any cases.\nHow about "}
-                    <Text style={{ color: "blue", textDecorationLine: "underline" }} onPress={openAddScreen}>
+                    <Text style={styles.link} onPress={openAddScreen}>
                         adding one
                     </Text>
                     {" or maybe "}
-                    <Text style={{ color: "blue", textDecorationLine: "underline" }} onPress={openAlgorithmSetScreen}>
+                    <Text style={styles.link} onPress={openAlgorithmSetScreen}>
                         importing an algorithm set
                     </Text>
                     ?
@@ -308,18 +312,18 @@ const MainScreenDrawerContent: FC<DrawerContentComponentProps> = observer(props 
 
     return (
         <DrawerContentScrollView {...props}>
-            <Drawer.Item
-                label="Import Algorithm Set"
-                onPress={() => props.navigation.dangerouslyGetParent()?.navigate("ImportAlgorithmSet")}
-            />
             <Drawer.Section>
-                <TouchableNativeFeedback background={TOUCHABLE_BACKGROUND} onPress={toggleShouldDisplayLabels}>
+                <Drawer.Item
+                    label="Import Algorithm Set"
+                    onPress={() => props.navigation.dangerouslyGetParent()?.navigate("ImportAlgorithmSet")}
+                />
+            </Drawer.Section>
+                <TouchableNativeFeedback background={TOUCHABLE_BACKGROUND} >
                     <View style={styles.preference}>
                         <Text>Display Labels</Text>
                         <Switch value={settingStore.shouldDisplayLabels} />
                     </View>
                 </TouchableNativeFeedback>
-            </Drawer.Section>
         </DrawerContentScrollView>
     );
 });
