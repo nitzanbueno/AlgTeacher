@@ -2,7 +2,7 @@ import React, { FC, useState, useEffect } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Portal, Dialog, Button } from "react-native-paper";
 import AsyncStorage from "@react-native-community/async-storage";
-import { StyleSheet } from "react-native";
+import { BackHandler, StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
     helpModal: {
@@ -33,6 +33,20 @@ const HelpDialog: FC<{ openKey: string; title: string }> = props => {
     useEffect(() => {
         openIfFirstUsage();
     }, [openKey]);
+
+    useEffect(
+        // Dismiss dialog on back press
+        React.useCallback(() => {
+            const eventListener = BackHandler.addEventListener("hardwareBackPress", () => {
+                if (!isVisible) return false;
+
+                close();
+                return true;
+            });
+
+            return () => eventListener.remove();
+        }, [isVisible]),
+    );
 
     return (
         <Portal>
