@@ -3,6 +3,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Portal, Dialog, Button } from "react-native-paper";
 import AsyncStorage from "@react-native-community/async-storage";
 import { BackHandler, StyleSheet } from "react-native";
+import { CURRENT_VERSION } from "../Models";
 
 const styles = StyleSheet.create({
     helpModal: {
@@ -20,9 +21,10 @@ const HelpDialog: FC<{ openKey: string; title: string }> = props => {
     async function openIfFirstUsage() {
         const shouldShow = await AsyncStorage.getItem(openKey);
 
-        if (shouldShow === null || shouldShow === "true") {
+        // Redisplay the screen on each version update
+        if (shouldShow === null || shouldShow !== CURRENT_VERSION) {
             setIsVisible(true);
-            await AsyncStorage.setItem(openKey, "false");
+            await AsyncStorage.setItem(openKey, CURRENT_VERSION);
         }
     }
 
