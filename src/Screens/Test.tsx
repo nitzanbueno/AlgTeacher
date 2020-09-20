@@ -15,12 +15,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         // justifyContent: "center",
     },
-    textContainer: {
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        width: "100%",
-    },
     algorithmSetText: {
         marginTop: 30,
         fontSize: 30,
@@ -39,6 +33,10 @@ const styles = StyleSheet.create({
     },
     solutionContainer: {
         marginTop: 10,
+        textAlign: "center",
+        alignItems: "center",
+        display: "flex",
+        width: "90%"
     },
 });
 
@@ -119,10 +117,10 @@ const TestScreen: FC<Props> = props => {
 
             <View style={styles.solutionContainer}>
                 {shouldDisplaySolution ? (
-                    <View style={styles.textContainer}>
+                    <>
                         <Title children={"Solution:"} />
                         <Caption style={styles.scrambleText} children={algorithm} />
-                    </View>
+                    </>
                 ) : (
                     <Button mode="contained" onPress={showSolution} children="Show Solution" />
                 )}
