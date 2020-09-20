@@ -310,7 +310,6 @@ export function GenerateScrambleAsync(algorithm: string): Promise<string> {
     const normalizedAlgorithm = NormalizeAlgorithm(algorithm);
 
     if (normalizedAlgorithm === "") {
-        console.log("Empty alg");
         return Promise.resolve("");
     }
 
