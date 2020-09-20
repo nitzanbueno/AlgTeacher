@@ -7,6 +7,7 @@ export type RootStackParamList = {
         caseId: number;
         title?: string;
     };
+    CreateAlgorithmSet: undefined;
     Test: {
         caseId: number;
     };

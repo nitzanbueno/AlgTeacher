@@ -70,17 +70,12 @@ const styles = StyleSheet.create({
     },
 });
 
-const selectedImageSize = {
-    width: 150,
-    height: 150,
-};
-
 interface Props {
     navigation: StackNavigationProp<RootStackParamList, "Add">;
     route: RouteProp<RootStackParamList, "Add">;
 }
 
-function SelectionStandin(props: any) {
+function SelectionStandin(_: any) {
     return <View style={styles.imageSelectionStandin} />;
 }
 
@@ -210,7 +205,7 @@ const AddScreen: FC<Props> = props => {
                 horizontal={true}
                 data={imageOptions}
                 renderItem={renderCaseImageOption}
-                keyExtractor={(item, index) => index.toString()}
+                keyExtractor={(_, index) => index.toString()}
             />
             <View style={styles.saveButton}>
                 <Button mode="contained" disabled={isAlgorithmInvalid} children="Save" onPress={saveCase} />

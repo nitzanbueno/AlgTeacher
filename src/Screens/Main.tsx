@@ -323,6 +323,10 @@ const MainScreenDrawerContent: FC<DrawerContentComponentProps> = observer(props 
                     label="Import Algorithm Set"
                     onPress={() => props.navigation.dangerouslyGetParent()?.navigate("ImportAlgorithmSet")}
                 />
+                <Drawer.Item
+                    label="Create Algorithm Set"
+                    onPress={() => props.navigation.dangerouslyGetParent()?.navigate("CreateAlgorithmSet")}
+                />
             </Drawer.Section>
             <TouchableNativeFeedback background={TOUCHABLE_BACKGROUND} onPress={toggleShouldDisplayLabels}>
                 <View style={styles.preference}>
